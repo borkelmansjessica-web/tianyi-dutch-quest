@@ -1,0 +1,859 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tianyi's Dutch Quest</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #111827;
+  color: #f9fafb;
+  font-family: Arial, sans-serif;
+}
+
+.app {
+  width: min(100%, 680px);
+  margin: auto;
+  padding: 20px 16px 40px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.stats {
+  display: flex;
+  gap: 8px;
+}
+
+.stat {
+  background: #263449;
+  border-radius: 20px;
+  padding: 9px 11px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.hero {
+  padding: 25px;
+  border-radius: 22px;
+  background: linear-gradient(135deg,#263d70,#65437f);
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  color: #d6c4ff;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+}
+
+h1 {
+  font-size: 29px;
+  margin: 12px 0 8px;
+}
+
+.hero p {
+  line-height: 1.5;
+  color: #e5e7eb;
+}
+
+.characters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0 10px;
+}
+
+.character {
+  flex: 1;
+  text-align: center;
+  padding: 14px 8px;
+  background: #ffffff18;
+  border: 1px solid #ffffff35;
+  border-radius: 15px;
+}
+
+.avatar {
+  font-size: 36px;
+}
+
+.character strong {
+  display: block;
+  margin-top: 5px;
+}
+
+.character small {
+  color: #ded8f3;
+}
+
+.heart {
+  font-size: 23px;
+}
+
+.progress {
+  height: 8px;
+  background: #374151;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 15px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #a3e635;
+  transition: width .3s;
+}
+
+.card {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 19px;
+  padding: 21px;
+  margin-bottom: 16px;
+}
+
+.tag {
+  color: #a5b4fc;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+h2 {
+  font-size: 21px;
+  margin: 10px 0;
+}
+
+.story {
+  line-height: 1.65;
+  color: #e5e7eb;
+  font-size: 15px;
+}
+
+.quote {
+  background: #293548;
+  border-left: 4px solid #a78bfa;
+  padding: 13px;
+  border-radius: 8px;
+  margin: 16px 0;
+  line-height: 1.6;
+}
+
+.mission-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 15px 0;
+}
+
+.pill {
+  background: #303e55;
+  border-radius: 20px;
+  padding: 7px 11px;
+  font-size: 12px;
+  color: #dbeafe;
+}
+
+.primary {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  padding: 16px;
+  background: #a3e635;
+  color: #17200b;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.secondary {
+  background: #374151;
+  color: white;
+}
+
+.question {
+  font-size: 21px;
+  line-height: 1.5;
+  margin: 23px 0 8px;
+  font-weight: bold;
+}
+
+.translation {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.options {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.option {
+  background: #293548;
+  border: 2px solid #45536a;
+  border-radius: 12px;
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.option:disabled {
+  cursor: default;
+  opacity: .95;
+}
+
+.option.correct {
+  border-color: #84cc16;
+  background: #263d25;
+}
+
+.option.wrong {
+  border-color: #f87171;
+  background: #482b31;
+}
+
+.feedback {
+  display: none;
+  margin-top: 17px;
+  padding: 15px;
+  border-radius: 12px;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.feedback.good {
+  display: block;
+  background: #203b2c;
+}
+
+.feedback.bad {
+  display: block;
+  background: #452b32;
+}
+
+.hint {
+  background: #293548;
+  padding: 14px;
+  border-radius: 12px;
+  margin-top: 17px;
+  line-height: 1.6;
+  font-size: 14px;
+  color: #e5e7eb;
+}
+
+.small {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.hidden {
+  display: none;
+}
+
+.finish {
+  text-align: center;
+}
+
+.finish-icon {
+  font-size: 58px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #293548;
+  padding: 13px;
+  border-radius: 12px;
+  margin-top: 9px;
+}
+
+.menu-item span {
+  font-size: 23px;
+}
+
+.menu-item small {
+  color: #9ca3af;
+  display: block;
+  margin-top: 3px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="top">
+    <div class="logo">⚔️ Tianyi's Dutch Quest</div>
+
+    <div class="stats">
+      <div class="stat">⭐ <span id="xp">0</span> XP</div>
+      <div class="stat">🔥 <span id="streak">0</span></div>
+    </div>
+  </div>
+
+  <!-- HOME SCREEN -->
+
+  <section id="home">
+
+    <div class="hero">
+
+      <div class="eyebrow">YOUR PERSONAL ADVENTURE</div>
+
+      <h1>A Journey to Belgium 🇧🇪</h1>
+
+      <p>
+        Two people. One adventure. One future home.
+        Your Dutch journey starts here, baby.
+      </p>
+
+      <div class="characters">
+
+        <div class="character">
+          <div class="avatar">🤓</div>
+          <strong>Tianyi</strong>
+          <small>Koning 👑</small>
+        </div>
+
+        <div class="heart">❤️</div>
+
+        <div class="character">
+          <div class="avatar">👸</div>
+          <strong>Jessica</strong>
+          <small>Koningin 👑</small>
+        </div>
+
+      </div>
+
+      <div class="progress">
+        <div class="progress-fill" id="homeProgress"></div>
+      </div>
+
+      <p class="small" id="homeProgressText">
+        Your first adventure awaits!
+      </p>
+
+    </div>
+
+    <div class="card">
+
+      <div class="tag">CHAPTER 1 · QINGDAO</div>
+
+      <h2>☕ The Morning Quest</h2>
+
+      <p class="story">
+        It's morning in Qingdao. Jessica is making coffee.
+        Tianyi is still waking up. The Duolingo mugs are ready
+        and breakfast is waiting.
+      </p>
+
+      <div class="quote">
+        <strong>Jessica:</strong>
+        "Good morning, baby! Are you ready for coffee?"
+        <br><br>
+        <strong>Tianyi:</strong>
+        "Yes, mijn koningin!"
+      </div>
+
+      <div class="mission-info">
+        <span class="pill">🎯 4 questions</span>
+        <span class="pill">⭐ 40 XP available</span>
+        <span class="pill">📚 A1 grammar</span>
+      </div>
+
+      <button class="primary" onclick="startMission()">
+        Start Quest ⚔️
+      </button>
+
+    </div>
+
+    <div class="card">
+
+      <div class="tag">YOUR ADVENTURE MAP</div>
+
+      <h2>Journey to Belgium</h2>
+
+      <div class="menu-item">
+        <span>☕</span>
+        <div>
+          <strong>1. Morning in Qingdao</strong>
+          <small>Current mission</small>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <span>✈️</span>
+        <div>
+          <strong>2. Christmas in Belgium</strong>
+          <small>Coming soon</small>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <span>🌴</span>
+        <div>
+          <strong>3. The Marseille Adventure</strong>
+          <small>Coming soon</small>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <span>🏡</span>
+        <div>
+          <strong>4. Our New Home in Belgium</strong>
+          <small>Final destination</small>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- GAME SCREEN -->
+
+  <section id="game" class="hidden">
+
+    <div class="card">
+
+      <div class="tag" id="questionTag">
+        MISSION 1 · GRAMMAR
+      </div>
+
+      <h2 id="questionTitle">Let's practise!</h2>
+
+      <div class="progress">
+        <div class="progress-fill" id="gameProgress"></div>
+      </div>
+
+      <p class="small" id="questionNumber">
+        Question 1 of 4
+      </p>
+
+      <div class="question" id="question"></div>
+
+      <div class="translation" id="translation"></div>
+
+      <div class="options" id="options"></div>
+
+      <div class="feedback" id="feedback"></div>
+
+      <div class="hint" id="hint">
+        💡 Don't worry about mistakes. Learn one step at a time.
+      </div>
+
+      <button
+        class="primary hidden"
+        id="nextButton"
+        onclick="nextQuestion()"
+      >
+        Next question →
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- FINISH SCREEN -->
+
+  <section id="finish" class="hidden">
+
+    <div class="card finish">
+
+      <div class="finish-icon">👑🏆👑</div>
+
+      <div class="tag">MISSION COMPLETED</div>
+
+      <h2>Goed gedaan, koning Tianyi!</h2>
+
+      <p class="story">
+        You completed your first Dutch adventure.
+        Jessica is proud of you, baby!
+      </p>
+
+      <h1 style="color:#a3e635">
+        +<span id="earnedXP">0</span> XP
+      </h1>
+
+      <p>You are one step closer to Belgium. 🇧🇪</p>
+
+      <button class="primary" onclick="goHome()">
+        Return to the Kingdom
+      </button>
+
+    </div>
+
+  </section>
+
+</div>
+
+<script>
+
+// ----------------------------------
+// SAVE AND LOAD PLAYER PROGRESS
+// ----------------------------------
+
+let current = 0;
+
+let savedProgress = {};
+
+try {
+  savedProgress = JSON.parse(
+    localStorage.getItem("tianyiQuest") || "{}"
+  ) || {};
+} catch (error) {
+  savedProgress = {};
+}
+
+let xp = savedProgress.xp || 0;
+let streak = savedProgress.streak || 0;
+let earned = 0;
+let answered = false;
+let missionCompleted = savedProgress.missionCompleted || false;
+
+function saveProgress() {
+  localStorage.setItem(
+    "tianyiQuest",
+    JSON.stringify({
+      xp: xp,
+      streak: streak,
+      missionCompleted: missionCompleted
+    })
+  );
+}
+
+document.getElementById("xp").textContent = xp;
+document.getElementById("streak").textContent = streak;
+
+if (missionCompleted) {
+  document.getElementById("homeProgress").style.width = "100%";
+
+  document.getElementById("homeProgressText").textContent =
+    "First mission completed!";
+}
+
+// ----------------------------------
+// QUESTIONS
+// ----------------------------------
+
+const questions = [
+
+  {
+    title: "Coffee time ☕",
+
+    question: "Ik ___ koffie.",
+
+    translation: "我喝咖啡。",
+
+    answers: [
+      "drinkt",
+      "drink",
+      "drinken"
+    ],
+
+    correct: "drink",
+
+    explanation:
+      "Correct! 'Ik' uses the verb stem. Drinken becomes drink.",
+
+    hint:
+      "💡 IK + verb stem. Ik drink, ik woon, ik werk.",
+
+    chinese:
+      "我 + 动词词干。Ik drink = 我喝。"
+  },
+
+  {
+    title: "The royal breakfast 🍌",
+
+    question: "Tianyi ___ yoghurt met banaan.",
+
+    translation: "Tianyi吃香蕉酸奶。",
+
+    answers: [
+      "eet",
+      "eten",
+      "eetst"
+    ],
+
+    correct: "eet",
+
+    explanation:
+      "Correct! Tianyi = hij. With hij, we usually add -t to the verb stem. Eten becomes eet.",
+
+    hint:
+      "💡 Hij / zij / het + verb stem + t. Hij eet.",
+
+    chinese:
+      "Tianyi = hij。第三人称单数通常加 -t。"
+  },
+
+  {
+    title: "The royal bag 👜",
+
+    question: "Tianyi ___ de tas van Jessica.",
+
+    translation: "Tianyi拿着Jessica的包。",
+
+    answers: [
+      "draag",
+      "dragen",
+      "draagt"
+    ],
+
+    correct: "draagt",
+
+    explanation:
+      "Correct! Tianyi = hij. Dragen becomes draagt.",
+
+    hint:
+      "💡 Hij draagt. Remember: dragen → draagt.",
+
+    chinese:
+      "Hij draagt = 他拿着 / 背着。"
+  },
+
+  {
+    title: "Together forever ❤️",
+
+    question: "Wij ___ hand in hand.",
+
+    translation: "我们手牵手走路。",
+
+    answers: [
+      "loopt",
+      "lopen",
+      "loop"
+    ],
+
+    correct: "lopen",
+
+    explanation:
+      "Correct! With 'wij', we use the whole infinitive: wij lopen.",
+
+    hint:
+      "💡 WIJ + infinitive. Wij lopen, wij eten, wij drinken.",
+
+    chinese:
+      "Wij + 动词原形。Wij lopen = 我们走路。"
+  }
+
+];
+
+// ----------------------------------
+// START MISSION
+// ----------------------------------
+
+function startMission() {
+
+  document.getElementById("home").classList.add("hidden");
+
+  document.getElementById("finish").classList.add("hidden");
+
+  document.getElementById("game").classList.remove("hidden");
+
+  current = 0;
+  earned = 0;
+
+  renderQuestion();
+}
+
+// ----------------------------------
+// DISPLAY QUESTION
+// ----------------------------------
+
+function renderQuestion() {
+
+  answered = false;
+
+  const q = questions[current];
+
+  document.getElementById("questionTitle").textContent =
+    q.title;
+
+  document.getElementById("question").textContent =
+    q.question;
+
+  document.getElementById("translation").textContent =
+    q.translation;
+
+  document.getElementById("questionNumber").textContent =
+    "Question " + (current + 1) + " of " + questions.length;
+
+  document.getElementById("gameProgress").style.width =
+    (current / questions.length * 100) + "%";
+
+  document.getElementById("hint").innerHTML =
+    q.hint +
+    "<br><br><span class='small'>" +
+    q.chinese +
+    "</span>";
+
+  const feedback = document.getElementById("feedback");
+
+  feedback.className = "feedback";
+  feedback.textContent = "";
+
+  document.getElementById("nextButton").classList.add("hidden");
+
+  const options = document.getElementById("options");
+
+  options.innerHTML = "";
+
+  q.answers.forEach(answer => {
+
+    const button = document.createElement("button");
+
+    button.className = "option";
+
+    button.textContent = answer;
+
+    button.onclick = () => checkAnswer(answer, button);
+
+    options.appendChild(button);
+
+  });
+
+}
+
+// ----------------------------------
+// CHECK ANSWER
+// ----------------------------------
+
+function checkAnswer(answer, selectedButton) {
+
+  if (answered) return;
+
+  answered = true;
+
+  const q = questions[current];
+
+  const feedback = document.getElementById("feedback");
+
+  const buttons = document.querySelectorAll(".option");
+
+  buttons.forEach(button => {
+
+    button.disabled = true;
+
+    if (button.textContent === q.correct) {
+      button.classList.add("correct");
+    }
+
+  });
+
+  if (answer === q.correct) {
+
+    xp += 10;
+    earned += 10;
+    streak++;
+
+    feedback.className = "feedback good";
+
+    feedback.innerHTML =
+      "✓ <strong>Uitstekend, koning!</strong><br>" +
+      q.explanation;
+
+  } else {
+
+    selectedButton.classList.add("wrong");
+
+    streak = 0;
+
+    feedback.className = "feedback bad";
+
+    feedback.innerHTML =
+      "Niet helemaal, baby! ❤️<br>" +
+      "Het juiste antwoord is <strong>" +
+      q.correct +
+      "</strong>.<br>" +
+      q.explanation +
+      "<br><br>Geen straf. Blijf oefenen!";
+
+  }
+
+  document.getElementById("xp").textContent = xp;
+
+  document.getElementById("streak").textContent = streak;
+
+  saveProgress();
+
+  document.getElementById("nextButton").classList.remove("hidden");
+
+  document.getElementById("nextButton").textContent =
+    current === questions.length - 1
+      ? "Voltooi missie 🏆"
+      : "Volgende vraag →";
+
+}
+
+// ----------------------------------
+// NEXT QUESTION
+// ----------------------------------
+
+function nextQuestion() {
+
+  current++;
+
+  if (current < questions.length) {
+
+    renderQuestion();
+
+  } else {
+
+    missionCompleted = true;
+    saveProgress();
+
+    document.getElementById("game").classList.add("hidden");
+
+    document.getElementById("finish").classList.remove("hidden");
+
+    document.getElementById("earnedXP").textContent = earned;
+
+    document.getElementById("homeProgress").style.width = "100%";
+
+    document.getElementById("homeProgressText").textContent =
+      "First mission completed!";
+
+  }
+
+}
+
+// ----------------------------------
+// RETURN HOME
+// ----------------------------------
+
+function goHome() {
+
+  document.getElementById("finish").classList.add("hidden");
+
+  document.getElementById("home").classList.remove("hidden");
+
+}
+
+</script>
+
+</body>
+</html>
