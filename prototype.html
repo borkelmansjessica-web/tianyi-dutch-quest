@@ -662,24 +662,67 @@ g.fillStyle(0x202632);g.fillEllipse(23,64,13,7);g.fillEllipse(41,64,13,7);
 g.generateTexture(key,64,76);g.destroy()
 }
 
-function makeToyota(s,key,withPassenger=true){
+function makeToyota(s,key,occupants=0){
  let g=s.make.graphics({x:0,y:0,add:false});
- // soft shadow, wheels and white body, viewed from above
- g.fillStyle(0x17202a,.28);g.fillEllipse(58,36,108,55);
- g.fillStyle(0x20252c);g.fillRoundedRect(9,7,15,19,5);g.fillRoundedRect(92,7,15,19,5);
- g.fillRoundedRect(9,47,15,19,5);g.fillRoundedRect(92,47,15,19,5);
- g.fillStyle(0xf7f8f5);g.fillRoundedRect(14,2,88,68,19);
- g.lineStyle(2,0xb9c1c8);g.strokeRoundedRect(14,2,88,68,19);
- g.fillStyle(0x9bb8c5);g.fillRoundedRect(26,9,64,19,7);
- g.fillStyle(0x263746);g.fillRoundedRect(27,42,62,17,6);
- g.fillStyle(0xdce8eb);g.fillRoundedRect(30,30,56,10,3);
- g.fillStyle(0xfff2b8);g.fillRoundedRect(19,4,14,4,2);g.fillRoundedRect(83,4,14,4,2);
- g.fillStyle(0xe45b50);g.fillRoundedRect(19,64,13,4,2);g.fillRoundedRect(83,64,13,4,2);
- // two tiny visible occupants behind the windscreen
- g.fillStyle(0xe7b994);g.fillCircle(46,18,6);
- g.fillStyle(0x24201e);g.fillCircle(46,15,5);
- if(withPassenger){g.fillStyle(0xf0c7aa);g.fillCircle(70,18,6);g.fillStyle(0xd8ad65);g.fillCircle(70,15,5)}
- g.generateTexture(key,116,72);g.destroy();
+
+ // Shadow
+ g.fillStyle(0x17202a,.28);
+ g.fillEllipse(58,36,108,58);
+
+ // Four wheels: two on each side
+ g.fillStyle(0x20252c);
+ g.fillRoundedRect(27,1,17,13,5);
+ g.fillRoundedRect(75,1,17,13,5);
+ g.fillRoundedRect(27,58,17,13,5);
+ g.fillRoundedRect(75,58,17,13,5);
+
+ // White Toyota body, horizontal orientation
+ g.fillStyle(0xf7f8f5);
+ g.fillRoundedRect(8,5,100,62,19);
+ g.lineStyle(2,0xb9c1c8);
+ g.strokeRoundedRect(8,5,100,62,19);
+
+ // Rear window
+ g.fillStyle(0x263746);
+ g.fillRoundedRect(18,15,17,42,5);
+
+ // Central roof
+ g.fillStyle(0xe0e5e5);
+ g.fillRoundedRect(39,13,29,46,5);
+
+ // Front windshield
+ g.fillStyle(0x9bb8c5);
+ g.fillRoundedRect(72,13,24,46,6);
+
+ // Front lights
+ g.fillStyle(0xfff2b8);
+ g.fillRoundedRect(99,12,8,12,3);
+ g.fillRoundedRect(99,48,8,12,3);
+
+ // Rear lights
+ g.fillStyle(0xe45b50);
+ g.fillRoundedRect(9,12,7,12,2);
+ g.fillRoundedRect(9,48,7,12,2);
+
+ // Occupants are only drawn in the occupied textures
+ if(occupants>=1){
+   // Tianyi, driver
+   g.fillStyle(0xe7b994);
+   g.fillCircle(83,26,6);
+   g.fillStyle(0x24201e);
+   g.fillCircle(83,23,5);
+ }
+
+ if(occupants>=2){
+   // Jessica, passenger
+   g.fillStyle(0xf0c7aa);
+   g.fillCircle(83,46,6);
+   g.fillStyle(0xd8ad65);
+   g.fillCircle(83,43,5);
+ }
+
+ g.generateTexture(key,116,72);
+ g.destroy();
 }
 
 function building(s,x,y,w,h,color,label){
