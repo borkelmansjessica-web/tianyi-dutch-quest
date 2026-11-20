@@ -3,332 +3,158 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Tianyi's Dutch Quest | Qingdao Prototype</title>
+<title>Tianyi's Dutch Quest | Chapter 1</title>
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.min.js"></script>
 <style>
-  :root { color-scheme: dark; --gold:#f3c86a; --ink:#101827; --panel:#182337; --line:#42516a; --lime:#b5ed52; }
-  * { box-sizing:border-box; }
-  body { margin:0; min-height:100vh; background:radial-gradient(ellipse at top,#293b59 0,#111827 65%); color:#f8fafc; font-family:Arial,sans-serif; }
-  .shell { width:min(1100px,100%); margin:0 auto; padding:14px; }
-  header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
-  .brand { font-weight:900; letter-spacing:.2px; font-size:clamp(15px,2.4vw,21px); }
-  .brand span { color:var(--gold); }
-  .hud { display:flex; gap:7px; flex-wrap:wrap; justify-content:flex-end; }
-  .chip { background:#202e44; border:1px solid #53617a; border-radius:999px; padding:8px 12px; font-size:12px; font-weight:700; white-space:nowrap; }
-  .stage { position:relative; border:2px solid #8d7042; border-radius:17px; overflow:hidden; box-shadow:0 18px 45px #0008; background:#789b6c; }
-  #game { width:100%; aspect-ratio:16/9; min-height:300px; touch-action:none; }
-  #game canvas { display:block; width:100% !important; height:100% !important; object-fit:contain; }
-  .quest-banner { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:11px 14px; background:linear-gradient(90deg,#202d43,#172235); border:1px solid #46536b; border-radius:12px; margin-top:10px; }
-  .quest-banner small { display:block; color:#c3ccda; margin-top:3px; }
-  .quest-name { font-weight:800; }
-  .quest-status { color:var(--gold); font-size:12px; font-weight:800; white-space:nowrap; }
-  .controls { display:flex; justify-content:space-between; align-items:end; gap:12px; margin-top:10px; }
-  .joystick { width:124px; height:124px; border-radius:50%; background:#182337aa; border:2px solid #ffffff42; position:relative; touch-action:none; user-select:none; }
-  .joy-knob { width:48px; height:48px; border-radius:50%; background:linear-gradient(145deg,#dce6f4,#8999b2); border:2px solid #fff9; position:absolute; left:36px; top:36px; box-shadow:0 3px 12px #0008; }
-  .control-hint { color:#aebbd0; font-size:12px; line-height:1.5; text-align:center; flex:1; }
-  .action-btn { border:1px solid #ffe08a; border-radius:15px; padding:16px 19px; color:#211a0b; font-weight:900; font-size:14px; background:linear-gradient(#ffe28a,#e9a92d); box-shadow:0 5px 0 #8b5e19; min-width:108px; touch-action:manipulation; }
-  .action-btn:active { transform:translateY(3px); box-shadow:0 2px 0 #8b5e19; }
-  .dialog-backdrop { position:fixed; inset:0; z-index:20; display:none; align-items:center; justify-content:center; padding:16px; background:#050914c9; }
-  .dialog-backdrop.show { display:flex; }
-  .dialog { width:min(510px,100%); background:linear-gradient(145deg,#26354e,#151f30); border:1px solid #a98950; border-radius:18px; padding:20px; box-shadow:0 20px 60px #000b; }
-  .dialog-tag { color:var(--gold); font-size:11px; font-weight:900; letter-spacing:1.3px; }
-  .dialog h2 { margin:8px 0; font-size:22px; }
-  .dialog p { color:#d9e0eb; line-height:1.5; }
-  .answers { display:grid; gap:9px; margin-top:14px; }
-  .answer { text-align:left; color:#f8fafc; background:#2b3b55; border:1px solid #65748b; padding:13px; border-radius:11px; font-size:15px; }
-  .answer:disabled { opacity:.8; }
-  .answer.good { border-color:#a3e635; background:#25432e; }
-  .answer.bad { border-color:#fb7185; background:#492b37; }
-  .result { min-height:42px; margin-top:12px; line-height:1.5; color:#f8e6b0; }
-  .close-btn { margin-top:8px; border:0; border-radius:10px; background:var(--lime); color:#17200b; padding:12px 16px; font-weight:900; width:100%; }
-  .footer-note { color:#8f9db2; font-size:11px; text-align:center; margin:10px 0 2px; }
-  @media (min-width:760px) { .controls { display:none; } }
-  @media (max-width:520px) { .shell{padding:9px} .chip{padding:7px 9px;font-size:11px} #game{min-height:280px} .joystick{width:108px;height:108px} .joy-knob{left:29px;top:29px} }
+:root{--gold:#f4c76b;--ink:#101827;--panel:#1b2940;--line:#53627b;--lime:#b5ed52}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#293b59,#0d1421 70%);color:#f8fafc;font-family:Arial,sans-serif}
+.shell{width:min(1160px,100%);margin:auto;padding:12px}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.brand{font-weight:900;font-size:clamp(15px,2.3vw,22px)}.brand span{color:var(--gold)}
+.hud{display:flex;gap:7px;flex-wrap:wrap}.chip{background:#202e44;border:1px solid #53617a;border-radius:999px;padding:8px 11px;font-size:12px;font-weight:800}
+.stage{position:relative;border:2px solid #987746;border-radius:16px;overflow:hidden;box-shadow:0 18px 45px #0008;background:#789b6c}
+#game{width:100%;aspect-ratio:16/9;min-height:280px;touch-action:none}#game canvas{display:block;width:100%!important;height:100%!important;object-fit:contain}
+.quest-banner{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 14px;background:linear-gradient(90deg,#202d43,#172235);border:1px solid #46536b;border-radius:12px;margin-top:10px}
+.quest-banner small{display:block;color:#c3ccda;margin-top:4px}.quest-name{font-weight:900}.quest-status{color:var(--gold);font-size:12px;font-weight:900}
+.controls{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-top:10px}.joystick{width:112px;height:112px;border-radius:50%;background:#182337aa;border:2px solid #ffffff42;position:relative;touch-action:none;user-select:none}.joy-knob{width:46px;height:46px;border-radius:50%;background:linear-gradient(145deg,#dce6f4,#8999b2);border:2px solid #fff9;position:absolute;left:31px;top:31px;box-shadow:0 3px 12px #0008}.control-hint{color:#aebbd0;font-size:12px;line-height:1.5;text-align:center;flex:1}.action-btn,.primary{border:1px solid #ffe08a;border-radius:13px;padding:14px 18px;color:#211a0b;font-weight:900;font-size:14px;background:linear-gradient(#ffe28a,#e9a92d);box-shadow:0 4px 0 #8b5e19;touch-action:manipulation}
+.primary{width:100%;font-size:17px;margin-top:14px;background:linear-gradient(#d7ff70,#8bcf26);border-color:#eaffad;box-shadow:0 4px 0 #527d16}
+.dialog-backdrop,.intro-backdrop,.complete-backdrop{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;padding:14px;background:#050914df;overflow:auto}
+.dialog-backdrop.show,.intro-backdrop.show,.complete-backdrop.show{display:flex}
+.dialog,.intro,.complete{width:min(590px,100%);max-height:94vh;overflow:auto;background:linear-gradient(145deg,#26354e,#151f30);border:1px solid #a98950;border-radius:19px;padding:20px;box-shadow:0 20px 60px #000b}
+.dialog-tag{color:var(--gold);font-size:11px;font-weight:900;letter-spacing:1.3px}.dialog h2,.intro h1,.complete h1{margin:8px 0 10px}.dialog p{color:#d9e0eb;line-height:1.5}.answers{display:grid;gap:9px;margin-top:14px}.answer{text-align:left;color:#f8fafc;background:#2b3b55;border:1px solid #65748b;padding:13px;border-radius:11px;font-size:15px}.answer:disabled{opacity:.9}.answer.good{border-color:#a3e635;background:#25432e}.answer.bad{border-color:#fb7185;background:#492b37}
+.result{min-height:38px;margin-top:12px;line-height:1.5;color:#f8e6b0}.explain{display:none;background:#111d2d;border:1px solid #46536b;border-radius:12px;padding:12px;margin-top:10px;line-height:1.5}.explain.show{display:block}.explain small{display:block;color:#c6d3e5;margin-top:7px}.close-btn{margin-top:12px;border:0;border-radius:10px;background:var(--lime);color:#17200b;padding:13px 16px;font-weight:900;width:100%}
+.intro h1{font-size:clamp(26px,5vw,38px);color:#ffe19a}.intro .sub{color:#d8e2f2;line-height:1.55}.intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.intro-card{background:#ffffff0c;border:1px solid #ffffff25;border-radius:13px;padding:12px}.intro-card strong{display:block;color:#ffe19a;margin-bottom:5px}.meter{height:9px;background:#3b4960;border-radius:20px;overflow:hidden;margin-top:8px}.meter i{display:block;height:100%;background:linear-gradient(90deg,#a3e635,#f6d365);width:0}
+.complete{text-align:center}.complete .crown{font-size:48px}.muted{color:#b8c5d8;font-size:13px;line-height:1.5}
+@media(min-width:760px){.controls{display:none}}@media(max-width:560px){.shell{padding:8px}.chip{padding:7px 9px;font-size:11px}#game{min-height:250px}.intro-grid{grid-template-columns:1fr 1fr}.dialog{padding:16px}.intro{padding:17px}}
 </style>
 </head>
 <body>
 <div class="shell">
-  <header>
-    <div class="brand">⚔️ TIAN YI'S <span>DUTCH QUEST</span></div>
-    <div class="hud">
-      <div class="chip">📍 QINGDAO</div>
-      <div class="chip">⭐ <span id="xp">0</span> XP</div>
-      <div class="chip">👑 LEVEL 1</div>
-    </div>
-  </header>
-
-  <div class="stage"><div id="game"></div></div>
-
-  <div class="quest-banner">
-    <div><div class="quest-name">☕ Quest 01: Vind het café</div><small id="quest-copy">Loop naar het café en praat met de barista.</small></div>
-    <div class="quest-status" id="quest-status">NIET VOLTOOID</div>
-  </div>
-
-  <div class="controls">
-    <div class="joystick" id="joystick" aria-label="Beweegpersonage"><div class="joy-knob" id="joy-knob"></div></div>
-    <div class="control-hint">Gebruik de joystick om te lopen.<br>Op computer: WASD of pijltjestoetsen.</div>
-    <button class="action-btn" id="interact">PRAAT 👋</button>
-  </div>
-  <div class="footer-note">Prototype 0.1 · Besturing: WASD / pijltjes · Bij het café: E of PRAAT</div>
+<header><div class="brand">⚔️ TIAN YI'S <span>DUTCH QUEST</span></div><div class="hud"><div class="chip">📍 QINGDAO</div><div class="chip">📖 CHAPTER 1</div><div class="chip">⭐ <span id="xp">0</span> XP</div><div class="chip">👑 LEVEL <span id="level">1</span></div></div></header>
+<div class="stage"><div id="game"></div></div>
+<div class="quest-banner"><div><div class="quest-name" id="quest-name">🏠 Daily life in Qingdao</div><small id="quest-copy">Start bij jullie appartement.</small></div><div class="quest-status" id="quest-status">KLAAR OM TE STARTEN</div></div>
+<div class="controls"><div class="joystick" id="joystick"><div class="joy-knob" id="joy-knob"></div></div><div class="control-hint">Beweeg met joystick.<br>Computer: WASD / pijltjestoetsen</div><button class="action-btn" id="interact">PRAAT 👋</button></div>
+<div class="muted" style="text-align:center;margin:9px">Bewegen: WASD / pijltjes · Interactie: E of PRAAT · Op tablet: joystick + PRAAT</div>
 </div>
 
-<div class="dialog-backdrop" id="dialog-backdrop">
-  <div class="dialog">
-    <div class="dialog-tag">QINGDAO · EERSTE TAALMISSIE</div>
-    <h2 id="dialog-title">Een koffie bestellen ☕</h2>
-    <p id="dialog-text">Barista: Goedemorgen! Wat wil je drinken?</p>
-    <p><strong>Tianyi:</strong> Wat antwoord je?</p>
-    <div class="answers" id="answers">
-      <button class="answer" data-answer="0">Ik wil graag een koffie.</button>
-      <button class="answer" data-answer="1">Ik graag koffie wil.</button>
-      <button class="answer" data-answer="2">Ik ben koffie.</button>
-    </div>
-    <div class="result" id="result"></div>
-    <button class="close-btn" id="close-dialog">Verder spelen</button>
+<div class="intro-backdrop show" id="intro">
+ <div class="intro">
+  <div class="dialog-tag">EEN PERSOONLIJKE TAALAVONTUUR · QINGDAO → BELGIË</div>
+  <h1>Tianyi's Dutch Quest 🇧🇪</h1>
+  <p class="sub">Leer Nederlands door jullie dagelijkse leven na te spelen. Help Tianyi door herkenbare situaties, praat met collega's, bestel koffie en verzamel Jessica's pakketjes. Elke missie brengt jullie een stap dichter bij een gezamenlijk leven in België.</p>
+  <div class="intro-grid">
+   <div class="intro-card"><strong>👑 Tianyi · Koning</strong>Speler en held van dit avontuur.<br><span class="muted">Moedertaal: Chinees · Nederlands: A1/A2</span></div>
+   <div class="intro-card"><strong>👑 Jessica · Koningin</strong>Companion, gesprekspartner en cheerleader.<br><span class="muted">Altijd in zijn team ❤️</span></div>
   </div>
+  <div class="intro-card"><strong>Huidige voortgang</strong><span>Chapter 1 van 4 · Daily life in Qingdao</span><div class="meter"><i id="intro-progress"></i></div><span class="muted" id="progress-label">0% voltooid · 0 XP</span></div>
+  <div class="intro-grid">
+   <div class="intro-card"><strong>📍 Chapter 1</strong>Daily life in Qingdao<br><span class="muted">Thuis · Metro · CMA CGM · Luckin Coffee · Pakketjes</span></div>
+   <div class="intro-card"><strong>🔒 Chapter 2</strong>Christmas in Belgium<br><span class="muted">Onder constructie</span></div>
+  </div>
+  <p class="sub">In deze eerste volledige quest oefen je korte gesprekken, woordenschat en vooral de Nederlandse werkwoordsvormen. Na elk antwoord krijg je uitleg in het Engels én Chinees. Fouten kosten geen XP.</p>
+  <button class="primary" id="start-game">START CHAPTER 1 ▶</button>
+ </div>
 </div>
+
+<div class="dialog-backdrop" id="dialog-backdrop"><div class="dialog">
+ <div class="dialog-tag" id="dialog-tag">CHAPTER 1 · DAILY LIFE</div><h2 id="dialog-title"></h2><p id="dialog-text"></p><p><strong id="speaker">Tianyi:</strong> Kies je antwoord:</p>
+ <div class="answers" id="answers"></div><div class="result" id="result"></div>
+ <div class="explain" id="explain"><strong>Why? (English)</strong><div id="explain-en"></div><small><strong>语法解释 (中文)</strong><br><span id="explain-zh"></span></small></div>
+ <button class="close-btn" id="close-dialog" disabled>Verder →</button>
+</div></div>
+<div class="complete-backdrop" id="complete"><div class="complete"><div class="crown">👑🏆👑</div><div class="dialog-tag">CHAPTER 1 COMPLETED</div><h1>Gefeliciteerd, koning Tianyi!</h1><p>Je hebt Daily life in Qingdao uitgespeeld. Jessica is trots op je, baby! ❤️</p><h1 style="color:#b5ed52">+<span id="earned">0</span> XP</h1><p>Weer een stap dichter bij een gezamenlijk leven in België. 🇧🇪</p><div class="intro-card"><strong>🔒 Chapter 2 · Christmas in Belgium</strong><span class="muted">Onder constructie. Het volgende avontuur wacht!</span></div><button class="primary" onclick="location.reload()">TERUG NAAR HET STARTSCHERM</button></div></div>
 
 <script>
-(() => {
-  const xpEl = document.getElementById('xp');
-  const questCopy = document.getElementById('quest-copy');
-  const questStatus = document.getElementById('quest-status');
-  const backdrop = document.getElementById('dialog-backdrop');
-  const resultEl = document.getElementById('result');
-  const answersEl = document.getElementById('answers');
-  const closeDialog = document.getElementById('close-dialog');
-  const interactButton = document.getElementById('interact');
-  let xp = 0;
-  let missionDone = false;
-  let dialogOpen = false;
-  let nearCafe = false;
-  let touchVector = { x: 0, y: 0 };
-
-  const config = {
-    type: Phaser.AUTO,
-    parent: 'game',
-    backgroundColor: '#88a96f',
-    scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH, width: 960, height: 540 },
-    physics: { default: 'arcade', arcade: { debug: false } },
-    scene: { create, update }
-  };
-
-  let game, player, jessica, cursors, keys, promptText, cafeZone, worldDecor;
-  let companionTick = 0;
-
-  function makeCharacterTexture(scene, key, jacket, hair, skin, glasses) {
-    const g = scene.make.graphics({ x: 0, y: 0, add: false });
-    // soft ground shadow
-    g.fillStyle(0x203020, 0.25); g.fillEllipse(32, 67, 39, 13);
-    // body and jacket, viewed from a slightly elevated angle
-    g.fillStyle(jacket, 1); g.fillRoundedRect(15, 34, 34, 30, 10);
-    g.fillStyle(0xffffff, 0.18); g.fillRoundedRect(29, 37, 4, 23, 2);
-    // neck and face
-    g.fillStyle(skin, 1); g.fillRoundedRect(25, 24, 14, 14, 5);
-    g.fillStyle(skin, 1); g.fillEllipse(32, 23, 28, 28);
-    // hair cap
-    g.fillStyle(hair, 1); g.fillEllipse(32, 14, 29, 18);
-    g.fillRoundedRect(18, 12, 28, 10, 5);
-    // ears
-    g.fillStyle(skin, 1); g.fillCircle(18, 24, 4); g.fillCircle(46, 24, 4);
-    if (glasses) {
-      g.lineStyle(2, 0x272b31, 1); g.strokeRoundedRect(20, 20, 10, 8, 2); g.strokeRoundedRect(34, 20, 10, 8, 2); g.lineBetween(30, 23, 34, 23);
-    } else {
-      g.fillStyle(0x332b27, 1); g.fillCircle(27, 24, 1.5); g.fillCircle(37, 24, 1.5);
-    }
-    // shoes
-    g.fillStyle(0x252a34, 1); g.fillEllipse(23, 64, 13, 7); g.fillEllipse(41, 64, 13, 7);
-    g.generateTexture(key, 64, 76);
-    g.destroy();
-  }
-
-  function create() {
-    const s = this;
-    s.physics.world.setBounds(0, 0, 1900, 1300);
-    makeCharacterTexture(s, 'tianyi', 0x667b42, 0x24201e, 0xe7b994, true);
-    makeCharacterTexture(s, 'jessica', 0x242b38, 0xd8ad65, 0xf0c7aa, true);
-    makeCharacterTexture(s, 'barista', 0x6c4b35, 0x382b24, 0xd9a77f, false);
-
-    // Grass base and subtle texture
-    s.add.rectangle(950, 650, 1900, 1300, 0x86a96e).setDepth(0);
-    const grass = s.add.graphics().setDepth(1);
-    for (let y = 25; y < 1300; y += 54) {
-      for (let x = 20; x < 1900; x += 63) {
-        grass.lineStyle(1, 0x668b5c, 0.20); grass.lineBetween(x, y, x + 5, y - 3);
-        grass.lineBetween(x + 12, y + 7, x + 17, y + 4);
-      }
-    }
-
-    // Coastline and promenade at the north edge
-    s.add.rectangle(950, 65, 1900, 130, 0x3d91b0).setDepth(2);
-    const waves = s.add.graphics().setDepth(3);
-    for (let i = 0; i < 34; i++) {
-      const x = (i * 71) % 1880;
-      waves.lineStyle(2, 0xb8e4e8, 0.28); waves.beginPath(); waves.arc(x, 45 + (i % 4) * 24, 16, 0.2, 2.7, false); waves.strokePath();
-    }
-    s.add.rectangle(950, 157, 1900, 34, 0xd8c69b).setDepth(4);
-    s.add.rectangle(950, 180, 1900, 8, 0xf0e2c2).setDepth(4);
-
-    // Roads and plaza paths
-    s.add.rectangle(950, 790, 1900, 170, 0x606b70).setDepth(2);
-    s.add.rectangle(950, 790, 1900, 4, 0xd6c58d).setDepth(3);
-    s.add.rectangle(950, 708, 1900, 5, 0xd5d8d2).setDepth(3);
-    s.add.rectangle(950, 872, 1900, 5, 0xd5d8d2).setDepth(3);
-    s.add.rectangle(610, 485, 520, 90, 0xd4c59c).setDepth(2);
-    s.add.rectangle(1120, 485, 520, 90, 0xd4c59c).setDepth(2);
-
-    // Cafe building
-    const cafe = s.add.container(1100, 380).setDepth(5);
-    const facade = s.add.rectangle(0, 0, 260, 175, 0xe7d6b5).setStrokeStyle(5, 0x785b43);
-    const roof = s.add.triangle(0, -99, -145, 0, 145, 0, 0, -80, 0x9a5544).setStrokeStyle(4, 0x673d35);
-    const awning = s.add.rectangle(0, -34, 210, 24, 0x8b3f3f).setStrokeStyle(2, 0x6b3030);
-    const door = s.add.rectangle(0, 48, 48, 80, 0x536b75).setStrokeStyle(3, 0x594c3c);
-    const win1 = s.add.rectangle(-82, 40, 58, 55, 0x9bcbd1).setStrokeStyle(4, 0x745b45);
-    const win2 = s.add.rectangle(82, 40, 58, 55, 0x9bcbd1).setStrokeStyle(4, 0x745b45);
-    const sign = s.add.text(0, -117, 'QINGDAO CAFÉ', { fontFamily:'Arial', fontSize:'17px', fontStyle:'bold', color:'#fff1c8', backgroundColor:'#53372e', padding:{x:9,y:5} }).setOrigin(0.5);
-    cafe.add([facade, roof, awning, door, win1, win2, sign]);
-    s.add.text(1100, 505, '☕', { fontSize:'30px' }).setOrigin(0.5).setDepth(6);
-
-    // Buildings around the square
-    drawBuilding(s, 370, 420, 205, 145, 0xd7b99b, 'NOODLE HOUSE');
-    drawBuilding(s, 1640, 420, 210, 150, 0xd7c8ad, 'FLOWER SHOP');
-    drawBuilding(s, 390, 1010, 235, 150, 0xd8c3a4, 'BOOK SHOP');
-    drawBuilding(s, 1570, 1015, 235, 150, 0xd5b6a4, 'MARKET');
-
-    // Trees and planters
-    const treePositions = [[170,350],[235,560],[520,260],[770,350],[1420,270],[1730,600],[220,950],[700,1080],[1300,1060],[1770,930],[900,590],[1370,590]];
-    treePositions.forEach(([x,y]) => drawTree(s,x,y));
-
-    // Player and companion
-    player = s.physics.add.image(570, 890, 'tianyi').setDepth(20);
-    player.setCollideWorldBounds(true); player.body.setSize(34, 45).setOffset(15, 20);
-    jessica = s.add.image(500, 930, 'jessica').setDepth(19);
-    s.physics.world.enable(jessica); jessica.body.setAllowGravity(false); jessica.body.setImmovable(true);
-
-    // Barista and interaction zone
-    const barista = s.physics.add.staticImage(1100, 535, 'barista').setDepth(18);
-    barista.setScale(0.85); barista.refreshBody();
-    cafeZone = new Phaser.Geom.Circle(1100, 600, 118);
-    s.add.circle(1100, 600, 118, 0xf4c45e, 0.07).setStrokeStyle(2, 0xf4c45e, 0.55).setDepth(8);
-
-    // Decorative signposts and spawn marker
-    s.add.text(565, 820, 'START', {fontSize:'13px',fontStyle:'bold',color:'#24321d',backgroundColor:'#e8d99f',padding:{x:7,y:4}}).setOrigin(0.5).setDepth(10);
-    s.add.text(1100, 670, 'Praat met de barista', {fontSize:'15px',fontStyle:'bold',color:'#fff4d1',backgroundColor:'#563c2e',padding:{x:9,y:6}}).setOrigin(0.5).setDepth(11);
-
-    cursors = s.input.keyboard.createCursorKeys();
-    keys = s.input.keyboard.addKeys('W,A,S,D,E,SPACE');
-    promptText = s.add.text(480, 0, '', {fontSize:'15px',fontStyle:'bold',color:'#fff5d6',backgroundColor:'#172235',padding:{x:10,y:7}}).setOrigin(0.5).setDepth(50).setScrollFactor(0);
-
-    s.cameras.main.setBounds(0, 0, 1900, 1300);
-    s.cameras.main.startFollow(player, true, 0.08, 0.08);
-    s.cameras.main.setZoom(1.05);
-    s.add.text(18, 18, 'QINGDAO · COASTAL DISTRICT', {fontSize:'13px',fontStyle:'bold',color:'#fff1c8',backgroundColor:'#182337bb',padding:{x:9,y:6}}).setScrollFactor(0).setDepth(60);
-    s.add.text(18, 51, 'Beweeg met WASD / pijltjes en verken de stad', {fontSize:'11px',color:'#ffffff',backgroundColor:'#182337aa',padding:{x:8,y:5}}).setScrollFactor(0).setDepth(60);
-  }
-
-  function drawBuilding(s,x,y,w,h,color,label) {
-    const c = s.add.container(x,y).setDepth(4);
-    c.add(s.add.rectangle(0,0,w,h,color).setStrokeStyle(4,0x725b45));
-    c.add(s.add.triangle(0,-h/2-22,-w/2-8,0,w/2+8,0,0,-38,0x8b5545).setStrokeStyle(3,0x633e36));
-    c.add(s.add.rectangle(0,5,w*.72,20,0x8b4d40));
-    c.add(s.add.rectangle(-w*.27,35,38,42,0x9bcbd1).setStrokeStyle(3,0x745b45));
-    c.add(s.add.rectangle(w*.27,35,38,42,0x9bcbd1).setStrokeStyle(3,0x745b45));
-    c.add(s.add.text(0,-h/2-9,label,{fontSize:'12px',fontStyle:'bold',color:'#fff1d1',backgroundColor:'#513a32',padding:{x:6,y:4}}).setOrigin(.5));
-  }
-
-  function drawTree(s,x,y) {
-    s.add.ellipse(x+4,y+18,52,18,0x263a27,0.23).setDepth(4);
-    s.add.rectangle(x,y+5,13,34,0x76523a).setDepth(5);
-    s.add.circle(x,y-8,28,0x3d754b).setDepth(6);
-    s.add.circle(x-14,y-16,17,0x4d8954).setDepth(7);
-    s.add.circle(x+13,y-19,17,0x5a965a).setDepth(7);
-    s.add.circle(x-7,y-26,10,0x77a969,0.7).setDepth(8);
-  }
-
-  function update(time, delta) {
-    if (!player || dialogOpen) { if (player) player.setVelocity(0,0); return; }
-    const speed = 205;
-    let vx = 0, vy = 0;
-    if (cursors.left.isDown || keys.A.isDown) vx -= 1;
-    if (cursors.right.isDown || keys.D.isDown) vx += 1;
-    if (cursors.up.isDown || keys.W.isDown) vy -= 1;
-    if (cursors.down.isDown || keys.S.isDown) vy += 1;
-    vx += touchVector.x; vy += touchVector.y;
-    const len = Math.hypot(vx,vy);
-    if (len > 1) { vx /= len; vy /= len; }
-    player.setVelocity(vx*speed, vy*speed);
-    if (len > 0.08) player.rotation = Phaser.Math.Angle.Between(0,0,vx,vy) * 0.12;
-
-    companionTick += delta;
-    const targetX = player.x - 55;
-    const targetY = player.y + 22;
-    jessica.x = Phaser.Math.Linear(jessica.x, targetX, 0.055);
-    jessica.y = Phaser.Math.Linear(jessica.y, targetY, 0.055);
-    const bob = Math.sin(companionTick / 190) * 1.4;
-    jessica.y += bob * 0.04;
-
-    const distance = Phaser.Math.Distance.Between(player.x, player.y, 1100, 600);
-    nearCafe = distance < 135;
-    promptText.setText(nearCafe ? 'Druk op E of PRAAT om te praten' : '');
-    if (nearCafe && Phaser.Input.Keyboard.JustDown(keys.E)) openDialog();
-  }
-
-  function openDialog() {
-    if (missionDone) {
-      document.getElementById('dialog-title').textContent = 'Missie voltooid! 🏆';
-      document.getElementById('dialog-text').textContent = 'De barista herkent je alweer. Goed gedaan, koning!';
-      answersEl.innerHTML = '<div class="answer good">Je hebt je eerste koffie besteld.</div>';
-      resultEl.textContent = 'Je hebt deze missie al afgerond. Je kunt verder de stad verkennen.';
-    } else {
-      document.getElementById('dialog-title').textContent = 'Een koffie bestellen ☕';
-      document.getElementById('dialog-text').textContent = 'Barista: Goedemorgen! Wat wil je drinken?';
-      answersEl.innerHTML = '<button class="answer" data-answer="0">Ik wil graag een koffie.</button><button class="answer" data-answer="1">Ik graag koffie wil.</button><button class="answer" data-answer="2">Ik ben koffie.</button>';
-      resultEl.textContent = '';
-      answersEl.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => chooseAnswer(Number(btn.dataset.answer))));
-    }
-    dialogOpen = true;
-    backdrop.classList.add('show');
-  }
-
-  function chooseAnswer(index) {
-    const buttons = [...answersEl.querySelectorAll('button')];
-    buttons.forEach(b => b.disabled = true);
-    if (index === 0) {
-      buttons[0].classList.add('good');
-      resultEl.textContent = '✓ Uitstekend, koning! “Ik wil graag een koffie.” is correct. +10 XP. Je hebt de eerste missie voltooid!';
-      xp += 10; xpEl.textContent = xp; missionDone = true;
-      questStatus.textContent = 'VOLTOOID ✓'; questStatus.style.color = '#b5ed52';
-      questCopy.textContent = 'Goed gedaan! Je eerste Nederlandse bestelling is gelukt.';
-      document.getElementById('dialog-title').textContent = 'Bestelling geslaagd!';
-    } else {
-      buttons[index].classList.add('bad'); buttons[0].classList.add('good');
-      resultEl.textContent = 'Nog niet helemaal. De juiste zin is: “Ik wil graag een koffie.” In een gewone hoofdzin staat het werkwoord op de tweede plaats.';
-    }
-  }
-
-  closeDialog.addEventListener('click', () => { backdrop.classList.remove('show'); dialogOpen = false; });
-  interactButton.addEventListener('click', () => { if (nearCafe) openDialog(); else { questCopy.textContent = 'Loop naar het café met het koffietekentje om de missie te starten.'; } });
-
-  // Touch joystick
-  const joystick = document.getElementById('joystick');
-  const knob = document.getElementById('joy-knob');
-  let joyPointer = null;
-  function moveJoy(e) {
-    const r = joystick.getBoundingClientRect();
-    const cx = r.left + r.width/2, cy = r.top + r.height/2;
-    let dx = e.clientX-cx, dy = e.clientY-cy;
-    const max = r.width*0.32; const d = Math.hypot(dx,dy);
-    if (d > max) { dx = dx/d*max; dy = dy/d*max; }
-    touchVector = {x:dx/max,y:dy/max};
-    knob.style.transform = `translate(${dx}px,${dy}px)`;
-  }
-  joystick.addEventListener('pointerdown', e => { joyPointer=e.pointerId; joystick.setPointerCapture(joyPointer); moveJoy(e); });
-  joystick.addEventListener('pointermove', e => { if (e.pointerId===joyPointer) moveJoy(e); });
-  function resetJoy() { joyPointer=null; touchVector={x:0,y:0}; knob.style.transform='translate(0,0)'; }
-  joystick.addEventListener('pointerup',resetJoy); joystick.addEventListener('pointercancel',resetJoy); joystick.addEventListener('lostpointercapture',resetJoy);
-
-  game = new Phaser.Game(config);
+(()=>{
+const $=id=>document.getElementById(id);
+let xp=Number(localStorage.getItem('tianyiQuestXP')||0), earned=0, qIndex=0, phase=0, dialogOpen=false, answered=false, nearTarget=null, started=false;
+$('xp').textContent=xp;$('level').textContent=Math.floor(xp/100)+1;$('progress-label').textContent=`0% voltooid · ${xp} XP`;
+const phases=[
+ {place:'🏠 Thuis · ochtend',qs:[
+  q('Jessica','Baby, kun je mij een koffie maken?','我可以给你做一杯咖啡吗？',['Ja, ik maak koffie voor je.','Ja, ik maken koffie voor je.','Ja, ik ben maak koffie.'],0,'After “ik”, use the verb stem: maken → maak.','“Ik”后面使用动词词干：maken 去掉 -en，变成 maak。'),
+  q('Jessica','Wanneer ga je douchen?','你什么时候去洗澡？',['Ik ga om acht uur douchen.','Ik gaat om acht uur douchen.','Ik om acht uur gaat douchen.'],0,'With “ik”, use ga, not gaat. In “gaan douchen”, the second verb stays at the end.','主语是 ik 时用 ga，不用 gaat。两个动词一起使用时，douchen 放在句末。'),
+  q('Jessica','Zal ik je hemd strijken?','我帮你熨衬衫好吗？',['Ja, dat zou fijn zijn.','Ja, dat zijn fijn.','Ja, ik zou fijn is.'],0,'“Dat zou fijn zijn” is a polite, natural response. The infinitive zijn comes at the end.','“Dat zou fijn zijn”是自然、礼貌的回答。情态动词 zou 后面用动词原形 zijn。')
+ ]},
+ {place:'🚇 Naar de metro',qs:[
+  q('Jessica','Tianyi vertrekt naar zijn werk. Wat zeg je tegen Jessica?','天一出门去上班时，怎么跟杰西卡道别？',['Tot vanavond, mijn koningin!','Goedemorgen gisteren!','Ik ben naar werk gisteren.'],0,'Use “Tot vanavond” to say goodbye until this evening. “Mijn koningin” means my queen.','“Tot vanavond”表示今晚见。 “mijn koningin”是“我的女王”。'),
+  q('Conducteur','Goedemorgen! Waar ga je vandaag naartoe?','早上好！你今天要去哪里？',['Ik ga naar mijn werk.','Ik gaat naar mijn werk.','Ik naar mijn werk ga.'],0,'“Ik ga” uses the first-person form. In a main clause, the conjugated verb is in second position.','“Ik”搭配“ga”。在荷兰语陈述句中，变位动词通常位于第二位。')
+ ]},
+ {place:'⚓ CMA CGM · haven terminal',qs:[
+  q('Collega','Goedemorgen Tianyi, klaar voor een nieuwe dag op het werk?','早上好，天一，准备好开始新的一天了吗？',['Ja, ik ben er klaar voor.','Ja, ik is klaar.','Ja, ik klaar ben.'],0,'“Ik ben” is the correct form of zijn. “Er klaar voor zijn” means to be ready for it.','“zijn”的 ik 形式是“ben”。“Er klaar voor zijn”表示“准备好了”。'),
+  q('Collega','Aan welke terminal werk je vandaag?','你今天在哪个码头工作？',['Ik werk vandaag aan de exportterminal.','Ik werkt vandaag aan de exportterminal.','Ik vandaag werk aan exportterminal.'],0,'With “ik”, use werk. The -t ending is used with hij/zij/het: hij werkt.','主语是 ik 时用 werk。hij/zij/het 通常加 -t：hij werkt。'),
+  q('Collega','Het schip komt om tien uur aan. Wat zeg je?','船十点到。你怎么回应？',['Dan controleer ik de planning.','Dan controleert ik de planning.','Dan ik controleer de planning.'],0,'“Dan” at the beginning is followed by the conjugated verb: Dan controleer ik…','句子以“Dan”开头时，变位动词放在主语前：Dan controleer ik…'),
+  q('Collega','Wat doe je als eerste bij vessel operations?','船舶运营工作中，你首先做什么？',['Ik controleer de scheepsplanning.','Ik controleert de scheepsplanning.','Ik controleren de scheepsplanning.'],0,'The infinitive controleren becomes controleer with “ik”. “Scheepsplanning” means vessel schedule/planning.','动词原形 controleren 与 ik 搭配时变成 controleer。“scheepsplanning”指船舶计划。'),
+  q('Collega','Is de lading al klaar?','货物准备好了吗？',['Nee, de lading is nog niet klaar.','Nee, de lading zijn nog niet klaar.','Nee, de lading ben nog niet klaar.'],0,'“De lading” is singular, so use is. “Nog niet” means not yet.','“De lading”是单数，所以用“is”。“nog niet”表示“还没有”。'),
+  q('Collega','Kun je de kapitein even bellen?','你能给船长打个电话吗？',['Ja, ik bel hem meteen.','Ja, ik belt hem meteen.','Ja, ik bellen hem meteen.'],0,'With “ik”, bel is the correct verb form. “Meteen” means immediately.','主语是 ik 时用 bel。“meteen”意思是“马上”。'),
+  q('Collega','Hoe was de overdracht met de vorige ploeg?','和上一班的交接怎么样？',['De overdracht was goed.','De overdracht waren goed.','De overdracht is gisteren goed geweest morgen.'],0,'“De overdracht” is singular, so the past tense is was.','“De overdracht”是单数，过去时用“was”，不用“waren”。'),
+  q('Collega','Bedankt voor vandaag. Je werkdag zit erop, tot morgen!','谢谢你今天的工作。下班了，明天见！',['Dank je wel. Tot morgen!','Dank jij wel. Tot gisteren!','Ik dank morgen tot.'],0,'“Dank je wel” is a natural way to say thank you. “Tot morgen” means see you tomorrow.','“Dank je wel”是自然的感谢表达。“Tot morgen”表示明天见。')
+ ]},
+ {place:'☕ Luckin Coffee',qs:[
+  q('Jessica','Baby, hoe was het op je werk?','宝贝，你今天上班怎么样？',['Het was druk, maar goed.','Het waren druk, maar goed.','Ik ben druk gisteren.'],0,'Use was with the singular “het”. “Druk” means busy.','“het”是单数，所以用“was”。“druk”表示忙碌。'),
+  q('Jessica','Laten we koffie bestellen! Wat zeg je tegen de medewerker?','我们点咖啡吧！你怎么跟店员说？',['Ik wil graag een latte, alstublieft.','Ik graag een latte wil.','Ik wilt graag latte.'],0,'“Ik wil graag…” is a polite way to order. With ik, use wil, not wilt.','“Ik wil graag…”是礼貌点单方式。主语 ik 用 wil，不用 wilt。'),
+  q('Medewerker','Welke maat wil je: klein, middel of groot?','你要什么杯型：小、中还是大？',['Een middelgrote, alstublieft.','Een middelgrootte, alstublieft.','Ik wil middel zijn.'],0,'“Middelgroot” is the adjective for medium-sized. “Een middelgrote” refers to a medium-sized drink.','“middelgroot”表示中杯大小。“Een middelgrote”可指一杯中杯饮料。'),
+  q('Medewerker','Wil je havermelk of gewone melk?','你要燕麦奶还是普通牛奶？',['Met havermelk, graag.','Ik met havermelk graag wil.','Havermelk ben graag.'],0,'“Met havermelk, graag” is a short, natural order. “Met” means with.','“Met havermelk, graag”是简短自然的点单表达。“met”意思是“加/用”。'),
+  q('Jessica','Zullen we hier even zitten?','我们在这里坐一会儿好吗？',['Ja, laten we daar zitten.','Ja, laat we daar zitten.','Ja, we zitten daar gisteren.'],0,'“Laten we” is the fixed form for “let’s”. The verb after it stays infinitive.','“Laten we”是“我们一起……”的固定表达，后面的动词用原形。')
+ ]},
+ {place:'📦 Pakketpunt · 10 pakketjes',qs:[
+  q('Medewerker','Pakket 1/10: Van wie is dit pakket?','第1/10个包裹：这个包裹是谁的？',['Dit pakket is van Jessica.','Deze pakket is van Jessica.','Dit pakket zijn van Jessica.'],0,'“Pakket” is a het-word, so use dit. “Van Jessica” means belonging to Jessica.','“Pakket”是 het-名词，所以用 dit。“Van Jessica”表示属于杰西卡。'),
+  q('Medewerker','Pakket 2/10: Wil je je naam spellen?','第2/10个包裹：你能拼一下你的名字吗？',['Ja, natuurlijk. J-E-S-S-I-C-A.','Ja, natuurlijk. Ik spellen Jessica.','Ja, natuurlijk. Mijn naam spell.'],0,'“Wil je…?” is a question with the verb before the subject. “Spellen” means to spell.','“Wil je…?”疑问句中动词放在主语前。“Spellen”意思是拼写。'),
+  q('Medewerker','Pakket 3/10: Heb je een afhaalcode?','第3/10个包裹：你有取件码吗？',['Ja, hier is de code.','Ja, hier zijn de code.','Ja, hier de code is.'],0,'“De code” is singular, so say “hier is de code”.','“De code”是单数，所以说“hier is de code”。'),
+  q('Medewerker','Pakket 4/10: Voor wie kom je de pakketjes ophalen?','第4/10个包裹：你来替谁取包裹？',['Ik kom ze voor Jessica ophalen.','Ik komt ze voor Jessica ophalen.','Ik ze ophalen voor Jessica kom.'],0,'With “ik”, use kom. In “komen ophalen”, the second verb stays at the end.','主语 ik 搭配 kom。在“komen ophalen”结构中，第二个动词放在句末。'),
+  q('Medewerker','Pakket 5/10: Hoeveel pakketjes heb je vandaag?','第5/10个包裹：你今天有多少个包裹？',['Ik heb er tien.','Ik heeft er tien.','Ik ben tien pakketjes.'],0,'Use “ik heb”. “Er tien” avoids repeating the noun pakketjes.','使用“ik heb”。“er tien”可以避免重复名词 pakketjes。'),
+  q('Medewerker','Pakket 6/10: Dit pakket is zwaar. Kun je het dragen?','第6/10个包裹：这个包裹很重。你能拿吗？',['Ja, ik kan het dragen.','Ja, ik kan het draagt.','Ja, ik kunnen het dragen.'],0,'After the modal verb kan, use the infinitive dragen at the end.','情态动词 kan 后面使用动词原形 dragen，并放在句末。'),
+  q('Medewerker','Pakket 7/10: Wil je een tas?','第7/10个包裹：你需要一个袋子吗？',['Nee, dank je. Ik heb een tas bij me.','Nee, dank je. Ik heeft een tas.','Nee, dank je. Ik een tas heb bij me.'],0,'“Ik heb” is the correct form. “Bij me” means with me.','“Ik”搭配“heb”。“Bij me”表示随身带着。'),
+  q('Medewerker','Pakket 8/10: Je moet hier tekenen. Wat zeg je?','第8/10个包裹：你需要在这里签字。你怎么回答？',['Natuurlijk, waar moet ik tekenen?','Natuurlijk, waar ik moet tekenen?','Natuurlijk, waar moet tekenen ik?'],0,'In a question, the verb comes before the subject: waar moet ik…?','疑问句中动词放在主语前：waar moet ik…?'),
+  q('Medewerker','Pakket 9/10: Alles is compleet. Wat zeg je?','第9/10个包裹：东西齐了。你怎么说？',['Bedankt voor uw hulp.','Bedankt voor jouw helpen.','Ik bedankt uw hulp.'],0,'“Bedankt voor uw hulp” is a polite expression. “Uw” is the formal possessive.','“Bedankt voor uw hulp”是礼貌表达。“Uw”是正式的“您的”。'),
+  q('Medewerker','Pakket 10/10: Fijne dag verder!','第10/10个包裹：祝你今天愉快！',['Dank u wel, u ook!','Dank jij wel, jij ook!','Ik dank u ook gisteren!'],0,'“Dank u wel” is polite/formal. “U ook” means you too.','“Dank u wel”是礼貌正式的感谢。“U ook”表示您也是。')
+ ]},
+ {place:'🏠 Thuis · avondeten',qs:[
+  q('Jessica','Wat wil je vanavond eten?','你今晚想吃什么？',['Ik wil graag noedels eten.','Ik wilt graag noedels eten.','Ik graag noedels eten wil.'],0,'With “ik”, use wil. The infinitive eten comes at the end after graag.','主语是 ik 时用 wil。动词原形 eten 放在句末。'),
+  q('Jessica','Zullen we samen koken?','我们一起做饭好吗？',['Ja, ik help je graag.','Ja, ik helpt je graag.','Ja, ik helpen je graag.'],0,'With “ik”, use help. “Je graag helpen” means gladly help you.','主语是 ik 时用 help。“Ik help je graag”表示我很乐意帮你。')
+ ]},
+ {place:'🌙 Klaarmaken om te slapen',qs:[
+  q('Jessica','Heb je je tanden al gepoetst?','你刷牙了吗？',['Ja, ik heb mijn tanden gepoetst.','Ja, ik heeft mijn tanden gepoetst.','Ja, ik ben mijn tanden poetsen.'],0,'The perfect tense uses heb + past participle: heb gepoetst.','完成时使用 heb + 过去分词：heb gepoetst。'),
+  q('Jessica','Ga je nog douchen voor het slapen?','睡前你还要洗澡吗？',['Nee, ik heb al gedoucht.','Nee, ik heeft al gedoucht.','Nee, ik al douchen.'],0,'Use heb with ik. “Gedoucht” is the past participle of douchen.','主语 ik 搭配 heb。“gedoucht”是 douchen 的过去分词。'),
+  q('Jessica','Welterusten, baby. Slaap lekker!','晚安，宝贝。睡个好觉！',['Welterusten, mijn koningin. Jij ook!','Welterusten, mijn koningin. Jij is ook!','Ik slaap lekker gisteren.'],0,'“Jij ook” means you too. It is a natural reply to a good-night wish.','“Jij ook”意思是“你也是”。这是回应晚安祝福的自然说法。')
+ ]}
+];
+function q(speaker,text,translation,answers,correct,en,zh){return{speaker,text,translation,answers,correct,en,zh}}
+const total=phases.reduce((n,p)=>n+p.qs.length,0);
+let completed=Number(localStorage.getItem('tianyiQuestCompleted')||0);
+$('intro-progress').style.width=Math.round(completed/total*100)+'%';
+function updateHud(){ $('xp').textContent=xp;$('level').textContent=Math.floor(xp/100)+1;$('progress-label').textContent=`${Math.round(completed/total*100)}% voltooid · ${xp} XP`;$('intro-progress').style.width=Math.round(completed/total*100)+'%';}
+const config={type:Phaser.AUTO,parent:'game',backgroundColor:'#7fa36d',scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH,width:960,height:540},physics:{default:'arcade',arcade:{debug:false}},scene:{create,update}};
+let game,scene,player,jessica,cursors,keys,objects=[],targetPrompt,moveVector={x:0,y:0};
+function makeChar(s,key,jacket,hair,skin,glasses){let g=s.make.graphics({x:0,y:0,add:false});g.fillStyle(0x1c261b,.3);g.fillEllipse(32,68,40,13);g.fillStyle(jacket);g.fillRoundedRect(14,36,36,28,9);g.fillStyle(skin);g.fillEllipse(32,25,28,27);g.fillStyle(hair);g.fillEllipse(32,15,29,18);g.fillRoundedRect(18,11,28,10,5);g.fillStyle(skin);g.fillCircle(18,25,4);g.fillCircle(46,25,4);if(glasses){g.lineStyle(2,0x20242b);g.strokeRoundedRect(20,21,10,7,2);g.strokeRoundedRect(34,21,10,7,2);g.lineBetween(30,24,34,24)}else{g.fillStyle(0x30231d);g.fillCircle(27,25,1.5);g.fillCircle(37,25,1.5)}g.fillStyle(0x202632);g.fillEllipse(23,64,13,7);g.fillEllipse(41,64,13,7);g.generateTexture(key,64,76);g.destroy()}
+function building(s,x,y,w,h,color,label){s.add.rectangle(x,y,w,h,color).setStrokeStyle(4,0x624b38).setDepth(2);s.add.rectangle(x,y-h*.24,w*.78,13,0x914c43).setDepth(3);for(let xx=x-w*.3;xx<=x+w*.3;xx+=w*.3)s.add.rectangle(xx,y-h*.05,34,34,0x9ed4dc).setStrokeStyle(3,0x4c5960).setDepth(3);s.add.rectangle(x+w*.28,y+h*.18,27,52,0x435a65).setDepth(3);s.add.text(x,y-h/2-19,label,{fontSize:'15px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#243348',padding:{x:7,y:4}}).setOrigin(.5).setDepth(8)}
+function create(){scene=this;let s=this;s.physics.world.setBounds(0,0,2200,1500);makeChar(s,'tianyi',0x667b42,0x24201e,0xe7b994,true);makeChar(s,'jessica',0x242b38,0xd8ad65,0xf0c7aa,true);makeChar(s,'npc',0x80583e,0x382b24,0xd9a77f,false);
+s.add.rectangle(1100,750,2200,1500,0x83a86e).setDepth(0);let grass=s.add.graphics().setDepth(1);for(let y=20;y<1500;y+=55)for(let x=20;x<2200;x+=60){grass.lineStyle(1,0x668b5c,.2);grass.lineBetween(x,y,x+6,y-3)}
+// coast and sea at north
+s.add.rectangle(1100,95,2200,190,0x3297b2).setDepth(1);let waves=s.add.graphics().setDepth(2);for(let x=0;x<2200;x+=55){waves.lineStyle(2,0xa7e4e8,.35);waves.arc(x,80,13,Math.PI,Math.PI*2,false)}
+s.add.rectangle(1100,205,2200,30,0xd7c28a).setDepth(2);s.add.rectangle(1100,242,2200,35,0xb5a27b).setDepth(2);
+// streets
+s.add.rectangle(1100,980,2200,115,0x59636b).setDepth(2);s.add.rectangle(1100,980,2200,4,0xf0d58b).setDepth(3);s.add.rectangle(1100,510,2200,80,0xd8c18f).setDepth(2);
+building(s,350,400,190,130,0xe2c9a3,'ONS APPARTEMENT');building(s,750,390,175,120,0xb9c8cf,'LUCKIN COFFEE');building(s,1190,390,190,130,0xd8d0a9,"SAM'S CLUB");building(s,480,760,150,110,0xcab18f,'PAKKETPUNT');building(s,1750,355,300,155,0xb6c1c9,'CMA CGM · TERMINAL');
+s.add.rectangle(1660,205,520,30,0x5d6872).setDepth(3);s.add.text(1750,285,'⚓  CONTAINER TERMINAL',{fontSize:'17px',fontStyle:'bold',color:'#fff4d0'}).setOrigin(.5).setDepth(8);
+s.add.text(120,880,'🚇 METRO',{fontSize:'18px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#26364a',padding:8}).setDepth(8);
+s.add.text(1360,1080,'🚗 WITTE TOYOTA',{fontSize:'16px',fontStyle:'bold',color:'#243348',backgroundColor:'#f6f7f5',padding:8}).setDepth(8);
+for(let i=0;i<28;i++){let x=100+(i*173)%2050,y=300+((i*97)%1050);s.add.circle(x,y,18,0x3d8054).setDepth(3);s.add.circle(x-6,y-7,10,0x5e9c68).setDepth(3)}
+player=s.physics.add.sprite(350,520,'tianyi').setDepth(10);player.setCollideWorldBounds(true);jessica=s.physics.add.sprite(300,520,'jessica').setDepth(9);jessica.body.setAllowGravity(false);
+cursors=s.input.keyboard.createCursorKeys();keys=s.input.keyboard.addKeys('W,A,S,D,E');s.cameras.main.setBounds(0,0,2200,1500);s.cameras.main.startFollow(player,true,.08,.08);s.cameras.main.setZoom(.95);
+objects=[{x:350,y:520,label:'Thuis',kind:'home'},{x:750,y:390,label:'Luckin Coffee',kind:'coffee'},{x:480,y:760,label:'Pakketpunt',kind:'parcel'},{x:1750,y:355,label:'CMA CGM',kind:'work'},{x:120,y:880,label:'Metro',kind:'metro'}];
+targetPrompt=s.add.text(480,480,'',{fontSize:'15px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#243348',padding:{x:8,y:5}}).setOrigin(.5).setDepth(20).setScrollFactor(0);
+}
+function update(time,delta){if(!started)return;let dx=0,dy=0;if(cursors.left.isDown||keys.A.isDown)dx=-1;if(cursors.right.isDown||keys.D.isDown)dx=1;if(cursors.up.isDown||keys.W.isDown)dy=-1;if(cursors.down.isDown||keys.S.isDown)dy=1;dx+=moveVector.x;dy+=moveVector.y;let len=Math.hypot(dx,dy)||1;player.setVelocity(dx/len*190,dy/len*190);if(Phaser.Input.Keyboard.JustDown(keys.E))interact();let dist=Phaser.Math.Distance.Between(player.x,player.y,jessica.x,jessica.y);if(dist>65){let a=Phaser.Math.Angle.Between(jessica.x,jessica.y,player.x,player.y);jessica.setVelocity(Math.cos(a)*Math.min(150,dist*2),Math.sin(a)*Math.min(150,dist*2))}else jessica.setVelocity(0,0);
+let nearest=null,nd=9999;objects.forEach(o=>{let d=Phaser.Math.Distance.Between(player.x,player.y,o.x,o.y);if(d<nd){nd=d;nearest=o}});if(nearest&&nd<105){targetPrompt.setText('E / PRAAT: '+nearest.label);targetPrompt.setVisible(true)}else targetPrompt.setVisible(false)}
+function interact(){if(dialogOpen)return;let nearest=objects.map(o=>({...o,d:Phaser.Math.Distance.Between(player.x,player.y,o.x,o.y)})).sort((a,b)=>a.d-b.d)[0];if(nearest&&nearest.d<120){let wanted=phases[phase].place;if((phase===0&&nearest.kind==='home')||(phase===1&&nearest.kind==='metro')||(phase===2&&nearest.kind==='work')||(phase===3&&nearest.kind==='coffee')||(phase===4&&nearest.kind==='parcel')||(phase>=5&&nearest.kind==='home'))openQuestion()}else if(qIndex<phases[phase].qs.length){$('quest-status').textContent='LOOP NAAR '+phases[phase].place.toUpperCase()}}
+function openQuestion(){if(qIndex>=phases[phase].qs.length){advancePhase();return}const q=phases[phase].qs[qIndex];dialogOpen=true;answered=false;$('dialog-tag').textContent=`CHAPTER 1 · ${phases[phase].place.toUpperCase()} · ${qIndex+1}/${phases[phase].qs.length}`;$('dialog-title').textContent=phases[phase].place;$('dialog-text').innerHTML=`<strong>${q.speaker}:</strong> “${q.text}”<br><span style="color:#b9c9dd">${q.translation}</span>`;$('speaker').textContent='Tianyi:';$('result').textContent='';$('explain').classList.remove('show');$('close-dialog').disabled=true;$('close-dialog').textContent='Verder →';$('answers').innerHTML='';q.answers.forEach((a,i)=>{let b=document.createElement('button');b.className='answer';b.textContent=a;b.onclick=()=>answer(i,b,q);$('answers').appendChild(b)});$('dialog-backdrop').classList.add('show')}
+function answer(i,btn,q){if(answered)return;answered=true;document.querySelectorAll('.answer').forEach((b,j)=>{b.disabled=true;if(j===q.correct)b.classList.add('good')});if(i===q.correct){xp+=10;earned+=10;$('result').textContent='✓ Goed gedaan, baby! ❤️';}else{btn.classList.add('bad');$('result').textContent='Bijna, koning! ❤️ Het juiste antwoord is: '+q.answers[q.correct]}completed++;localStorage.setItem('tianyiQuestXP',xp);localStorage.setItem('tianyiQuestCompleted',completed);updateHud();$('explain-en').textContent=q.en;$('explain-zh').textContent=q.zh;$('explain').classList.add('show');$('close-dialog').disabled=false;$('close-dialog').textContent=qIndex===phases[phase].qs.length-1?'Volgende locatie →':'Volgende vraag →';}
+function advancePhase(){phase++;qIndex=0;if(phase>=phases.length){$('earned').textContent=earned;$('complete').classList.add('show');return}let p=phases[phase];$('quest-name').textContent=p.place;$('quest-copy').textContent=`Ga naar de volgende locatie: ${p.place}.`; $('quest-status').textContent='NIEUWE QUEST';}
+$('close-dialog').onclick=()=>{if(!answered)return;$('dialog-backdrop').classList.remove('show');dialogOpen=false;qIndex++;if(qIndex>=phases[phase].qs.length){$('quest-status').textContent='LOCATIE VOLTOOID';$('quest-copy').textContent='Loop naar de volgende bestemming en druk op PRAAT.';advancePhase()}};
+$('start-game').onclick=()=>{$('intro').classList.remove('show');started=true;game.scene.start('default')};
+$('interact').onclick=interact;
+const joy=$('joystick'),knob=$('joy-knob');let active=false;function joyMove(e){let r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,max=35,len=Math.hypot(dx,dy)||1;if(len>max){dx=dx/len*max;dy=dy/len*max}knob.style.transform=`translate(${dx}px,${dy}px)`;moveVector={x:dx/max,y:dy/max}}joy.addEventListener('pointerdown',e=>{active=true;joy.setPointerCapture(e.pointerId);joyMove(e)});joy.addEventListener('pointermove',e=>{if(active)joyMove(e)});['pointerup','pointercancel','lostpointercapture'].forEach(ev=>joy.addEventListener(ev,()=>{active=false;moveVector={x:0,y:0};knob.style.transform='translate(0,0)'}));
+game=new Phaser.Game(config);
 })();
 </script>
-</body>
-</html>
+</body></html>
