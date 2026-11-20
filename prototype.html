@@ -116,6 +116,79 @@ header{display:flex;justify-content:space-between;align-items:center;gap:10px;ma
 .start-quest{min-height:54px;padding:8px 14px}
 .menu-nav .ico{font-size:22px}
 }
+ 
+/* START SCREEN LAYOUT REFINEMENT */
+
+/* Align both profile columns and move them lower */
+.menu-left,
+.menu-right {
+  align-self: start;
+  margin-top: clamp(125px, 19vh, 175px);
+  transform: none;
+}
+
+/* Keep the left and right panels aligned */
+.menu-left {
+  grid-column: 1;
+}
+
+.menu-right {
+  grid-column: 3;
+}
+
+/* Wider, shorter Start Quest button */
+.menu-center {
+  width: min(440px, 100%);
+  margin-bottom: 18px;
+}
+
+.start-quest {
+  width: 100%;
+  min-height: 54px;
+  height: 58px;
+  padding: 8px 24px;
+  font-size: clamp(19px, 2vw, 25px);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* Tablet and smaller desktop screens */
+@media (max-width: 850px) {
+  .menu-left,
+  .menu-right {
+    margin-top: clamp(115px, 17vh, 155px);
+  }
+
+  .menu-center {
+    width: min(420px, 100%);
+  }
+
+  .start-quest {
+    height: 54px;
+    min-height: 54px;
+    font-size: 21px;
+    white-space: nowrap;
+  }
+}
+
+/* Mobile layout */
+@media (max-width: 620px) {
+  .menu-left,
+  .menu-right {
+    margin-top: 0;
+  }
+
+  .menu-center {
+    width: min(300px, 90%);
+  }
+
+  .start-quest {
+    height: 52px;
+    min-height: 52px;
+    font-size: 20px;
+  }
+}
+
 </style>
 </head>
 <body>
