@@ -34,15 +34,16 @@ header{display:flex;justify-content:space-between;align-items:center;gap:10px;ma
 .menu-vignette{position:absolute;inset:0;background:linear-gradient(90deg,#10182765 0%,transparent 39%,transparent 66%,#10182755 100%),linear-gradient(0deg,#101827 0%,transparent 15%,transparent 88%,#10182722 100%)}
 .menu-wrap{position:relative;z-index:2;width:min(1500px,100%);height:100svh;min-height:620px;padding:14px 22px 12px;display:grid;grid-template-columns:minmax(245px,300px) minmax(280px,1fr) minmax(300px,360px);grid-template-rows:76px minmax(0,1fr) 82px;gap:10px;color:#fff;overflow:hidden}
 .
+.
 .menu-brand {
-  grid-column: 2 / 4;
-  grid-row: 1;
-  justify-self: end;
-  align-self: start;
-  width: min(650px, 100%);
+  position: absolute;
+  top: 12px;
+  right: 24px;
+  z-index: 20;
+  width: min(440px, 42%);
   margin: 0;
   padding: 0;
-  background: none;
+  background: transparent;
   border: none;
   box-shadow: none;
 }
@@ -52,7 +53,9 @@ header{display:flex;justify-content:space-between;align-items:center;gap:10px;ma
   width: 100%;
   height: auto;
   object-fit: contain;
+  background: transparent;
 }
+
 .menu-left{grid-column:1;grid-row:2;align-self:center;display:flex;flex-direction:column;gap:10px;margin:0;max-width:300px;width:100%}
 .menu-card{background:linear-gradient(145deg,#18243aE8,#101827ED);border:2px solid #c99a4d;border-radius:16px;padding:10px 13px;box-shadow:0 7px 18px #0007;color:#f7f3e9;backdrop-filter:blur(3px)}
 .menu-card h3{font:bold clamp(16px,1.5vw,20px) Georgia,serif;color:#ffe2a1;margin:0 0 6px;border-bottom:1px solid #8b7048;padding-bottom:5px}
