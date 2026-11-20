@@ -669,14 +669,14 @@ function makeToyota(s,key,occupants=0){
  g.fillStyle(0x17202a,.28);
  g.fillEllipse(58,36,108,58);
 
- // Four wheels: two on each side
+ // Four wheels
  g.fillStyle(0x20252c);
  g.fillRoundedRect(27,1,17,13,5);
  g.fillRoundedRect(75,1,17,13,5);
  g.fillRoundedRect(27,58,17,13,5);
  g.fillRoundedRect(75,58,17,13,5);
 
- // White Toyota body, horizontal orientation
+ // White Toyota body
  g.fillStyle(0xf7f8f5);
  g.fillRoundedRect(8,5,100,62,19);
  g.lineStyle(2,0xb9c1c8);
@@ -704,27 +704,25 @@ function makeToyota(s,key,occupants=0){
  g.fillRoundedRect(9,12,7,12,2);
  g.fillRoundedRect(9,48,7,12,2);
 
- // Occupants are only drawn in the occupied textures
+ // Tianyi: driver
  if(occupants>=1){
-   // Tianyi, driver
    g.fillStyle(0xe7b994);
-   g.fillCircle(83,26,6);
+   g.fillCircle(83,25,6);
    g.fillStyle(0x24201e);
-   g.fillCircle(83,23,5);
+   g.fillCircle(83,22,5);
  }
 
+ // Jessica: passenger, beside Tianyi
  if(occupants>=2){
-   // Jessica, passenger
    g.fillStyle(0xf0c7aa);
-   g.fillCircle(83,46,6);
+   g.fillCircle(83,47,6);
    g.fillStyle(0xd8ad65);
-   g.fillCircle(83,43,5);
+   g.fillCircle(83,44,5);
  }
 
  g.generateTexture(key,116,72);
  g.destroy();
 }
-
 function building(s,x,y,w,h,color,label){
 s.add.rectangle(x,y,w,h,color).setStrokeStyle(4,0x624b38).setDepth(2);
 s.add.rectangle(x,y-h*.24,w*.78,13,0x914c43).setDepth(3);
@@ -845,24 +843,28 @@ function update(time,delta){
 }
 function interact(){
  if(dialogOpen)return;
-if(driving){
+
+ // EXIT CAR
+ if(driving){
   driving=false;
   carSpeed=0;
   car.body.setVelocity(0,0);
 
+  // Restore Tianyi outside the car
   player.setPosition(car.x+58,car.y+22);
   player.setVisible(true);
   player.body.enable=true;
+  player.setVelocity(0,0);
 
-if(carHasJessica){
-  jessica.setVisible(false);
-  jessica.body.enable=false;
-  car.setTexture('white-toyota-two');
-}else{
-  car.setTexture('white-toyota-driver');
-}
+  // Restore Jessica only if she was inside
+  if(carHasJessica){
+   jessica.setPosition(car.x-55,car.y+25);
+   jessica.setVisible(true);
+   jessica.body.enable=true;
+   jessica.setVelocity(0,0);
+  }
 
-  // Hide all occupants when leaving the car
+  // Empty car: no visible occupants
   car.setTexture('white-toyota-empty');
 
   carHasJessica=false;
@@ -872,25 +874,61 @@ if(carHasJessica){
   $('interact').textContent='TALK 👋';
   $('quest-status').textContent='ON FOOT';
   return;
-}
- let nearCar=Phaser.Math.Distance.Between(player.x,player.y,car.x,car.y);
+ }
+
+ // ENTER CAR
+ let nearCar=Phaser.Math.Distance.Between(
+  player.x,player.y,car.x,car.y
+ );
+
  if(nearCar<125){
-  driving=true;carSpeed=0;
-  player.setVisible(false);player.body.enable=false;player.setVelocity(0,0);
-  let jessicaDistance=Phaser.Math.Distance.Between(jessica.x,jessica.y,car.x,car.y);
+  driving=true;
+  carSpeed=0;
+
+  // Hide Tianyi outside the car
+  player.setVisible(false);
+  player.body.enable=false;
+  player.setVelocity(0,0);
+
+  // Check whether Jessica is close enough to join
+  let jessicaDistance=Phaser.Math.Distance.Between(
+   jessica.x,jessica.y,car.x,car.y
+  );
+
   carHasJessica=jessica.visible && jessicaDistance<145;
-  if(carHasJessica){jessica.setVisible(false);jessica.body.enable=false;car.setTexture('white-toyota-two')}
-  else car.setTexture('white-toyota-one');
+
+  if(carHasJessica){
+   jessica.setVisible(false);
+   jessica.body.enable=false;
+   jessica.setVelocity(0,0);
+
+   // Both characters inside
+   car.setTexture('white-toyota-two');
+  }else{
+   // Tianyi alone inside
+   car.setTexture('white-toyota-driver');
+  }
+
   scene.cameras.main.startFollow(car,true,.08,.08);
+
   $('interact').textContent='EXIT CAR 🚗';
   $('quest-status').textContent='DRIVING';
   return;
  }
+
+ // NORMAL INTERACTION
  let target=objects.find(o=>o.kind===phases[phase].kind);
  if(!target)return;
- let d=Phaser.Math.Distance.Between(player.x,player.y,target.x,target.y);
- if(d<125){openQuestion()}
- else{$('quest-status').textContent='GO TO '+target.label.toUpperCase()}
+
+ let d=Phaser.Math.Distance.Between(
+  player.x,player.y,target.x,target.y
+ );
+
+ if(d<125){
+  openQuestion();
+ }else{
+  $('quest-status').textContent='GO TO '+target.label.toUpperCase();
+ }
 }
 function openQuestion(){
 if(qIndex>=phases[phase].qs.length){advancePhase();return}
