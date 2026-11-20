@@ -117,17 +117,18 @@ header{display:flex;justify-content:space-between;align-items:center;gap:10px;ma
 .menu-nav .ico{font-size:22px}
 }
  
-/* START SCREEN LAYOUT REFINEMENT */
 
-/* Align both profile columns and move them lower */
+/* START SCREEN LAYOUT REFINEMENT V2 */
+
+/* Move all four information panels further down */
 .menu-left,
 .menu-right {
   align-self: start;
-  margin-top: clamp(125px, 19vh, 175px);
+  margin-top: clamp(155px, 23vh, 205px);
   transform: none;
 }
 
-/* Keep the left and right panels aligned */
+/* Keep both columns aligned */
 .menu-left {
   grid-column: 1;
 }
@@ -136,9 +137,9 @@ header{display:flex;justify-content:space-between;align-items:center;gap:10px;ma
   grid-column: 3;
 }
 
-/* Wider, shorter Start Quest button */
+/* Slightly narrower Start Quest button */
 .menu-center {
-  width: min(440px, 100%);
+  width: min(390px, 88%);
   margin-bottom: 18px;
 }
 
@@ -146,7 +147,7 @@ header{display:flex;justify-content:space-between;align-items:center;gap:10px;ma
   width: 100%;
   min-height: 54px;
   height: 58px;
-  padding: 8px 24px;
+  padding: 8px 20px;
   font-size: clamp(19px, 2vw, 25px);
   white-space: nowrap;
   line-height: 1;
@@ -156,18 +157,17 @@ header{display:flex;justify-content:space-between;align-items:center;gap:10px;ma
 @media (max-width: 850px) {
   .menu-left,
   .menu-right {
-    margin-top: clamp(115px, 17vh, 155px);
+    margin-top: clamp(135px, 20vh, 175px);
   }
 
   .menu-center {
-    width: min(420px, 100%);
+    width: min(370px, 88%);
   }
 
   .start-quest {
     height: 54px;
     min-height: 54px;
     font-size: 21px;
-    white-space: nowrap;
   }
 }
 
@@ -188,6 +188,7 @@ header{display:flex;justify-content:space-between;align-items:center;gap:10px;ma
     font-size: 20px;
   }
 }
+
 
 </style>
 </head>
