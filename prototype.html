@@ -756,15 +756,17 @@ building(s,1750,355,300,155,0xb6c1c9,'CMA CGM · OFFICE');
 s.add.rectangle(1660,205,520,30,0x5d6872).setDepth(3);
 s.add.text(1750,285,'⚓',{fontSize:'17px',fontStyle:'bold',color:'#fff4d0'}).setOrigin(.5).setDepth(8);
 s.add.text(120,880,'🚇 METRO',{fontSize:'18px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#26364a',padding:8}).setDepth(8);
-makeToyota(s,'white-toyota-two',true);makeToyota(s,'white-toyota-one',false);
-car=s.physics.add.sprite(500,535,'white-toyota-two').setDepth(11);
+makeToyota(s,'white-toyota-empty',0);
+makeToyota(s,'white-toyota-driver',1);
+makeToyota(s,'white-toyota-two',2);
+
+car=s.physics.add.sprite(500,535,'white-toyota-empty').setDepth(11);
 car.setCollideWorldBounds(true);
 car.body.setSize(82,48).setOffset(17,12);
-car.setRotation(-Math.PI/2);
+car.setRotation(0);
 car.body.setAllowGravity(false);
 car.body.setDrag(900,900);
 car.body.setMaxVelocity(280);
-s.add.text(500,580,'WHITE TOYOTA',{fontSize:'12px',fontStyle:'bold',color:'#243348',backgroundColor:'#f6f7f5',padding:{x:6,y:3}}).setOrigin(.5).setDepth(8);
 for(let i=0;i<28;i++){let x=100+(i*173)%2050,y=300+((i*97)%1050);s.add.circle(x,y,18,0x3d8054).setDepth(3);s.add.circle(x-6,y-7,10,0x5e9c68).setDepth(3)}
 player=s.physics.add.sprite(350,520,'tianyi').setDepth(10);
 player.setCollideWorldBounds(true);
@@ -843,18 +845,34 @@ function update(time,delta){
 }
 function interact(){
  if(dialogOpen)return;
- if(driving){
-  driving=false;carSpeed=0;car.body.setVelocity(0,0);
-  player.setPosition(car.x+58,car.y+22);player.setVisible(true);player.body.enable=true;
+if(driving){
+  driving=false;
+  carSpeed=0;
+  car.body.setVelocity(0,0);
+
+  player.setPosition(car.x+58,car.y+22);
+  player.setVisible(true);
+  player.body.enable=true;
+
+if(carHasJessica){
+  jessica.setVisible(false);
+  jessica.body.enable=false;
+  car.setTexture('white-toyota-two');
+}else{
+  car.setTexture('white-toyota-driver');
+}
+
+  // Hide all occupants when leaving the car
+  car.setTexture('white-toyota-empty');
+
+  carHasJessica=false;
+
   scene.cameras.main.startFollow(player,true,.08,.08);
-  if(carHasJessica){
-   jessica.setPosition(car.x-55,car.y+25);jessica.setVisible(true);jessica.body.enable=true;
-  }
-  carHasJessica=false;car.setTexture('white-toyota-two');
+
   $('interact').textContent='TALK 👋';
   $('quest-status').textContent='ON FOOT';
   return;
- }
+}
  let nearCar=Phaser.Math.Distance.Between(player.x,player.y,car.x,car.y);
  if(nearCar<125){
   driving=true;carSpeed=0;
