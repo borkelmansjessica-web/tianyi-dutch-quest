@@ -209,6 +209,30 @@ header{display:flex;justify-content:space-between;align-items:center;gap:10px;ma
 }
 
 
+/* FINAL LOGO POSITION OVERRIDE */
+#main-menu .menu-wrap {
+  position: relative !important;
+}
+
+#main-menu .menu-wrap > .menu-brand {
+  position: absolute !important;
+  top: 12px !important;
+  right: 24px !important;
+  left: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  margin: 0 !important;
+  z-index: 100 !important;
+  width: min(440px, 42%) !important;
+}
+
+#main-menu .menu-brand-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
 </style>
 </head>
 <body>
