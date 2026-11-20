@@ -328,10 +328,10 @@ header{display:flex;justify-content:space-between;align-items:center;gap:10px;ma
   </div>
   <div class="controls">
    <div class="joystick" id="joystick"><div class="joy-knob" id="joy-knob"></div></div>
-   <div class="control-hint">Move with the joystick.<br>Computer: WASD / arrow keys</div>
+   <div class="control-hint">Walk: joystick / WASD<br>Drive: steer + accelerate</div>
    <button class="action-btn" id="interact">TALK 👋</button>
   </div>
-  <div class="muted" style="text-align:center;margin:9px">Move: WASD / arrows · Interact: E or TALK · Tablet: joystick + TALK</div>
+  <div class="muted" style="text-align:center;margin:9px">Walk: WASD / arrows · Drive: WASD / joystick · Enter/exit car: E or TALK</div>
  </div>
 </div>
 
@@ -428,7 +428,8 @@ const phases=[
 ]}
 ];
 const total=phases.reduce((n,p)=>n+p.qs.length,0);
-let scene,player,jessica,cursors,keys,game,objects=[],targetPrompt,moveVector={x:0,y:0};
+let scene,player,jessica,car,cursors,keys,game,objects=[],targetPrompt,moveVector={x:0,y:0};
+let driving=false,carHasJessica=false,carSpeed=0;
 function makeChar(s,key,jacket,hair,skin,glasses){
 let g=s.make.graphics({x:0,y:0,add:false});
 g.fillStyle(0x1c261b,.3);g.fillEllipse(32,68,40,13);
@@ -441,6 +442,27 @@ else{g.fillStyle(0x30231d);g.fillCircle(27,25,1.5);g.fillCircle(37,25,1.5)}
 g.fillStyle(0x202632);g.fillEllipse(23,64,13,7);g.fillEllipse(41,64,13,7);
 g.generateTexture(key,64,76);g.destroy()
 }
+
+function makeToyota(s,key,withPassenger=true){
+ let g=s.make.graphics({x:0,y:0,add:false});
+ // soft shadow, wheels and white body, viewed from above
+ g.fillStyle(0x17202a,.28);g.fillEllipse(58,36,108,55);
+ g.fillStyle(0x20252c);g.fillRoundedRect(9,7,15,19,5);g.fillRoundedRect(92,7,15,19,5);
+ g.fillRoundedRect(9,47,15,19,5);g.fillRoundedRect(92,47,15,19,5);
+ g.fillStyle(0xf7f8f5);g.fillRoundedRect(14,2,88,68,19);
+ g.lineStyle(2,0xb9c1c8);g.strokeRoundedRect(14,2,88,68,19);
+ g.fillStyle(0x9bb8c5);g.fillRoundedRect(26,9,64,19,7);
+ g.fillStyle(0x263746);g.fillRoundedRect(27,42,62,17,6);
+ g.fillStyle(0xdce8eb);g.fillRoundedRect(30,30,56,10,3);
+ g.fillStyle(0xfff2b8);g.fillRoundedRect(19,4,14,4,2);g.fillRoundedRect(83,4,14,4,2);
+ g.fillStyle(0xe45b50);g.fillRoundedRect(19,64,13,4,2);g.fillRoundedRect(83,64,13,4,2);
+ // two tiny visible occupants behind the windscreen
+ g.fillStyle(0xe7b994);g.fillCircle(46,18,6);
+ g.fillStyle(0x24201e);g.fillCircle(46,15,5);
+ if(withPassenger){g.fillStyle(0xf0c7aa);g.fillCircle(70,18,6);g.fillStyle(0xd8ad65);g.fillCircle(70,15,5)}
+ g.generateTexture(key,116,72);g.destroy();
+}
+
 function building(s,x,y,w,h,color,label){
 s.add.rectangle(x,y,w,h,color).setStrokeStyle(4,0x624b38).setDepth(2);
 s.add.rectangle(x,y-h*.24,w*.78,13,0x914c43).setDepth(3);
@@ -493,34 +515,94 @@ objects=[
 targetPrompt=s.add.text(480,480,'',{fontSize:'15px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#243348',padding:{x:8,y:5}}).setOrigin(.5).setDepth(20).setScrollFactor(0)
 }
 function update(time,delta){
-if(!started)return;
-let dx=0,dy=0;
-if(cursors.left.isDown||keys.A.isDown)dx=-1;
-if(cursors.right.isDown||keys.D.isDown)dx=1;
-if(cursors.up.isDown||keys.W.isDown)dy=-1;
-if(cursors.down.isDown||keys.S.isDown)dy=1;
-dx+=moveVector.x;dy+=moveVector.y;
-let len=Math.hypot(dx,dy)||1;
-player.setVelocity(dx/len*190,dy/len*190);
-if(Phaser.Input.Keyboard.JustDown(keys.E))interact();
-if(phase===0||phase===1||phase>=3){
-if(phase===3&&jessica.x<600){jessica.setPosition(690,450)}
-let dist=Phaser.Math.Distance.Between(player.x,player.y,jessica.x,jessica.y);
-if(dist>65){let a=Phaser.Math.Angle.Between(jessica.x,jessica.y,player.x,player.y);jessica.setVelocity(Math.cos(a)*Math.min(150,dist*2),Math.sin(a)*Math.min(150,dist*2))}
-else jessica.setVelocity(0,0)
-}else{jessica.setVelocity(0,0);jessica.setPosition(350,520)}
-let target=objects.find(o=>o.kind===phases[phase].kind);
-let d=Phaser.Math.Distance.Between(player.x,player.y,target.x,target.y);
-if(d<105){targetPrompt.setText('E / TALK: '+target.label);targetPrompt.setVisible(true)}
-else targetPrompt.setVisible(false)
+ if(!started)return;
+ let dx=0,dy=0;
+ if(cursors.left.isDown||keys.A.isDown)dx=-1;
+ if(cursors.right.isDown||keys.D.isDown)dx=1;
+ if(cursors.up.isDown||keys.W.isDown)dy=-1;
+ if(cursors.down.isDown||keys.S.isDown)dy=1;
+ if(driving){
+  // Steering plus forward/reverse. The mobile joystick uses up/down to drive
+  // and left/right to steer.
+  let steer=dx;
+  let throttle=-dy;
+  if(Math.abs(steer)>0.05 && Math.abs(carSpeed)>4){
+   car.rotation+=steer*(carSpeed>=0?1:-1)*0.045*(delta/16.67);
+  }
+  if(Math.abs(throttle)>0.05)carSpeed+=throttle*5.2*(delta/16.67);
+  else carSpeed*=Math.pow(0.985,delta/16.67);
+  carSpeed=Phaser.Math.Clamp(carSpeed,-125,245);
+  car.body.setVelocity(Math.cos(car.rotation)*carSpeed,Math.sin(car.rotation)*carSpeed);
+  player.setVelocity(0,0);
+  if(carHasJessica){jessica.setVelocity(0,0);jessica.setVisible(false)}
+  scene.cameras.main.startFollow(car,true,.08,.08);
+ }else{
+  dx+=moveVector.x;dy+=moveVector.y;
+  let len=Math.hypot(dx,dy)||1;
+  player.setVelocity(dx/len*190,dy/len*190);
+  if(phase===0||phase===1||phase>=3){
+   if(phase===3&&jessica.x<600)jessica.setPosition(690,450);
+   let dist=Phaser.Math.Distance.Between(player.x,player.y,jessica.x,jessica.y);
+   if(dist>65){let a=Phaser.Math.Angle.Between(jessica.x,jessica.y,player.x,player.y);jessica.setVelocity(Math.cos(a)*Math.min(150,dist*2),Math.sin(a)*Math.min(150,dist*2))}
+   else jessica.setVelocity(0,0);
+  }else{jessica.setVelocity(0,0);jessica.setPosition(350,520)}
+  scene.cameras.main.startFollow(player,true,.08,.08);
+ }
+ if(Phaser.Input.Keyboard.JustDown(keys.E))interact();
+ let activeX=driving?car.x:player.x,activeY=driving?car.y:player.y;
+ if(!driving && (phase===0||phase===1||phase>=3)){
+  // If Jessica is not in the car, she follows the car while it is being driven.
+ } 
+ let target=objects.find(o=>o.kind===phases[phase].kind);
+ let d=Phaser.Math.Distance.Between(activeX,activeY,target.x,target.y);
+ if(driving){
+  let carDist=Phaser.Math.Distance.Between(activeX,activeY,car.x,car.y);
+  if(carDist<1){targetPrompt.setText('E: EXIT CAR');targetPrompt.setVisible(true)}
+  else if(d<115){targetPrompt.setText('E / TALK: '+target.label);targetPrompt.setVisible(true)}
+  else{targetPrompt.setText('Driving · E to exit');targetPrompt.setVisible(true)}
+ }else if(Phaser.Math.Distance.Between(player.x,player.y,car.x,car.y)<115){
+  targetPrompt.setText('E: ENTER WHITE TOYOTA');targetPrompt.setVisible(true)
+ }else if(d<105){targetPrompt.setText('E / TALK: '+target.label);targetPrompt.setVisible(true)}
+ else targetPrompt.setVisible(false);
+ // A non-passenger Jessica keeps following the vehicle on foot.
+ if(driving && !carHasJessica && (phase===0||phase===1||phase>=3)){
+  let dist=Phaser.Math.Distance.Between(car.x,car.y,jessica.x,jessica.y);
+  if(dist>65){let a=Phaser.Math.Angle.Between(jessica.x,jessica.y,car.x,car.y);jessica.setVelocity(Math.cos(a)*Math.min(155,dist*2),Math.sin(a)*Math.min(155,dist*2))}
+  else jessica.setVelocity(0,0);
+ }
 }
 function interact(){
-if(dialogOpen)return;
-let target=objects.find(o=>o.kind===phases[phase].kind);
-if(!target)return;
-let d=Phaser.Math.Distance.Between(player.x,player.y,target.x,target.y);
-if(d<125){openQuestion()}
-else{$('quest-status').textContent='GO TO '+target.label.toUpperCase()}
+ if(dialogOpen)return;
+ if(driving){
+  driving=false;carSpeed=0;car.body.setVelocity(0,0);
+  player.setPosition(car.x+58,car.y+22);player.setVisible(true);player.body.enable=true;
+  scene.cameras.main.startFollow(player,true,.08,.08);
+  if(carHasJessica){
+   jessica.setPosition(car.x-55,car.y+25);jessica.setVisible(true);jessica.body.enable=true;
+  }
+  carHasJessica=false;car.setTexture('white-toyota-two');
+  $('interact').textContent='TALK 👋';
+  $('quest-status').textContent='ON FOOT';
+  return;
+ }
+ let nearCar=Phaser.Math.Distance.Between(player.x,player.y,car.x,car.y);
+ if(nearCar<125){
+  driving=true;carSpeed=0;
+  player.setVisible(false);player.body.enable=false;player.setVelocity(0,0);
+  let jessicaDistance=Phaser.Math.Distance.Between(jessica.x,jessica.y,car.x,car.y);
+  carHasJessica=jessica.visible && jessicaDistance<145;
+  if(carHasJessica){jessica.setVisible(false);jessica.body.enable=false;car.setTexture('white-toyota-two')}
+  else car.setTexture('white-toyota-one');
+  scene.cameras.main.startFollow(car,true,.08,.08);
+  $('interact').textContent='EXIT CAR 🚗';
+  $('quest-status').textContent='DRIVING';
+  return;
+ }
+ let target=objects.find(o=>o.kind===phases[phase].kind);
+ if(!target)return;
+ let d=Phaser.Math.Distance.Between(player.x,player.y,target.x,target.y);
+ if(d<125){openQuestion()}
+ else{$('quest-status').textContent='GO TO '+target.label.toUpperCase()}
 }
 function openQuestion(){
 if(qIndex>=phases[phase].qs.length){advancePhase();return}
