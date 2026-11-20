@@ -1,5 +1,6 @@
+
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -26,105 +27,231 @@ header{display:flex;justify-content:space-between;align-items:center;gap:10px;ma
 .intro h1{font-size:clamp(26px,5vw,38px);color:#ffe19a}.intro .sub{color:#d8e2f2;line-height:1.55}.intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.intro-card{background:#ffffff0c;border:1px solid #ffffff25;border-radius:13px;padding:12px}.intro-card strong{display:block;color:#ffe19a;margin-bottom:5px}.meter{height:9px;background:#3b4960;border-radius:20px;overflow:hidden;margin-top:8px}.meter i{display:block;height:100%;background:linear-gradient(90deg,#a3e635,#f6d365);width:0}
 .complete{text-align:center}.complete .crown{font-size:48px}.muted{color:#b8c5d8;font-size:13px;line-height:1.5}
 @media(min-width:760px){.controls{display:none}}@media(max-width:560px){.shell{padding:8px}.chip{padding:7px 9px;font-size:11px}#game{min-height:250px}.intro-grid{grid-template-columns:1fr 1fr}.dialog{padding:16px}.intro{padding:17px}}
+
+/* CINEMATIC MAIN MENU */
+#main-menu{position:fixed;inset:0;z-index:50;display:flex;align-items:stretch;justify-content:center;background:#101827;overflow:auto}
+.menu-art{position:absolute;inset:0;background-image:linear-gradient(90deg,#07101b66,#07101b00 48%,#07101b22),url('assets/start-screen.png');background-size:cover;background-position:center}
+.menu-layout{position:relative;z-index:1;width:min(1500px,100%);min-height:100vh;padding:24px;display:grid;grid-template-columns:minmax(230px,1fr) minmax(250px,1.2fr) minmax(270px,1fr);grid-template-rows:auto 1fr auto;gap:16px}
+.menu-brand{grid-column:2/4;text-align:right;color:#fff0c2;font-family:Georgia,serif;font-size:clamp(27px,4vw,52px);font-weight:bold;text-shadow:0 3px 8px #000}
+.menu-brand small{display:block;font-size:clamp(14px,2vw,24px);font-style:italic;color:#fff}
+.menu-left{grid-column:1;grid-row:2;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.menu-right{grid-column:3;grid-row:2;display:flex;flex-direction:column;justify-content:center;gap:12px}
+.menu-card{background:linear-gradient(145deg,#17243beF,#111a2beF);border:2px solid #c18b3d;border-radius:16px;padding:14px;box-shadow:0 7px 20px #0008;color:white}
+.menu-card h3{font-family:Georgia,serif;color:#ffe1a0;font-size:20px;margin:0 0 8px;border-bottom:1px solid #79613f;padding-bottom:7px}
+.menu-card p{font-size:14px;line-height:1.35;margin:5px 0}
+.menu-card .gold{color:#ffd45e;font-weight:bold}
+.menu-character{display:flex;align-items:center;gap:12px}
+.menu-character img{width:82px;height:100px;object-fit:contain;image-rendering:pixelated}
+.menu-character .details{flex:1}
+.menu-character h2{font-family:Georgia,serif;font-style:italic;color:#ffe1a0;margin:0 0 8px}
+.menu-character p{margin:5px 0}
+.menu-center{grid-column:2;grid-row:2;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:12px}
+.menu-start{border:3px solid #ffe19a;border-radius:60px;padding:18px 42px;min-width:280px;background:linear-gradient(#ffdb73,#b96b18);color:white;font-family:Georgia,serif;font-weight:bold;font-size:clamp(22px,3vw,36px);text-shadow:0 2px 4px #6b370c;box-shadow:0 0 20px #ffbd45,0 5px 0 #75420e;cursor:pointer}
+.menu-start:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.menu-nav{grid-column:1/4;grid-row:3;display:grid;grid-template-columns:repeat(6,1fr);background:linear-gradient(145deg,#17243bf5,#111a2bf5);border:2px solid #c18b3d;border-radius:18px;padding:10px;box-shadow:0 8px 24px #0009}
+.menu-nav button{background:transparent;border:0;border-right:1px solid #59647a;color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:15px;cursor:pointer;padding:8px 3px}
+.menu-nav button:last-child{border-right:0}
+.menu-nav button .nav-icon{font-size:30px;filter:drop-shadow(0 2px 2px #000)}
+.menu-nav button:hover{color:#ffdc8d;background:#ffffff0b}
+.menu-panel{position:fixed;inset:0;z-index:70;background:#030914d9;display:none;align-items:center;justify-content:center;padding:16px}
+.menu-panel.show{display:flex}
+.menu-panel-box{width:min(520px,100%);background:linear-gradient(145deg,#26354e,#151f30);border:2px solid #c18b3d;border-radius:18px;padding:22px;box-shadow:0 18px 50px #000}
+.menu-panel-box h2{font-family:Georgia,serif;color:#ffe1a0;margin:0 0 12px}
+.menu-panel-box p{line-height:1.55;color:#e5eaf2}
+.menu-panel-box button{width:100%;border:0;border-radius:10px;background:#e9b84f;padding:12px;font-weight:bold;margin-top:12px;cursor:pointer}
+body.playing #main-menu{display:none}
+@media(max-width:850px){
+.menu-layout{grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto;padding:12px}
+.menu-brand{grid-column:1/3;text-align:center}
+.menu-left{grid-column:1;grid-row:2}
+.menu-right{grid-column:2;grid-row:2}
+.menu-center{grid-column:1/3;grid-row:3;padding:10px}
+.menu-nav{grid-column:1/3;grid-row:4}
+.menu-layout{grid-template-rows:auto 1fr auto auto}
+.menu-character img{width:58px;height:75px}
+.menu-card{padding:9px}
+.menu-card h3{font-size:16px}
+.menu-card p{font-size:12px}
+.menu-nav button{font-size:11px}
+.menu-nav button .nav-icon{font-size:22px}
+.menu-start{min-width:220px;padding:13px 24px}
+}
+@media(max-width:520px){
+.menu-layout{display:flex;flex-direction:column;min-height:100vh}
+.menu-brand{font-size:27px}
+.menu-left{display:grid;grid-template-columns:1fr 1fr}
+.menu-right{display:grid;grid-template-columns:1fr}
+.menu-center{order:3}
+.menu-nav{order:4;grid-template-columns:repeat(3,1fr)}
+.menu-nav button:nth-child(3){border-right:0}
+.menu-nav button{border-bottom:1px solid #59647a}
+.menu-nav button:nth-child(n+4){border-bottom:0}
+.menu-card p{font-size:11px}
+.menu-character img{width:50px;height:65px}
+}
 </style>
 </head>
 <body>
+<div id="main-menu">
+<div class="menu-art"></div>
+<div class="menu-layout">
+<div class="menu-brand">Tianyi's Dutch Quest <span>🇧🇪</span><small>A Journey to Belgium</small></div>
+<div class="menu-left">
+<div class="menu-card">
+<h3>Game Overview</h3>
+<p>Learn Dutch with Tianyi through real-life adventures in Qingdao! Complete daily quests, practice vocabulary and grammar, and get one step closer to your life together in Belgium. ♡</p>
+</div>
+<div class="menu-card">
+<h3>Current Chapter</h3>
+<p>Chapter 1</p><p class="gold">Daily Life in Qingdao</p><p>Let's have a good day! 🤩</p>
+<div style="margin-top:10px;font-weight:bold">Progress <span id="menu-percent" style="float:right">0%</span></div>
+<div class="meter"><i id="menu-progress-bar"></i></div>
+<p>🏆 XP <span id="menu-xp" style="float:right">0 XP</span></p>
+<p>⭐ Level <span id="menu-level" style="float:right">Lv.1</span></p>
+</div>
+<div class="menu-card">
+<h3>Next Chapter</h3>
+<p>🚧 Chapter 2</p><p class="gold">Under Construction</p>
+</div>
+</div>
+<div class="menu-center">
+<button class="menu-start" id="menu-start">▶ Start Quest</button>
+</div>
+<div class="menu-right">
+<div class="menu-card menu-character">
+<img src="assets/tianyi_four_poses_transparent.png" alt="Tianyi">
+<div class="details"><h2>Tianyi</h2><p>⚓ Maritime sector (Vessel Operations)</p><p>🎓 Master Public Administration</p><p>🎮 Games (LoL, Brawl Stars)</p><p><span class="gold">Goal:</span> Learn Dutch and relocate to Belgium.</p></div>
+</div>
+<div class="menu-card menu-character">
+<img src="assets/Jessica_four_poses_transparent(1).png" alt="Jessica">
+<div class="details"><h2>Jessica</h2><p>♡ Your partner and travel buddy</p><p>💻 Public servant</p><p>📷 101 quirky hobbies which she can't decide on</p><p><span class="gold">Goal:</span> Build a shared life together in Belgium.</p></div>
+</div>
+</div>
+<div class="menu-nav">
+<button data-panel="Story"><span class="nav-icon">📖</span>Story</button>
+<button data-panel="Minigames"><span class="nav-icon">🎮</span>Minigames</button>
+<button data-panel="Missions"><span class="nav-icon">🏆</span>Missions</button>
+<button data-panel="Grammar"><span class="nav-icon">📚</span>Grammar</button>
+<button data-panel="Vocab"><span class="nav-icon">📚</span>Vocab</button>
+<button data-panel="Progress"><span class="nav-icon">📊</span>Progress</button>
+</div>
+</div>
+</div>
+
+<div class="menu-panel" id="menu-panel">
+<div class="menu-panel-box">
+<h2 id="menu-panel-title">Story</h2>
+<div id="menu-panel-content"></div>
+<button id="menu-panel-close">Back to Main Menu</button>
+</div>
+</div>
+
 <div class="shell">
-<header><div class="brand">⚔️ TIAN YI'S <span>DUTCH QUEST</span></div><div class="hud"><div class="chip">📍 QINGDAO</div><div class="chip">📖 CHAPTER 1</div><div class="chip">⭐ <span id="xp">0</span> XP</div><div class="chip">👑 LEVEL <span id="level">1</span></div></div></header>
+<header>
+<div class="brand">Tianyi's <span>Dutch Quest</span></div>
+<div class="hud">
+<div class="chip">⭐ XP: <span id="xp">0</span></div>
+<div class="chip">🔥 Completed: <span id="completed">0</span>/<span id="total">0</span></div>
+</div>
+</header>
 <div class="stage"><div id="game"></div></div>
-<div class="quest-banner"><div><div class="quest-name" id="quest-name">🏠 Daily life in Qingdao</div><small id="quest-copy">Start bij jullie appartement.</small></div><div class="quest-status" id="quest-status">KLAAR OM TE STARTEN</div></div>
-<div class="controls"><div class="joystick" id="joystick"><div class="joy-knob" id="joy-knob"></div></div><div class="control-hint">Beweeg met joystick.<br>Computer: WASD / pijltjestoetsen</div><button class="action-btn" id="interact">PRAAT 👋</button></div>
-<div class="muted" style="text-align:center;margin:9px">Bewegen: WASD / pijltjes · Interactie: E of PRAAT · Op tablet: joystick + PRAAT</div>
+<div class="quest-banner">
+<div><div class="quest-name" id="quest-name">Home</div><small id="quest-copy">Welcome to Chapter 1</small></div>
+<div class="quest-status" id="quest-status">READY</div>
+</div>
+<div class="controls">
+<div class="joystick" id="joystick"><div class="joy-knob" id="joy-knob"></div></div>
+<div class="control-hint">Use WASD / arrows or joystick to move.<br>Press E or TALK near a location.</div>
+<button class="action-btn" id="interact">TALK</button>
+</div>
 </div>
 
-<div class="intro-backdrop show" id="intro">
- <div class="intro">
-  <div class="dialog-tag">EEN PERSOONLIJKE TAALAVONTUUR · QINGDAO → BELGIË</div>
-  <h1>Tianyi's Dutch Quest 🇧🇪</h1>
-  <p class="sub">Leer Nederlands door jullie dagelijkse leven na te spelen. Help Tianyi door herkenbare situaties, praat met collega's, bestel koffie en verzamel Jessica's pakketjes. Elke missie brengt jullie een stap dichter bij een gezamenlijk leven in België.</p>
-  <div class="intro-grid">
-   <div class="intro-card"><strong>👑 Tianyi · Koning</strong>Speler en held van dit avontuur.<br><span class="muted">Moedertaal: Chinees · Nederlands: A1/A2</span></div>
-   <div class="intro-card"><strong>👑 Jessica · Koningin</strong>Companion, gesprekspartner en cheerleader.<br><span class="muted">Altijd in zijn team ❤️</span></div>
-  </div>
-  <div class="intro-card"><strong>Huidige voortgang</strong><span>Chapter 1 van 4 · Daily life in Qingdao</span><div class="meter"><i id="intro-progress"></i></div><span class="muted" id="progress-label">0% voltooid · 0 XP</span></div>
-  <div class="intro-grid">
-   <div class="intro-card"><strong>📍 Chapter 1</strong>Daily life in Qingdao<br><span class="muted">Thuis · Metro · CMA CGM · Luckin Coffee · Pakketjes</span></div>
-   <div class="intro-card"><strong>🔒 Chapter 2</strong>Christmas in Belgium<br><span class="muted">Onder constructie</span></div>
-  </div>
-  <p class="sub">In deze eerste volledige quest oefen je korte gesprekken, woordenschat en vooral de Nederlandse werkwoordsvormen. Na elk antwoord krijg je uitleg in het Engels én Chinees. Fouten kosten geen XP.</p>
-  <button class="primary" id="start-game">START CHAPTER 1 ▶</button>
- </div>
+<div class="dialog-backdrop" id="dialog-backdrop">
+<div class="dialog">
+<div class="dialog-tag" id="dialog-tag">CHAPTER 1</div>
+<h2 id="dialog-title">Location</h2>
+<p id="dialog-text"></p>
+<div id="speaker"></div>
+<div class="answers" id="answers"></div>
+<div class="result" id="result"></div>
+<div class="explain" id="explain"><strong>Explanation</strong><div id="explain-en"></div><small id="explain-zh"></small></div>
+<button class="close-btn" id="close-dialog">Next</button>
 </div>
-
-<div class="dialog-backdrop" id="dialog-backdrop"><div class="dialog">
- <div class="dialog-tag" id="dialog-tag">CHAPTER 1 · DAILY LIFE</div><h2 id="dialog-title"></h2><p id="dialog-text"></p><p><strong id="speaker">Tianyi:</strong> Kies je antwoord:</p>
- <div class="answers" id="answers"></div><div class="result" id="result"></div>
- <div class="explain" id="explain"><strong>Why? (English)</strong><div id="explain-en"></div><small><strong>语法解释 (中文)</strong><br><span id="explain-zh"></span></small></div>
- <button class="close-btn" id="close-dialog" disabled>Verder →</button>
-</div></div>
-<div class="complete-backdrop" id="complete"><div class="complete"><div class="crown">👑🏆👑</div><div class="dialog-tag">CHAPTER 1 COMPLETED</div><h1>Gefeliciteerd, koning Tianyi!</h1><p>Je hebt Daily life in Qingdao uitgespeeld. Jessica is trots op je, baby! ❤️</p><h1 style="color:#b5ed52">+<span id="earned">0</span> XP</h1><p>Weer een stap dichter bij een gezamenlijk leven in België. 🇧🇪</p><div class="intro-card"><strong>🔒 Chapter 2 · Christmas in Belgium</strong><span class="muted">Onder constructie. Het volgende avontuur wacht!</span></div><button class="primary" onclick="location.reload()">TERUG NAAR HET STARTSCHERM</button></div></div>
+</div>
+<div class="intro-backdrop" id="intro">
+<div class="intro">
+<h1>Welcome, koning Tianyi!</h1>
+<p class="sub">Your Dutch adventure starts in Qingdao. Learn through everyday conversations, one quest at a time.</p>
+<div class="intro-grid">
+<div class="intro-card"><strong>Chapter 1</strong>Daily Life in Qingdao</div>
+<div class="intro-card"><strong>Goal</strong>Build your life together in Belgium</div>
+</div>
+<p class="muted">Complete quests, earn XP and improve your Dutch step by step.</p>
+<button class="primary" id="start-game">Start Chapter 1</button>
+</div>
+</div>
+<div class="complete-backdrop" id="complete">
+<div class="complete">
+<div class="crown">👑</div>
+<h1>Goed gedaan, koning Tianyi!</h1>
+<p>You completed Chapter 1.</p>
+<p class="muted">Jessica is proud of you. ❤️</p>
+<p>XP earned: <strong id="earned">0</strong></p>
+</div>
+</div>
 
 <script>
 (()=>{
 const $=id=>document.getElementById(id);
-let xp=Number(localStorage.getItem('tianyiQuestXP')||0), earned=0, qIndex=0, phase=0, dialogOpen=false, answered=false, nearTarget=null, started=false;
-$('xp').textContent=xp;$('level').textContent=Math.floor(xp/100)+1;$('progress-label').textContent=`0% voltooid · ${xp} XP`;
+let xp=Number(localStorage.getItem('tianyiQuestXP')||0),completed=Number(localStorage.getItem('tianyiQuestCompleted')||0),earned=0,phase=0,qIndex=0,answered=false,dialogOpen=false,started=false;
 const phases=[
- {place:'🏠 Thuis · ochtend',qs:[
-  q('Jessica','Baby, kun je mij een koffie maken?','我可以给你做一杯咖啡吗？',['Ja, ik maak koffie voor je.','Ja, ik maken koffie voor je.','Ja, ik ben maak koffie.'],0,'After “ik”, use the verb stem: maken → maak.','“Ik”后面使用动词词干：maken 去掉 -en，变成 maak。'),
-  q('Jessica','Wanneer ga je douchen?','你什么时候去洗澡？',['Ik ga om acht uur douchen.','Ik gaat om acht uur douchen.','Ik om acht uur gaat douchen.'],0,'With “ik”, use ga, not gaat. In “gaan douchen”, the second verb stays at the end.','主语是 ik 时用 ga，不用 gaat。两个动词一起使用时，douchen 放在句末。'),
-  q('Jessica','Zal ik je hemd strijken?','我帮你熨衬衫好吗？',['Ja, dat zou fijn zijn.','Ja, dat zijn fijn.','Ja, ik zou fijn is.'],0,'“Dat zou fijn zijn” is a polite, natural response. The infinitive zijn comes at the end.','“Dat zou fijn zijn”是自然、礼貌的回答。情态动词 zou 后面用动词原形 zijn。')
- ]},
- {place:'🚇 Naar de metro',qs:[
-  q('Jessica','Tianyi vertrekt naar zijn werk. Wat zeg je tegen Jessica?','天一出门去上班时，怎么跟杰西卡道别？',['Tot vanavond, mijn koningin!','Goedemorgen gisteren!','Ik ben naar werk gisteren.'],0,'Use “Tot vanavond” to say goodbye until this evening. “Mijn koningin” means my queen.','“Tot vanavond”表示今晚见。 “mijn koningin”是“我的女王”。'),
-  q('Conducteur','Goedemorgen! Waar ga je vandaag naartoe?','早上好！你今天要去哪里？',['Ik ga naar mijn werk.','Ik gaat naar mijn werk.','Ik naar mijn werk ga.'],0,'“Ik ga” uses the first-person form. In a main clause, the conjugated verb is in second position.','“Ik”搭配“ga”。在荷兰语陈述句中，变位动词通常位于第二位。')
- ]},
- {place:'⚓ CMA CGM · haven terminal',qs:[
-  q('Collega','Goedemorgen Tianyi, klaar voor een nieuwe dag op het werk?','早上好，天一，准备好开始新的一天了吗？',['Ja, ik ben er klaar voor.','Ja, ik is klaar.','Ja, ik klaar ben.'],0,'“Ik ben” is the correct form of zijn. “Er klaar voor zijn” means to be ready for it.','“zijn”的 ik 形式是“ben”。“Er klaar voor zijn”表示“准备好了”。'),
-  q('Collega','Aan welke terminal werk je vandaag?','你今天在哪个码头工作？',['Ik werk vandaag aan de exportterminal.','Ik werkt vandaag aan de exportterminal.','Ik vandaag werk aan exportterminal.'],0,'With “ik”, use werk. The -t ending is used with hij/zij/het: hij werkt.','主语是 ik 时用 werk。hij/zij/het 通常加 -t：hij werkt。'),
-  q('Collega','Het schip komt om tien uur aan. Wat zeg je?','船十点到。你怎么回应？',['Dan controleer ik de planning.','Dan controleert ik de planning.','Dan ik controleer de planning.'],0,'“Dan” at the beginning is followed by the conjugated verb: Dan controleer ik…','句子以“Dan”开头时，变位动词放在主语前：Dan controleer ik…'),
-  q('Collega','Wat doe je als eerste bij vessel operations?','船舶运营工作中，你首先做什么？',['Ik controleer de scheepsplanning.','Ik controleert de scheepsplanning.','Ik controleren de scheepsplanning.'],0,'The infinitive controleren becomes controleer with “ik”. “Scheepsplanning” means vessel schedule/planning.','动词原形 controleren 与 ik 搭配时变成 controleer。“scheepsplanning”指船舶计划。'),
-  q('Collega','Is de lading al klaar?','货物准备好了吗？',['Nee, de lading is nog niet klaar.','Nee, de lading zijn nog niet klaar.','Nee, de lading ben nog niet klaar.'],0,'“De lading” is singular, so use is. “Nog niet” means not yet.','“De lading”是单数，所以用“is”。“nog niet”表示“还没有”。'),
-  q('Collega','Kun je de kapitein even bellen?','你能给船长打个电话吗？',['Ja, ik bel hem meteen.','Ja, ik belt hem meteen.','Ja, ik bellen hem meteen.'],0,'With “ik”, bel is the correct verb form. “Meteen” means immediately.','主语是 ik 时用 bel。“meteen”意思是“马上”。'),
-  q('Collega','Hoe was de overdracht met de vorige ploeg?','和上一班的交接怎么样？',['De overdracht was goed.','De overdracht waren goed.','De overdracht is gisteren goed geweest morgen.'],0,'“De overdracht” is singular, so the past tense is was.','“De overdracht”是单数，过去时用“was”，不用“waren”。'),
-  q('Collega','Bedankt voor vandaag. Je werkdag zit erop, tot morgen!','谢谢你今天的工作。下班了，明天见！',['Dank je wel. Tot morgen!','Dank jij wel. Tot gisteren!','Ik dank morgen tot.'],0,'“Dank je wel” is a natural way to say thank you. “Tot morgen” means see you tomorrow.','“Dank je wel”是自然的感谢表达。“Tot morgen”表示明天见。')
- ]},
- {place:'☕ Luckin Coffee',qs:[
-  q('Jessica','Baby, hoe was het op je werk?','宝贝，你今天上班怎么样？',['Het was druk, maar goed.','Het waren druk, maar goed.','Ik ben druk gisteren.'],0,'Use was with the singular “het”. “Druk” means busy.','“het”是单数，所以用“was”。“druk”表示忙碌。'),
-  q('Jessica','Laten we koffie bestellen! Wat zeg je tegen de medewerker?','我们点咖啡吧！你怎么跟店员说？',['Ik wil graag een latte, alstublieft.','Ik graag een latte wil.','Ik wilt graag latte.'],0,'“Ik wil graag…” is a polite way to order. With ik, use wil, not wilt.','“Ik wil graag…”是礼貌点单方式。主语 ik 用 wil，不用 wilt。'),
-  q('Medewerker','Welke maat wil je: klein, middel of groot?','你要什么杯型：小、中还是大？',['Een middelgrote, alstublieft.','Een middelgrootte, alstublieft.','Ik wil middel zijn.'],0,'“Middelgroot” is the adjective for medium-sized. “Een middelgrote” refers to a medium-sized drink.','“middelgroot”表示中杯大小。“Een middelgrote”可指一杯中杯饮料。'),
-  q('Medewerker','Wil je havermelk of gewone melk?','你要燕麦奶还是普通牛奶？',['Met havermelk, graag.','Ik met havermelk graag wil.','Havermelk ben graag.'],0,'“Met havermelk, graag” is a short, natural order. “Met” means with.','“Met havermelk, graag”是简短自然的点单表达。“met”意思是“加/用”。'),
-  q('Jessica','Zullen we hier even zitten?','我们在这里坐一会儿好吗？',['Ja, laten we daar zitten.','Ja, laat we daar zitten.','Ja, we zitten daar gisteren.'],0,'“Laten we” is the fixed form for “let’s”. The verb after it stays infinitive.','“Laten we”是“我们一起……”的固定表达，后面的动词用原形。')
- ]},
- {place:'📦 Pakketpunt · 10 pakketjes',qs:[
-  q('Medewerker','Pakket 1/10: Van wie is dit pakket?','第1/10个包裹：这个包裹是谁的？',['Dit pakket is van Jessica.','Deze pakket is van Jessica.','Dit pakket zijn van Jessica.'],0,'“Pakket” is a het-word, so use dit. “Van Jessica” means belonging to Jessica.','“Pakket”是 het-名词，所以用 dit。“Van Jessica”表示属于杰西卡。'),
-  q('Medewerker','Pakket 2/10: Wil je je naam spellen?','第2/10个包裹：你能拼一下你的名字吗？',['Ja, natuurlijk. J-E-S-S-I-C-A.','Ja, natuurlijk. Ik spellen Jessica.','Ja, natuurlijk. Mijn naam spell.'],0,'“Wil je…?” is a question with the verb before the subject. “Spellen” means to spell.','“Wil je…?”疑问句中动词放在主语前。“Spellen”意思是拼写。'),
-  q('Medewerker','Pakket 3/10: Heb je een afhaalcode?','第3/10个包裹：你有取件码吗？',['Ja, hier is de code.','Ja, hier zijn de code.','Ja, hier de code is.'],0,'“De code” is singular, so say “hier is de code”.','“De code”是单数，所以说“hier is de code”。'),
-  q('Medewerker','Pakket 4/10: Voor wie kom je de pakketjes ophalen?','第4/10个包裹：你来替谁取包裹？',['Ik kom ze voor Jessica ophalen.','Ik komt ze voor Jessica ophalen.','Ik ze ophalen voor Jessica kom.'],0,'With “ik”, use kom. In “komen ophalen”, the second verb stays at the end.','主语 ik 搭配 kom。在“komen ophalen”结构中，第二个动词放在句末。'),
-  q('Medewerker','Pakket 5/10: Hoeveel pakketjes heb je vandaag?','第5/10个包裹：你今天有多少个包裹？',['Ik heb er tien.','Ik heeft er tien.','Ik ben tien pakketjes.'],0,'Use “ik heb”. “Er tien” avoids repeating the noun pakketjes.','使用“ik heb”。“er tien”可以避免重复名词 pakketjes。'),
-  q('Medewerker','Pakket 6/10: Dit pakket is zwaar. Kun je het dragen?','第6/10个包裹：这个包裹很重。你能拿吗？',['Ja, ik kan het dragen.','Ja, ik kan het draagt.','Ja, ik kunnen het dragen.'],0,'After the modal verb kan, use the infinitive dragen at the end.','情态动词 kan 后面使用动词原形 dragen，并放在句末。'),
-  q('Medewerker','Pakket 7/10: Wil je een tas?','第7/10个包裹：你需要一个袋子吗？',['Nee, dank je. Ik heb een tas bij me.','Nee, dank je. Ik heeft een tas.','Nee, dank je. Ik een tas heb bij me.'],0,'“Ik heb” is the correct form. “Bij me” means with me.','“Ik”搭配“heb”。“Bij me”表示随身带着。'),
-  q('Medewerker','Pakket 8/10: Je moet hier tekenen. Wat zeg je?','第8/10个包裹：你需要在这里签字。你怎么回答？',['Natuurlijk, waar moet ik tekenen?','Natuurlijk, waar ik moet tekenen?','Natuurlijk, waar moet tekenen ik?'],0,'In a question, the verb comes before the subject: waar moet ik…?','疑问句中动词放在主语前：waar moet ik…?'),
-  q('Medewerker','Pakket 9/10: Alles is compleet. Wat zeg je?','第9/10个包裹：东西齐了。你怎么说？',['Bedankt voor uw hulp.','Bedankt voor jouw helpen.','Ik bedankt uw hulp.'],0,'“Bedankt voor uw hulp” is a polite expression. “Uw” is the formal possessive.','“Bedankt voor uw hulp”是礼貌表达。“Uw”是正式的“您的”。'),
-  q('Medewerker','Pakket 10/10: Fijne dag verder!','第10/10个包裹：祝你今天愉快！',['Dank u wel, u ook!','Dank jij wel, jij ook!','Ik dank u ook gisteren!'],0,'“Dank u wel” is polite/formal. “U ook” means you too.','“Dank u wel”是礼貌正式的感谢。“U ook”表示您也是。')
- ]},
- {place:'🏠 Thuis · avondeten',qs:[
-  q('Jessica','Wat wil je vanavond eten?','你今晚想吃什么？',['Ik wil graag noedels eten.','Ik wilt graag noedels eten.','Ik graag noedels eten wil.'],0,'With “ik”, use wil. The infinitive eten comes at the end after graag.','主语是 ik 时用 wil。动词原形 eten 放在句末。'),
-  q('Jessica','Zullen we samen koken?','我们一起做饭好吗？',['Ja, ik help je graag.','Ja, ik helpt je graag.','Ja, ik helpen je graag.'],0,'With “ik”, use help. “Je graag helpen” means gladly help you.','主语是 ik 时用 help。“Ik help je graag”表示我很乐意帮你。')
- ]},
- {place:'🌙 Klaarmaken om te slapen',qs:[
-  q('Jessica','Heb je je tanden al gepoetst?','你刷牙了吗？',['Ja, ik heb mijn tanden gepoetst.','Ja, ik heeft mijn tanden gepoetst.','Ja, ik ben mijn tanden poetsen.'],0,'The perfect tense uses heb + past participle: heb gepoetst.','完成时使用 heb + 过去分词：heb gepoetst。'),
-  q('Jessica','Ga je nog douchen voor het slapen?','睡前你还要洗澡吗？',['Nee, ik heb al gedoucht.','Nee, ik heeft al gedoucht.','Nee, ik al douchen.'],0,'Use heb with ik. “Gedoucht” is the past participle of douchen.','主语 ik 搭配 heb。“gedoucht”是 douchen 的过去分词。'),
-  q('Jessica','Welterusten, baby. Slaap lekker!','晚安，宝贝。睡个好觉！',['Welterusten, mijn koningin. Jij ook!','Welterusten, mijn koningin. Jij is ook!','Ik slaap lekker gisteren.'],0,'“Jij ook” means you too. It is a natural reply to a good-night wish.','“Jij ook”意思是“你也是”。这是回应晚安祝福的自然说法。')
- ]}
+{kind:'home',place:'Home',qs:[
+{speaker:'Jessica',text:'Baby, kun je mij een koffie maken?',translation:'Can you make me a coffee?',answers:['Ja, natuurlijk.','Nee, ik ben koffie.','Ik ga gisteren.'],correct:0,en:'“Ja, natuurlijk” means “Yes, of course.” Natuurlijk is a natural, friendly way to agree.',zh:'“Ja, natuurlijk” means “好的，当然”. Natuurlijk is a friendly way to agree.'},
+{speaker:'Jessica',text:'Wanneer ga je douchen?',translation:'When are you going to shower?',answers:['Ik ga nu douchen.','Ik douche gisteren.','Ik ben douche.'],correct:0,en:'Use “Ik ga + infinitive” to talk about a planned action: Ik ga douchen.',zh:'用 “Ik ga + 动词原形” 表示计划做某事。'},
+{speaker:'Jessica',text:'Zal ik je hemd strijken?',translation:'Shall I iron your shirt?',answers:['Ja, graag. Dank je wel.','Ik ben een hemd.','Ik strijk morgen gisteren.'],correct:0,en:'“Ja, graag” is a polite way to accept an offer. “Dank je wel” means thank you.',zh:'“Ja, graag” 表示礼貌地接受帮助；“Dank je wel” 是谢谢。'},
+{speaker:'Tianyi',text:'Wat zeg je als je naar je werk vertrekt?',translation:'What do you say when you leave for work?',answers:['Tot straks, Jessica!','Eet smakelijk!','Welterusten!'],correct:0,en:'“Tot straks” means see you later. Use it when you expect to see someone again soon.',zh:'“Tot straks” 是一会儿见，适合很快会再见面的情况。'}
+]},
+{kind:'metro',place:'Metro',qs:[
+{speaker:'Metro attendant',text:'Goedemorgen. Waar ga je vandaag naartoe?',translation:'Good morning. Where are you going today?',answers:['Ik ga naar mijn werk.','Ik ben gisteren thuis.','Ik werk naar metro.'],correct:0,en:'“Ik ga naar mijn werk” means “I am going to work.” Use naar for direction.',zh:'“Ik ga naar mijn werk” 是“我去上班”。naar 表示方向。'},
+{speaker:'Passenger',text:'Hoe laat begint je werk?',translation:'What time does your work start?',answers:['Om acht uur.','In de koffie.','Met de trein gisteren.'],correct:0,en:'Use “om” with a clock time: om acht uur, om half negen.',zh:'具体时间前使用 om，例如 om acht uur。'}
+]},
+{kind:'work',place:'CMA CGM Office',qs:[
+{speaker:'Colleague',text:'Goedemorgen Tianyi, klaar voor een nieuwe werkdag?',translation:'Good morning Tianyi, ready for a new workday?',answers:['Ja, ik ben er klaar voor.','Ik ben gisteren klaar.','Ik ga een kantoor.'],correct:0,en:'“Ik ben er klaar voor” means “I am ready for it.” It is a natural workplace expression.',zh:'“Ik ben er klaar voor” 意思是“我准备好了”。'},
+{speaker:'Captain',text:'Goedemorgen. We hebben extra smeerolie aan boord nodig. Kun je dat regelen?',translation:'Good morning. We need extra lubricating oil on board. Can you arrange that?',answers:['Natuurlijk. Ik neem contact op met de verantwoordelijke collega.','Ik ga naar huis.','De olie is mijn lunch.'],correct:0,en:'“Smeerolie” is lubricating oil. “Ik neem contact op met…” means I will contact…',zh:'“Smeerolie” 是润滑油。“Ik neem contact op met…” 是我会联系……'},
+{speaker:'Colleague',text:'De kapitein vraagt om olie. Wat moet je eerst doen?',translation:'The captain is asking for oil. What should you do first?',answers:['Controleren wie de levering coördineert.','De kapitein negeren.','Een taxi bestellen.'],correct:0,en:'First identify the colleague or supplier responsible for arranging the delivery.',zh:'首先确认负责安排交付的同事或供应商。'},
+{speaker:'Supplier',text:'Wanneer heeft het schip de olie nodig?',translation:'When does the vessel need the oil?',answers:['Zo snel mogelijk, liefst vóór aankomst.','Ik drink graag koffie.','Volgende maand misschien gisteren.'],correct:0,en:'“Zo snel mogelijk” means as soon as possible. “Vóór aankomst” means before arrival.',zh:'“Zo snel mogelijk” 是尽快；“vóór aankomst” 是抵达之前。'},
+{speaker:'Captain',text:'Kun je bevestigen wanneer de olie aan boord komt?',translation:'Can you confirm when the oil will be on board?',answers:['Ik wacht op bevestiging en houd u op de hoogte.','Ik weet niet waar ik woon.','Tot gisteren.'],correct:0,en:'“Ik houd u op de hoogte” is a professional way to say I will keep you informed.',zh:'“Ik houd u op de hoogte” 是正式表达，意思是我会及时通知您。'},
+{speaker:'Colleague',text:'De levering loopt vertraging op. Wat stuur je aan de kapitein?',translation:'The delivery is delayed. What do you send to the captain?',answers:['De levering is vertraagd. Ik geef u een nieuwe verwachte tijd zodra die bekend is.','Alles is altijd perfect.','Ik ben op vakantie.'],correct:0,en:'“Vertraagd” means delayed. “Verwachte tijd” means expected time. Give a clear update and next step.',zh:'“Vertraagd” 是延误；“verwachte tijd” 是预计时间。清楚说明情况和下一步。'},
+{speaker:'Colleague',text:'Hoe vraag je naar de verwachte aankomsttijd?',translation:'How do you ask for the estimated arrival time?',answers:['Wat is de verwachte aankomsttijd?','Waar is mijn ontbijt?','Hoeveel kost de regen?'],correct:0,en:'“Verwachte aankomsttijd” is estimated time of arrival. ETA is the common English abbreviation.',zh:'“Verwachte aankomsttijd” 是预计到达时间。ETA 是常见英文缩写。'},
+{speaker:'Colleague',text:'Het werk zit erop. Wat zeg je?',translation:'The workday is over. What do you say?',answers:['Tot morgen, fijne avond!','Goedemorgen gisteren!','Eet je kantoor!'],correct:0,en:'“Tot morgen, fijne avond” means see you tomorrow, have a nice evening.',zh:'“Tot morgen, fijne avond” 是明天见，晚上愉快。'}
+]},
+{kind:'coffee',place:'Luckin Coffee',qs:[
+{speaker:'Jessica',text:'Baby, hoe was het op je werk?',translation:'Baby, how was work?',answers:['Het was druk, maar goed.','Ik ben werk gisteren.','Ik drink een kantoor.'],correct:0,en:'“Het was druk, maar goed” means it was busy, but good. Use was for the past tense of zijn.',zh:'“Het was druk, maar goed” 是“很忙，但是不错”。was 是 zijn 的过去式。'},
+{speaker:'Barista',text:'Goedemiddag! Wat wil je bestellen?',translation:'Good afternoon! What would you like to order?',answers:['Ik wil graag een latte.','Ik ben een latte.','Ik ga gisteren latte.'],correct:0,en:'“Ik wil graag…” is a polite way to order: I would like…',zh:'“Ik wil graag…” 是礼貌点餐表达，意思是“我想要……”。'},
+{speaker:'Barista',text:'Wil je de koffie warm of iced?',translation:'Would you like the coffee hot or iced?',answers:['Iced, alstublieft.','Ik ben warm gisteren.','Koffie naar huis.'],correct:0,en:'“Alstublieft” is a polite please. “Iced” is commonly used in café conversations.',zh:'“Alstublieft” 是礼貌用语，相当于“请”。'},
+{speaker:'Jessica',text:'Zullen we hier even zitten?',translation:'Shall we sit here for a while?',answers:['Ja, gezellig!','Nee, ik ben stoel.','Ik zit morgen gisteren.'],correct:0,en:'“Gezellig” describes a pleasant, cozy atmosphere or time together.',zh:'“Gezellig” 表示舒适、愉快、温馨的感觉。'}
+]},
+{kind:'sams',place:"Sam's Club",qs:[
+{speaker:'Jessica',text:'Wat hebben we nodig voor het ontbijt?',translation:'What do we need for breakfast?',answers:['Griekse yoghurt, bananen en eieren.','Een schip en een stoel.','Een jas en schoenen.'],correct:0,en:'Food words: Griekse yoghurt = Greek yoghurt, bananen = bananas, eieren = eggs.',zh:'食物词汇：Griekse yoghurt 希腊酸奶，bananen 香蕉，eieren 鸡蛋。'},
+{speaker:'Jessica',text:'Waar staat de spaghetti?',translation:'Where is the spaghetti?',answers:['Bij de pasta, denk ik.','In de badkamer.','Naast de buschauffeur.'],correct:0,en:'“Waar staat…?” asks where a product is located. “Bij de pasta” means near the pasta.',zh:'“Waar staat…?” 用来询问商品在哪里。“Bij de pasta” 是在意大利面附近。'},
+{speaker:'Jessica',text:'Kun je een pak sap pakken?',translation:'Can you grab a carton of juice?',answers:['Ja, ik pak een pak sap.','Ik drink een supermarkt.','Nee, ik ben banaan.'],correct:0,en:'“Een pak sap” means a carton of juice. “Pakken” means to grab or take.',zh:'“Een pak sap” 是一盒果汁。“Pakken” 是拿取。'},
+{speaker:'Jessica',text:'Hebben we nog koffie en brood?',translation:'Do we still have coffee and bread?',answers:['Nee, die moeten we kopen.','Ja, ik ben brood.','Koffie is gisteren.'],correct:0,en:'“Die moeten we kopen” means we need to buy those. Moeten expresses necessity.',zh:'“Die moeten we kopen” 是“我们需要买那些”。moeten 表示必须或需要。'},
+{speaker:'Staff member',text:'Kan ik u ergens mee helpen?',translation:'Can I help you with anything?',answers:['Ja, waar kan ik de blauwe bessen vinden?','Ik ben blauwe bessen.','Ik help de koffie.'],correct:0,en:'“Waar kan ik … vinden?” means where can I find…? A useful shopping question.',zh:'“Waar kan ik … vinden?” 是“我在哪里可以找到……？”'},
+{speaker:'Jessica',text:'Zullen we ook kip en rijst kopen?',translation:'Shall we also buy chicken and rice?',answers:['Ja, dat is een goed idee.','Nee, ik ben rijst.','Ik koop gisteren kip.'],correct:0,en:'“Dat is een goed idee” means that is a good idea. “Ook” means also.',zh:'“Dat is een goed idee” 是“这是个好主意”。“Ook” 是“也”。'},
+{speaker:'Jessica',text:'Wil je chocolade of chips?',translation:'Would you like chocolate or crisps?',answers:['Een beetje chocolade, graag.','Ik ben chocolade.','Chips naar kantoor gisteren.'],correct:0,en:'“Een beetje” means a little. “Graag” makes your answer sound friendly.',zh:'“Een beetje” 是一点；“graag” 让表达更自然、礼貌。'},
+{speaker:'Cashier',text:'Wilt u een tas?',translation:'Would you like a bag?',answers:['Ja, graag.','Ik ben tas.','Nee, ik wil gisteren.'],correct:0,en:'“Wilt u…?” is a polite formal question. “Een tas” means a bag.',zh:'“Wilt u…?” 是礼貌正式的问法。“Een tas” 是袋子。'},
+{speaker:'Cashier',text:'Dat is dan 38 euro. Wilt u pinnen?',translation:'That will be 38 euros. Would you like to pay by card?',answers:['Ja, ik betaal met mijn pinpas.','Ik ben 38 euro.','Ik betaal met een banaan.'],correct:0,en:'“Betalen met mijn pinpas” means paying with my debit card. Pinnen is common Dutch for paying by card.',zh:'“Betalen met mijn pinpas” 是用借记卡付款。pinnen 是荷兰语常用的刷卡表达。'},
+{speaker:'Jessica',text:'Hebben we alles? Dan kunnen we naar huis.',translation:'Do we have everything? Then we can go home.',answers:['Ja, we hebben alles. Laten we gaan!','Ik ben alles gisteren.','Nee, ik ga supermarkt slapen.'],correct:0,en:'“Laten we gaan” means let’s go. “We hebben alles” means we have everything.',zh:'“Laten we gaan” 是“我们走吧”。“We hebben alles” 是“我们都买齐了”。'}
+]},
+{kind:'home',place:'Home · Evening',qs:[
+{speaker:'Jessica',text:'Wat wil je vanavond eten?',translation:'What would you like to eat tonight?',answers:['Ik heb zin in kip met rijst.','Ik ben kip gisteren.','Ik eet naar kantoor.'],correct:0,en:'“Ik heb zin in…” means I feel like having… or I fancy…',zh:'“Ik heb zin in…” 表示“我想吃……”或“我很想要……”。'},
+{speaker:'Jessica',text:'Heb je je tanden al gepoetst?',translation:'Have you brushed your teeth yet?',answers:['Ja, ik heb mijn tanden gepoetst.','Ik poets morgen gisteren.','Ik ben tanden.'],correct:0,en:'The perfect tense uses hebben + past participle: heb gepoetst.',zh:'完成时使用 hebben + 过去分词，例如 heb gepoetst。'},
+{speaker:'Jessica',text:'Ga je nog douchen voor het slapen?',translation:'Are you going to shower before sleeping?',answers:['Ja, daarna ga ik slapen.','Ik douche een bed.','Ik ben morgen gisteren.'],correct:0,en:'“Daarna” means after that. “Voor het slapen” means before going to sleep.',zh:'“Daarna” 是之后；“voor het slapen” 是睡觉之前。'},
+{speaker:'Jessica',text:'Slaap lekker, mijn koning.',translation:'Sleep well, my king.',answers:['Dank je wel, mijn koningin. Slaap lekker!','Ik ben een bed.','Tot gisteren!'],correct:0,en:'“Slaap lekker” means sleep well. “Mijn koningin” is our special Dutch title.',zh:'“Slaap lekker” 是睡个好觉。“Mijn koningin” 是我们的特别称呼。'}
+]}
 ];
-function q(speaker,text,translation,answers,correct,en,zh){return{speaker,text,translation,answers,correct,en,zh}}
-const total=phases.reduce((n,p)=>n+p.qs.length,0);
-let completed=Number(localStorage.getItem('tianyiQuestCompleted')||0);
-$('intro-progress').style.width=Math.round(completed/total*100)+'%';
-function updateHud(){ $('xp').textContent=xp;$('level').textContent=Math.floor(xp/100)+1;$('progress-label').textContent=`${Math.round(completed/total*100)}% voltooid · ${xp} XP`;$('intro-progress').style.width=Math.round(completed/total*100)+'%';}
-const config={type:Phaser.AUTO,parent:'game',backgroundColor:'#7fa36d',scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH,width:960,height:540},physics:{default:'arcade',arcade:{debug:false}},scene:{create,update}};
-let game,scene,player,jessica,cursors,keys,objects=[],targetPrompt,moveVector={x:0,y:0};
+const total=phases.reduce((n,p)=>n+p.qs.length,0);$('total').textContent=total;
+let scene,player,jessica,cursors,keys,game,objects=[],targetPrompt,moveVector={x:0,y:0};
 function makeChar(s,key,jacket,hair,skin,glasses){let g=s.make.graphics({x:0,y:0,add:false});g.fillStyle(0x1c261b,.3);g.fillEllipse(32,68,40,13);g.fillStyle(jacket);g.fillRoundedRect(14,36,36,28,9);g.fillStyle(skin);g.fillEllipse(32,25,28,27);g.fillStyle(hair);g.fillEllipse(32,15,29,18);g.fillRoundedRect(18,11,28,10,5);g.fillStyle(skin);g.fillCircle(18,25,4);g.fillCircle(46,25,4);if(glasses){g.lineStyle(2,0x20242b);g.strokeRoundedRect(20,21,10,7,2);g.strokeRoundedRect(34,21,10,7,2);g.lineBetween(30,24,34,24)}else{g.fillStyle(0x30231d);g.fillCircle(27,25,1.5);g.fillCircle(37,25,1.5)}g.fillStyle(0x202632);g.fillEllipse(23,64,13,7);g.fillEllipse(41,64,13,7);g.generateTexture(key,64,76);g.destroy()}
 function building(s,x,y,w,h,color,label){s.add.rectangle(x,y,w,h,color).setStrokeStyle(4,0x624b38).setDepth(2);s.add.rectangle(x,y-h*.24,w*.78,13,0x914c43).setDepth(3);for(let xx=x-w*.3;xx<=x+w*.3;xx+=w*.3)s.add.rectangle(xx,y-h*.05,34,34,0x9ed4dc).setStrokeStyle(3,0x4c5960).setDepth(3);s.add.rectangle(x+w*.28,y+h*.18,27,52,0x435a65).setDepth(3);s.add.text(x,y-h/2-19,label,{fontSize:'15px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#243348',padding:{x:7,y:4}}).setOrigin(.5).setDepth(8)}
 function create(){scene=this;let s=this;s.physics.world.setBounds(0,0,2200,1500);makeChar(s,'tianyi',0x667b42,0x24201e,0xe7b994,true);makeChar(s,'jessica',0x242b38,0xd8ad65,0xf0c7aa,true);makeChar(s,'npc',0x80583e,0x382b24,0xd9a77f,false);
@@ -134,27 +261,37 @@ s.add.rectangle(1100,95,2200,190,0x3297b2).setDepth(1);let waves=s.add.graphics(
 s.add.rectangle(1100,205,2200,30,0xd7c28a).setDepth(2);s.add.rectangle(1100,242,2200,35,0xb5a27b).setDepth(2);
 // streets
 s.add.rectangle(1100,980,2200,115,0x59636b).setDepth(2);s.add.rectangle(1100,980,2200,4,0xf0d58b).setDepth(3);s.add.rectangle(1100,510,2200,80,0xd8c18f).setDepth(2);
-building(s,350,400,190,130,0xe2c9a3,'ONS APPARTEMENT');building(s,750,390,175,120,0xb9c8cf,'LUCKIN COFFEE');building(s,1190,390,190,130,0xd8d0a9,"SAM'S CLUB");building(s,480,760,150,110,0xcab18f,'PAKKETPUNT');building(s,1750,355,300,155,0xb6c1c9,'CMA CGM · TERMINAL');
-s.add.rectangle(1660,205,520,30,0x5d6872).setDepth(3);s.add.text(1750,285,'⚓  CONTAINER TERMINAL',{fontSize:'17px',fontStyle:'bold',color:'#fff4d0'}).setOrigin(.5).setDepth(8);
+building(s,350,400,190,130,0xe2c9a3,'OUR APARTMENT');building(s,750,390,175,120,0xb9c8cf,'LUCKIN COFFEE');building(s,1190,390,190,130,0xd8d0a9,"SAM'S CLUB");building(s,1750,355,300,155,0xb6c1c9,'CMA CGM · OFFICE');
+s.add.rectangle(1660,205,520,30,0x5d6872).setDepth(3);s.add.text(1750,285,'⚓ CONTAINER TERMINAL',{fontSize:'17px',fontStyle:'bold',color:'#fff4d0'}).setOrigin(.5).setDepth(8);
 s.add.text(120,880,'🚇 METRO',{fontSize:'18px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#26364a',padding:8}).setDepth(8);
 s.add.text(1360,1080,'🚗 WITTE TOYOTA',{fontSize:'16px',fontStyle:'bold',color:'#243348',backgroundColor:'#f6f7f5',padding:8}).setDepth(8);
 for(let i=0;i<28;i++){let x=100+(i*173)%2050,y=300+((i*97)%1050);s.add.circle(x,y,18,0x3d8054).setDepth(3);s.add.circle(x-6,y-7,10,0x5e9c68).setDepth(3)}
 player=s.physics.add.sprite(350,520,'tianyi').setDepth(10);player.setCollideWorldBounds(true);jessica=s.physics.add.sprite(300,520,'jessica').setDepth(9);jessica.body.setAllowGravity(false);
 cursors=s.input.keyboard.createCursorKeys();keys=s.input.keyboard.addKeys('W,A,S,D,E');s.cameras.main.setBounds(0,0,2200,1500);s.cameras.main.startFollow(player,true,.08,.08);s.cameras.main.setZoom(.95);
-objects=[{x:350,y:520,label:'Thuis',kind:'home'},{x:750,y:390,label:'Luckin Coffee',kind:'coffee'},{x:480,y:760,label:'Pakketpunt',kind:'parcel'},{x:1750,y:355,label:'CMA CGM',kind:'work'},{x:120,y:880,label:'Metro',kind:'metro'}];
+objects=[{x:350,y:520,label:'Home',kind:'home'},{x:120,y:880,label:'Metro',kind:'metro'},{x:1750,y:355,label:'CMA CGM office',kind:'work'},{x:750,y:390,label:'Luckin Coffee',kind:'coffee'},{x:1190,y:390,label:"Sam's Club",kind:'sams'}];
 targetPrompt=s.add.text(480,480,'',{fontSize:'15px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#243348',padding:{x:8,y:5}}).setOrigin(.5).setDepth(20).setScrollFactor(0);
 }
-function update(time,delta){if(!started)return;let dx=0,dy=0;if(cursors.left.isDown||keys.A.isDown)dx=-1;if(cursors.right.isDown||keys.D.isDown)dx=1;if(cursors.up.isDown||keys.W.isDown)dy=-1;if(cursors.down.isDown||keys.S.isDown)dy=1;dx+=moveVector.x;dy+=moveVector.y;let len=Math.hypot(dx,dy)||1;player.setVelocity(dx/len*190,dy/len*190);if(Phaser.Input.Keyboard.JustDown(keys.E))interact();let dist=Phaser.Math.Distance.Between(player.x,player.y,jessica.x,jessica.y);if(dist>65){let a=Phaser.Math.Angle.Between(jessica.x,jessica.y,player.x,player.y);jessica.setVelocity(Math.cos(a)*Math.min(150,dist*2),Math.sin(a)*Math.min(150,dist*2))}else jessica.setVelocity(0,0);
-let nearest=null,nd=9999;objects.forEach(o=>{let d=Phaser.Math.Distance.Between(player.x,player.y,o.x,o.y);if(d<nd){nd=d;nearest=o}});if(nearest&&nd<105){targetPrompt.setText('E / PRAAT: '+nearest.label);targetPrompt.setVisible(true)}else targetPrompt.setVisible(false)}
-function interact(){if(dialogOpen)return;let nearest=objects.map(o=>({...o,d:Phaser.Math.Distance.Between(player.x,player.y,o.x,o.y)})).sort((a,b)=>a.d-b.d)[0];if(nearest&&nearest.d<120){let wanted=phases[phase].place;if((phase===0&&nearest.kind==='home')||(phase===1&&nearest.kind==='metro')||(phase===2&&nearest.kind==='work')||(phase===3&&nearest.kind==='coffee')||(phase===4&&nearest.kind==='parcel')||(phase>=5&&nearest.kind==='home'))openQuestion()}else if(qIndex<phases[phase].qs.length){$('quest-status').textContent='LOOP NAAR '+phases[phase].place.toUpperCase()}}
-function openQuestion(){if(qIndex>=phases[phase].qs.length){advancePhase();return}const q=phases[phase].qs[qIndex];dialogOpen=true;answered=false;$('dialog-tag').textContent=`CHAPTER 1 · ${phases[phase].place.toUpperCase()} · ${qIndex+1}/${phases[phase].qs.length}`;$('dialog-title').textContent=phases[phase].place;$('dialog-text').innerHTML=`<strong>${q.speaker}:</strong> “${q.text}”<br><span style="color:#b9c9dd">${q.translation}</span>`;$('speaker').textContent='Tianyi:';$('result').textContent='';$('explain').classList.remove('show');$('close-dialog').disabled=true;$('close-dialog').textContent='Verder →';$('answers').innerHTML='';q.answers.forEach((a,i)=>{let b=document.createElement('button');b.className='answer';b.textContent=a;b.onclick=()=>answer(i,b,q);$('answers').appendChild(b)});$('dialog-backdrop').classList.add('show')}
-function answer(i,btn,q){if(answered)return;answered=true;document.querySelectorAll('.answer').forEach((b,j)=>{b.disabled=true;if(j===q.correct)b.classList.add('good')});if(i===q.correct){xp+=10;earned+=10;$('result').textContent='✓ Goed gedaan, baby! ❤️';}else{btn.classList.add('bad');$('result').textContent='Bijna, koning! ❤️ Het juiste antwoord is: '+q.answers[q.correct]}completed++;localStorage.setItem('tianyiQuestXP',xp);localStorage.setItem('tianyiQuestCompleted',completed);updateHud();$('explain-en').textContent=q.en;$('explain-zh').textContent=q.zh;$('explain').classList.add('show');$('close-dialog').disabled=false;$('close-dialog').textContent=qIndex===phases[phase].qs.length-1?'Volgende locatie →':'Volgende vraag →';}
-function advancePhase(){phase++;qIndex=0;if(phase>=phases.length){$('earned').textContent=earned;$('complete').classList.add('show');return}let p=phases[phase];$('quest-name').textContent=p.place;$('quest-copy').textContent=`Ga naar de volgende locatie: ${p.place}.`; $('quest-status').textContent='NIEUWE QUEST';}
-$('close-dialog').onclick=()=>{if(!answered)return;$('dialog-backdrop').classList.remove('show');dialogOpen=false;qIndex++;if(qIndex>=phases[phase].qs.length){$('quest-status').textContent='LOCATIE VOLTOOID';$('quest-copy').textContent='Loop naar de volgende bestemming en druk op PRAAT.';advancePhase()}};
-$('start-game').onclick=()=>{$('intro').classList.remove('show');started=true;game.scene.start('default')};
+function update(time,delta){if(!started)return;let dx=0,dy=0;if(cursors.left.isDown||keys.A.isDown)dx=-1;if(cursors.right.isDown||keys.D.isDown)dx=1;if(cursors.up.isDown||keys.W.isDown)dy=-1;if(cursors.down.isDown||keys.S.isDown)dy=1;dx+=moveVector.x;dy+=moveVector.y;let len=Math.hypot(dx,dy)||1;player.setVelocity(dx/len*190,dy/len*190);if(Phaser.Input.Keyboard.JustDown(keys.E))interact();
+// Jessica accompanies Tianyi from home to the metro, waits at home during work, then rejoins at Luckin and follows him to the end.
+if(phase===0||phase===1||phase>=3){if(phase===3&&jessica.x<600){jessica.setPosition(690,450)}let dist=Phaser.Math.Distance.Between(player.x,player.y,jessica.x,jessica.y);if(dist>65){let a=Phaser.Math.Angle.Between(jessica.x,jessica.y,player.x,player.y);jessica.setVelocity(Math.cos(a)*Math.min(150,dist*2),Math.sin(a)*Math.min(150,dist*2))}else jessica.setVelocity(0,0)}else{jessica.setVelocity(0,0);jessica.setPosition(350,520)}
+let target=objects.find(o=>o.kind===phases[phase].kind);let d=Phaser.Math.Distance.Between(player.x,player.y,target.x,target.y);if(d<105){targetPrompt.setText('E / TALK: '+target.label);targetPrompt.setVisible(true)}else targetPrompt.setVisible(false)}
+function interact(){if(dialogOpen)return;let target=objects.find(o=>o.kind===phases[phase].kind);if(!target)return;let d=Phaser.Math.Distance.Between(player.x,player.y,target.x,target.y);if(d<125){openQuestion()}else{$('quest-status').textContent='GO TO '+target.label.toUpperCase()}}
+function openQuestion(){if(qIndex>=phases[phase].qs.length){advancePhase();return}const q=phases[phase].qs[qIndex];dialogOpen=true;answered=false;$('dialog-tag').textContent=`CHAPTER 1 · ${phases[phase].place.toUpperCase()} · ${qIndex+1}/${phases[phase].qs.length}`;$('dialog-title').textContent=phases[phase].place;$('dialog-text').innerHTML=`<strong>${q.speaker}:</strong> “${q.text}”<br><span style="color:#b9c9dd">${q.translation}</span>`;$('speaker').textContent='Tianyi:';$('result').textContent='';$('explain').classList.remove('show');$('close-dialog').disabled=true;$('close-dialog').textContent='Next →';$('answers').innerHTML='';q.answers.forEach((a,i)=>{let b=document.createElement('button');b.className='answer';b.textContent=a;b.onclick=()=>answer(i,b,q);$('answers').appendChild(b)});$('dialog-backdrop').classList.add('show')}
+function answer(i,btn,q){if(answered)return;answered=true;document.querySelectorAll('.answer').forEach((b,j)=>{b.disabled=true;if(j===q.correct)b.classList.add('good')});if(i===q.correct){xp+=10;earned+=10;$('result').textContent='✓ Well done, koning! ❤️';}else{btn.classList.add('bad');$('result').textContent='Almost, koning! ❤️ The correct answer is: '+q.answers[q.correct]}completed++;localStorage.setItem('tianyiQuestXP',xp);localStorage.setItem('tianyiQuestCompleted',completed);updateHud();$('explain-en').textContent=q.en;$('explain-zh').textContent=q.zh;$('explain').classList.add('show');$('close-dialog').disabled=false;$('close-dialog').textContent=qIndex===phases[phase].qs.length-1?'Finish location →':'Next question →';}
+function advancePhase(){phase++;qIndex=0;if(phase>=phases.length){$('earned').textContent=earned;$('complete').classList.add('show');return}let p=phases[phase];$('quest-name').textContent=p.place;$('quest-copy').textContent=`Quest complete! Walk to ${p.place} and press TALK to begin.`;$('quest-status').textContent='NEW LOCATION';}
+$('close-dialog').onclick=()=>{if(!answered)return;if(qIndex<phases[phase].qs.length-1){qIndex++;openQuestion();return}$('dialog-backdrop').classList.remove('show');dialogOpen=false;$('quest-status').textContent='LOCATION COMPLETE';advancePhase()};
+$('start-game').onclick=()=>{document.body.classList.add('playing');$('intro').classList.remove('show');started=true;game.scene.start('default')};
+$('menu-start').onclick=()=>{document.body.classList.add('playing');started=true;game.scale.refresh();game.scene.start('default')};
+function updateHud(){$('xp').textContent=xp;$('completed').textContent=completed;refreshMenu()}
+function refreshMenu(){let pct=Math.round(completed/total*100);$('menu-percent').textContent=pct+'%';$('menu-progress-bar').style.width=pct+'%';$('menu-xp').textContent=xp+' / '+(total*10)+' XP';$('menu-level').textContent='Lv.'+(Math.floor(xp/100)+1);}
+refreshMenu();
+document.querySelectorAll('.menu-nav button').forEach(b=>b.addEventListener('click',()=>{let name=b.dataset.panel;$('menu-panel-title').textContent=name;let content={Story:'Chapter 1: Daily Life in Qingdao. Follow Tianyi through home, the metro, his office, Luckin Coffee, Sam’s Club and home again.',Minigames:'Mini-games are coming soon. Complete the story quests to earn XP while this section is being prepared.',Missions:'Daily mission: complete the next location quest. Chapter mission: finish all six locations.',Grammar:'Grammar focus: present-tense verb conjugation, word order, questions, modal verbs and the perfect tense. Explanations appear after each answer in English and Chinese.',Vocab:'Vocabulary focus: daily routines, transport, vessel operations, coffee orders, groceries and food. Chinese support is included in the lessons.',Progress:`You have earned ${xp} XP and completed ${completed} of ${total} questions (${Math.round(completed/total*100)}%). Your current level is ${Math.floor(xp/100)+1}.`}[name];$('menu-panel-content').innerHTML='<p>'+content+'</p>';$('menu-panel').classList.add('show')}));
+$('menu-panel-close').onclick=()=>$('menu-panel').classList.remove('show');
 $('interact').onclick=interact;
 const joy=$('joystick'),knob=$('joy-knob');let active=false;function joyMove(e){let r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,max=35,len=Math.hypot(dx,dy)||1;if(len>max){dx=dx/len*max;dy=dy/len*max}knob.style.transform=`translate(${dx}px,${dy}px)`;moveVector={x:dx/max,y:dy/max}}joy.addEventListener('pointerdown',e=>{active=true;joy.setPointerCapture(e.pointerId);joyMove(e)});joy.addEventListener('pointermove',e=>{if(active)joyMove(e)});['pointerup','pointercancel','lostpointercapture'].forEach(ev=>joy.addEventListener(ev,()=>{active=false;moveVector={x:0,y:0};knob.style.transform='translate(0,0)'}));
+const config={type:Phaser.AUTO,parent:'game',width:960,height:540,backgroundColor:'#83a86e',physics:{default:'arcade',arcade:{debug:false}},scene:{create,update}};
 game=new Phaser.Game(config);
 })();
 </script>
-</body></html>
+</body>
+</html>
