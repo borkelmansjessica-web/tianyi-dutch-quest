@@ -8,202 +8,299 @@
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.min.js"></script>
 <style>
 :root{--gold:#f4c76b;--ink:#101827;--panel:#1b2940;--line:#53627b;--lime:#b5ed52}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#293b59,#0d1421 70%);color:#f8fafc;font-family:Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#293b59,#0d1421 70%);color:#f8fafc;font-family:Arial,sans-serif}
 .shell{width:min(1160px,100%);margin:auto;padding:12px}
 header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-.brand{font-weight:900;font-size:clamp(15px,2.3vw,22px)}.brand span{color:var(--gold)}
-.hud{display:flex;gap:7px;flex-wrap:wrap}.chip{background:#202e44;border:1px solid #53617a;border-radius:999px;padding:8px 11px;font-size:12px;font-weight:800}
+.brand{font-weight:900;font-size:clamp(15px,2.3vw,22px)}
+.brand span{color:var(--gold)}
+.hud{display:flex;gap:7px;flex-wrap:wrap}
+.chip{background:#202e44;border:1px solid #53617a;border-radius:999px;padding:8px 11px;font-size:12px;font-weight:800}
 .stage{position:relative;border:2px solid #987746;border-radius:16px;overflow:hidden;box-shadow:0 18px 45px #0008;background:#789b6c}
-#game{width:100%;aspect-ratio:16/9;min-height:280px;touch-action:none}#game canvas{display:block;width:100%!important;height:100%!important;object-fit:contain}
+#game{width:100%;aspect-ratio:16/9;min-height:280px;touch-action:none}
+#game canvas{display:block;width:100%!important;height:100%!important;object-fit:contain}
 .quest-banner{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 14px;background:linear-gradient(90deg,#202d43,#172235);border:1px solid #46536b;border-radius:12px;margin-top:10px}
-.quest-banner small{display:block;color:#c3ccda;margin-top:4px}.quest-name{font-weight:900}.quest-status{color:var(--gold);font-size:12px;font-weight:900}
-.controls{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-top:10px}.joystick{width:112px;height:112px;border-radius:50%;background:#182337aa;border:2px solid #ffffff42;position:relative;touch-action:none;user-select:none}.joy-knob{width:46px;height:46px;border-radius:50%;background:linear-gradient(145deg,#dce6f4,#8999b2);border:2px solid #fff9;position:absolute;left:31px;top:31px;box-shadow:0 3px 12px #0008}.control-hint{color:#aebbd0;font-size:12px;line-height:1.5;text-align:center;flex:1}.action-btn,.primary{border:1px solid #ffe08a;border-radius:13px;padding:14px 18px;color:#211a0b;font-weight:900;font-size:14px;background:linear-gradient(#ffe28a,#e9a92d);box-shadow:0 4px 0 #8b5e19;touch-action:manipulation}
+.quest-banner small{display:block;color:#c3ccda;margin-top:4px}
+.quest-name{font-weight:900}
+.quest-status{color:var(--gold);font-size:12px;font-weight:900}
+.controls{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-top:10px}
+.joystick{width:112px;height:112px;border-radius:50%;background:#182337aa;border:2px solid #ffffff42;position:relative;touch-action:none;user-select:none}
+.joy-knob{width:46px;height:46px;border-radius:50%;background:linear-gradient(145deg,#dce6f4,#8999b2);border:2px solid #fff9;position:absolute;left:31px;top:31px;box-shadow:0 3px 12px #0008}
+.control-hint{color:#aebbd0;font-size:12px;line-height:1.5;text-align:center;flex:1}
+.action-btn,.primary{border:1px solid #ffe08a;border-radius:13px;padding:14px 18px;color:#211a0b;font-weight:900;font-size:14px;background:linear-gradient(#ffe28a,#e9a92d);box-shadow:0 4px 0 #8b5e19;touch-action:manipulation}
 .primary{width:100%;font-size:17px;margin-top:14px;background:linear-gradient(#d7ff70,#8bcf26);border-color:#eaffad;box-shadow:0 4px 0 #527d16}
 .dialog-backdrop,.intro-backdrop,.complete-backdrop{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;padding:14px;background:#050914df;overflow:auto}
 .dialog-backdrop.show,.intro-backdrop.show,.complete-backdrop.show{display:flex}
 .dialog,.intro,.complete{width:min(590px,100%);max-height:94vh;overflow:auto;background:linear-gradient(145deg,#26354e,#151f30);border:1px solid #a98950;border-radius:19px;padding:20px;box-shadow:0 20px 60px #000b}
-.dialog-tag{color:var(--gold);font-size:11px;font-weight:900;letter-spacing:1.3px}.dialog h2,.intro h1,.complete h1{margin:8px 0 10px}.dialog p{color:#d9e0eb;line-height:1.5}.answers{display:grid;gap:9px;margin-top:14px}.answer{text-align:left;color:#f8fafc;background:#2b3b55;border:1px solid #65748b;padding:13px;border-radius:11px;font-size:15px}.answer:disabled{opacity:.9}.answer.good{border-color:#a3e635;background:#25432e}.answer.bad{border-color:#fb7185;background:#492b37}
-.result{min-height:38px;margin-top:12px;line-height:1.5;color:#f8e6b0}.explain{display:none;background:#111d2d;border:1px solid #46536b;border-radius:12px;padding:12px;margin-top:10px;line-height:1.5}.explain.show{display:block}.explain small{display:block;color:#c6d3e5;margin-top:7px}.close-btn{margin-top:12px;border:0;border-radius:10px;background:var(--lime);color:#17200b;padding:13px 16px;font-weight:900;width:100%}
-.intro h1{font-size:clamp(26px,5vw,38px);color:#ffe19a}.intro .sub{color:#d8e2f2;line-height:1.55}.intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.intro-card{background:#ffffff0c;border:1px solid #ffffff25;border-radius:13px;padding:12px}.intro-card strong{display:block;color:#ffe19a;margin-bottom:5px}.meter{height:9px;background:#3b4960;border-radius:20px;overflow:hidden;margin-top:8px}.meter i{display:block;height:100%;background:linear-gradient(90deg,#a3e635,#f6d365);width:0}
-.complete{text-align:center}.complete .crown{font-size:48px}.muted{color:#b8c5d8;font-size:13px;line-height:1.5}
-@media(min-width:760px){.controls{display:none}}@media(max-width:560px){.shell{padding:8px}.chip{padding:7px 9px;font-size:11px}#game{min-height:250px}.intro-grid{grid-template-columns:1fr 1fr}.dialog{padding:16px}.intro{padding:17px}}
-
-/* CINEMATIC MAIN MENU */
-#main-menu{position:fixed;inset:0;z-index:50;display:flex;align-items:stretch;justify-content:center;background:#101827;overflow:auto}
-.menu-art{position:absolute;inset:0;background-image:linear-gradient(90deg,#07101b66,#07101b00 48%,#07101b22),url('assets/start-screen.png');background-size:cover;background-position:center}
-.menu-layout{position:relative;z-index:1;width:min(1500px,100%);min-height:100vh;padding:24px;display:grid;grid-template-columns:minmax(230px,1fr) minmax(250px,1.2fr) minmax(270px,1fr);grid-template-rows:auto 1fr auto;gap:16px}
-.menu-brand{grid-column:2/4;text-align:right;color:#fff0c2;font-family:Georgia,serif;font-size:clamp(27px,4vw,52px);font-weight:bold;text-shadow:0 3px 8px #000}
-.menu-brand small{display:block;font-size:clamp(14px,2vw,24px);font-style:italic;color:#fff}
-.menu-left{grid-column:1;grid-row:2;display:flex;flex-direction:column;justify-content:center;gap:10px}
-.menu-right{grid-column:3;grid-row:2;display:flex;flex-direction:column;justify-content:center;gap:12px}
-.menu-card{background:linear-gradient(145deg,#17243beF,#111a2beF);border:2px solid #c18b3d;border-radius:16px;padding:14px;box-shadow:0 7px 20px #0008;color:white}
-.menu-card h3{font-family:Georgia,serif;color:#ffe1a0;font-size:20px;margin:0 0 8px;border-bottom:1px solid #79613f;padding-bottom:7px}
-.menu-card p{font-size:14px;line-height:1.35;margin:5px 0}
-.menu-card .gold{color:#ffd45e;font-weight:bold}
-.menu-character{display:flex;align-items:center;gap:12px}
-.menu-character img{width:82px;height:100px;object-fit:contain;image-rendering:pixelated}
-.menu-character .details{flex:1}
-.menu-character h2{font-family:Georgia,serif;font-style:italic;color:#ffe1a0;margin:0 0 8px}
-.menu-character p{margin:5px 0}
-.menu-center{grid-column:2;grid-row:2;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:12px}
-.menu-start{border:3px solid #ffe19a;border-radius:60px;padding:18px 42px;min-width:280px;background:linear-gradient(#ffdb73,#b96b18);color:white;font-family:Georgia,serif;font-weight:bold;font-size:clamp(22px,3vw,36px);text-shadow:0 2px 4px #6b370c;box-shadow:0 0 20px #ffbd45,0 5px 0 #75420e;cursor:pointer}
-.menu-start:hover{filter:brightness(1.12);transform:translateY(-2px)}
-.menu-nav{grid-column:1/4;grid-row:3;display:grid;grid-template-columns:repeat(6,1fr);background:linear-gradient(145deg,#17243bf5,#111a2bf5);border:2px solid #c18b3d;border-radius:18px;padding:10px;box-shadow:0 8px 24px #0009}
-.menu-nav button{background:transparent;border:0;border-right:1px solid #59647a;color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:15px;cursor:pointer;padding:8px 3px}
-.menu-nav button:last-child{border-right:0}
-.menu-nav button .nav-icon{font-size:30px;filter:drop-shadow(0 2px 2px #000)}
-.menu-nav button:hover{color:#ffdc8d;background:#ffffff0b}
-.menu-panel{position:fixed;inset:0;z-index:70;background:#030914d9;display:none;align-items:center;justify-content:center;padding:16px}
-.menu-panel.show{display:flex}
-.menu-panel-box{width:min(520px,100%);background:linear-gradient(145deg,#26354e,#151f30);border:2px solid #c18b3d;border-radius:18px;padding:22px;box-shadow:0 18px 50px #000}
-.menu-panel-box h2{font-family:Georgia,serif;color:#ffe1a0;margin:0 0 12px}
-.menu-panel-box p{line-height:1.55;color:#e5eaf2}
-.menu-panel-box button{width:100%;border:0;border-radius:10px;background:#e9b84f;padding:12px;font-weight:bold;margin-top:12px;cursor:pointer}
-body.playing #main-menu{display:none}
-@media(max-width:850px){
-.menu-layout{grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto;padding:12px}
-.menu-brand{grid-column:1/3;text-align:center}
-.menu-left{grid-column:1;grid-row:2}
-.menu-right{grid-column:2;grid-row:2}
-.menu-center{grid-column:1/3;grid-row:3;padding:10px}
-.menu-nav{grid-column:1/3;grid-row:4}
-.menu-layout{grid-template-rows:auto 1fr auto auto}
-.menu-character img{width:58px;height:75px}
-.menu-card{padding:9px}
-.menu-card h3{font-size:16px}
-.menu-card p{font-size:12px}
-.menu-nav button{font-size:11px}
-.menu-nav button .nav-icon{font-size:22px}
-.menu-start{min-width:220px;padding:13px 24px}
+.dialog-tag{color:var(--gold);font-size:11px;font-weight:900;letter-spacing:1.3px}
+.dialog h2,.intro h1,.complete h1{margin:8px 0 10px}
+.dialog p{color:#d9e0eb;line-height:1.5}
+.answers{display:grid;gap:9px;margin-top:14px}
+.answer{text-align:left;color:#f8fafc;background:#2b3b55;border:1px solid #65748b;padding:13px;border-radius:11px;font-size:15px}
+.answer:disabled{opacity:.9}
+.answer.good{border-color:#a3e635;background:#25432e}
+.answer.bad{border-color:#fb7185;background:#492b37}
+.result{min-height:38px;margin-top:12px;line-height:1.5;color:#f8e6b0}
+.explain{display:none;background:#111d2d;border:1px solid #46536b;border-radius:12px;padding:12px;margin-top:10px;line-height:1.5}
+.explain.show{display:block}
+.explain small{display:block;color:#c6d3e5;margin-top:7px}
+.close-btn{margin-top:12px;border:0;border-radius:10px;background:var(--lime);color:#17200b;padding:13px 16px;font-weight:900;width:100%}
+.intro h1{font-size:clamp(26px,5vw,38px);color:#ffe19a}
+.intro .sub{color:#d8e2f2;line-height:1.55}
+.intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.intro-card{background:#ffffff0c;border:1px solid #ffffff25;border-radius:13px;padding:12px}
+.intro-card strong{display:block;color:#ffe19a;margin-bottom:5px}
+.meter{height:9px;background:#3b4960;border-radius:20px;overflow:hidden;margin-top:8px}
+.meter i{display:block;height:100%;background:linear-gradient(90deg,#a3e635,#f6d365);width:0}
+.complete{text-align:center}
+.complete .crown{font-size:48px}
+.muted{color:#b8c5d8;font-size:13px;line-height:1.5}
+@media(min-width:760px){.controls{display:none}}
+@media(max-width:560px){
+.shell{padding:8px}
+.chip{padding:7px 9px;font-size:11px}
+#game{min-height:250px}
+.intro-grid{grid-template-columns:1fr 1fr}
+.dialog{padding:16px}
+.intro{padding:17px}
 }
-@media(max-width:520px){
-.menu-layout{display:flex;flex-direction:column;min-height:100vh}
-.menu-brand{font-size:27px}
-.menu-left{display:grid;grid-template-columns:1fr 1fr}
-.menu-right{display:grid;grid-template-columns:1fr}
-.menu-center{order:3}
-.menu-nav{order:4;grid-template-columns:repeat(3,1fr)}
+
+/* CINEMATIC MAIN MENU · REFINED LANDSCAPE LAYOUT */
+#main-menu{position:fixed;inset:0;z-index:50;display:flex;align-items:stretch;justify-content:center;background:#101827;overflow:hidden}
+.menu-art{position:absolute;inset:0;background-image:linear-gradient(90deg,#07101b35,#07101b00 48%,#07101b18),url('assets/start-screen.png');background-size:cover;background-position:center 43%}
+.menu-vignette{position:absolute;inset:0;background:linear-gradient(90deg,#10182765 0%,transparent 39%,transparent 66%,#10182755 100%),linear-gradient(0deg,#101827 0%,transparent 15%,transparent 88%,#10182722 100%)}
+.menu-wrap{position:relative;z-index:2;width:min(1500px,100%);height:100svh;min-height:620px;padding:14px 22px 12px;display:grid;grid-template-columns:minmax(245px,300px) minmax(280px,1fr) minmax(300px,360px);grid-template-rows:76px minmax(0,1fr) 82px;gap:10px;color:#fff;overflow:hidden}
+.menu-brand{grid-column:3;grid-row:1;justify-self:end;align-self:start;text-align:right;background:transparent;border:0;border-radius:0;padding:0;box-shadow:none;min-width:0;width:100%}
+.menu-brand h1{font:bold clamp(25px,2.8vw,39px) Georgia,serif;color:#ffe4a6;margin:0;text-shadow:0 3px 6px #000b;white-space:nowrap}
+.menu-brand p{font:bold italic clamp(15px,1.6vw,21px) Georgia,serif;color:#fff1d5;margin:3px 0 0;text-shadow:0 2px 5px #000}
+.menu-left{grid-column:1;grid-row:2;align-self:center;display:flex;flex-direction:column;gap:10px;margin:0;max-width:300px;width:100%}
+.menu-card{background:linear-gradient(145deg,#18243aE8,#101827ED);border:2px solid #c99a4d;border-radius:16px;padding:10px 13px;box-shadow:0 7px 18px #0007;color:#f7f3e9;backdrop-filter:blur(3px)}
+.menu-card h3{font:bold clamp(16px,1.5vw,20px) Georgia,serif;color:#ffe2a1;margin:0 0 6px;border-bottom:1px solid #8b7048;padding-bottom:5px}
+.menu-card p{font-size:clamp(11px,1.05vw,14px);line-height:1.3;margin:4px 0}
+.menu-card strong{color:#ffd26d}
+.menu-progress{height:10px;background:#34425a;border:1px solid #8e9bb1;border-radius:20px;overflow:hidden;margin:6px 0 3px}
+.menu-progress span{display:block;height:100%;background:linear-gradient(90deg,#8be52e,#d8ff76);width:0;max-width:100%;transition:width .3s}
+.menu-right{grid-column:3;grid-row:2;align-self:center;display:flex;flex-direction:column;gap:10px;width:100%;max-width:360px}
+.profile-card{display:grid;grid-template-columns:76px minmax(0,1fr);gap:9px;align-items:center;min-height:136px;padding:10px 11px}
+.profile-avatar{width:76px;height:88px;border-radius:10px;background-image:url('assets/start-screen.png');background-repeat:no-repeat;background-size:430% auto;box-shadow:0 2px 9px #0008;border:1px solid #d4a95d}
+.profile-avatar.tianyi-photo{background-position:12% 24%}
+.profile-avatar.jessica-photo{background-position:39% 24%}
+.profile-card h2{font:italic bold clamp(19px,2vw,25px) Georgia,serif;color:#ffe1a0;margin:0 0 5px}
+.profile-card p{margin:4px 0;font-size:clamp(10px,1.02vw,13px);line-height:1.25}
+.menu-center{grid-column:2;grid-row:2;align-self:end;justify-self:center;width:min(370px,78%);margin-bottom:18px}
+.start-quest{width:100%;border:3px solid #ffe19a;border-radius:60px;padding:12px 18px;background:linear-gradient(#ffcf68,#c66c16);color:#fff8df;font:bold clamp(22px,2.5vw,31px) Georgia,serif;text-shadow:0 2px 3px #6a3300;box-shadow:0 0 16px #ffb52d,inset 0 2px 4px #fff9;cursor:pointer;min-height:66px}
+.start-quest:hover{filter:brightness(1.08)}
+.menu-nav{grid-column:1/4;grid-row:3;align-self:stretch;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));background:linear-gradient(145deg,#17233af5,#101827f7);border:2px solid #c99a4d;border-radius:17px;padding:5px 8px;box-shadow:0 8px 20px #0009;min-height:0}
+.menu-nav button{background:transparent;border:0;border-right:1px solid #68738a;color:#fff;font-size:clamp(11px,1.2vw,15px);padding:4px 3px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:0}
+.menu-nav button:last-child{border-right:0}
+.menu-nav button:hover{color:#ffdc8d;background:#ffffff0b}
+.menu-nav .ico{font-size:clamp(21px,2.2vw,29px)}
+#menu-panel{position:fixed;inset:0;z-index:70;background:#060b14d9;display:none;align-items:center;justify-content:center;padding:18px}
+#menu-panel.show{display:flex}
+.menu-panel-box{width:min(620px,100%);max-height:85vh;overflow:auto;background:linear-gradient(145deg,#253650,#101827);border:2px solid #c99a4d;border-radius:18px;padding:22px;box-shadow:0 18px 50px #000}
+.menu-panel-box h2{font:bold 28px Georgia,serif;color:#ffe1a0;margin:0 0 12px}
+.menu-panel-box p{line-height:1.5;color:#e5eaf2}
+.menu-panel-box button{background:#f3c66b;border:0;border-radius:10px;padding:11px 20px;font-weight:bold;cursor:pointer}
+#app-shell{display:none}
+body.playing #main-menu{display:none}
+body.playing #app-shell{display:block}
+@media(max-width:850px){
+.menu-wrap{grid-template-columns:minmax(205px,260px) minmax(180px,1fr) minmax(225px,280px);grid-template-rows:66px minmax(0,1fr) 72px;padding:10px;gap:8px}
+.menu-brand h1{font-size:clamp(21px,3vw,30px)}
+.menu-left{max-width:260px;gap:7px}
+.menu-card{padding:8px 10px}
+.menu-card h3{font-size:15px}
+.menu-card p,.profile-card p{font-size:11px}
+.menu-right{max-width:280px;gap:7px}
+.profile-card{grid-template-columns:58px minmax(0,1fr);min-height:112px;padding:8px}
+.profile-avatar{width:58px;height:70px;background-size:450% auto}
+.profile-card h2{font-size:19px}
+.menu-center{width:min(300px,78%);margin-bottom:12px}
+.start-quest{min-height:56px;padding:9px 14px;font-size:23px}
+.menu-nav{padding:4px}
+.menu-nav button{font-size:11px}
+.menu-nav .ico{font-size:21px}
+}
+@media(max-width:620px){
+.menu-wrap{height:auto;min-height:100svh;overflow:auto;display:flex;flex-direction:column;padding:10px;gap:8px}
+.menu-art{background-position:42% center}
+.menu-brand{order:0;text-align:right;width:100%;padding:0 4px}
+.menu-brand h1{font-size:24px}
+.menu-brand p{font-size:15px}
+.menu-right{order:1;display:grid;grid-template-columns:1fr 1fr;max-width:none;gap:7px}
+.profile-card{display:block;min-height:0;padding:8px}
+.profile-avatar{width:48px;height:56px;float:left;margin:0 7px 4px 0;background-size:470% auto}
+.profile-card h2{font-size:17px}
+.profile-card p{font-size:10px}
+.menu-left{order:2;display:grid;grid-template-columns:1fr 1fr;max-width:none;gap:7px}
+.menu-left .menu-card:first-child{grid-column:1/3}
+.menu-card{padding:8px 9px}
+.menu-card h3{font-size:15px}
+.menu-card p{font-size:10px}
+.menu-center{order:3;width:min(300px,90%);margin:3px auto}
+.start-quest{min-height:52px;font-size:21px}
+.menu-nav{order:4;grid-template-columns:repeat(3,1fr);min-height:120px}
+.menu-nav button{font-size:11px;border-bottom:1px solid #68738a}
 .menu-nav button:nth-child(3){border-right:0}
-.menu-nav button{border-bottom:1px solid #59647a}
 .menu-nav button:nth-child(n+4){border-bottom:0}
+}
+@media(min-width:851px) and (max-height:700px){
+.menu-wrap{grid-template-rows:60px minmax(0,1fr) 72px;padding-top:8px;padding-bottom:8px;gap:7px}
+.menu-left,.menu-right{gap:6px}
+.menu-card{padding:7px 10px}
 .menu-card p{font-size:11px}
-.menu-character img{width:50px;height:65px}
+.profile-card{min-height:105px}
+.menu-center{margin-bottom:10px}
+.start-quest{min-height:54px;padding:8px 14px}
+.menu-nav .ico{font-size:22px}
 }
 </style>
 </head>
 <body>
+
 <div id="main-menu">
-<div class="menu-art"></div>
-<div class="menu-layout">
-<div class="menu-brand">Tianyi's Dutch Quest <span>🇧🇪</span><small>A Journey to Belgium</small></div>
-<div class="menu-left">
-<div class="menu-card">
-<h3>Game Overview</h3>
-<p>Learn Dutch with Tianyi through real-life adventures in Qingdao! Complete daily quests, practice vocabulary and grammar, and get one step closer to your life together in Belgium. ♡</p>
-</div>
-<div class="menu-card">
-<h3>Current Chapter</h3>
-<p>Chapter 1</p><p class="gold">Daily Life in Qingdao</p><p>Let's have a good day! 🤩</p>
-<div style="margin-top:10px;font-weight:bold">Progress <span id="menu-percent" style="float:right">0%</span></div>
-<div class="meter"><i id="menu-progress-bar"></i></div>
-<p>🏆 XP <span id="menu-xp" style="float:right">0 XP</span></p>
-<p>⭐ Level <span id="menu-level" style="float:right">Lv.1</span></p>
-</div>
-<div class="menu-card">
-<h3>Next Chapter</h3>
-<p>🚧 Chapter 2</p><p class="gold">Under Construction</p>
-</div>
-</div>
-<div class="menu-center">
-<button class="menu-start" id="menu-start">▶ Start Quest</button>
-</div>
-<div class="menu-right">
-<div class="menu-card menu-character">
-<img src="assets/tianyi_four_poses_transparent.png" alt="Tianyi">
-<div class="details"><h2>Tianyi</h2><p>⚓ Maritime sector (Vessel Operations)</p><p>🎓 Master Public Administration</p><p>🎮 Games (LoL, Brawl Stars)</p><p><span class="gold">Goal:</span> Learn Dutch and relocate to Belgium.</p></div>
-</div>
-<div class="menu-card menu-character">
-<img src="assets/Jessica_four_poses_transparent(1).png" alt="Jessica">
-<div class="details"><h2>Jessica</h2><p>♡ Your partner and travel buddy</p><p>💻 Public servant</p><p>📷 101 quirky hobbies which she can't decide on</p><p><span class="gold">Goal:</span> Build a shared life together in Belgium.</p></div>
-</div>
-</div>
-<div class="menu-nav">
-<button data-panel="Story"><span class="nav-icon">📖</span>Story</button>
-<button data-panel="Minigames"><span class="nav-icon">🎮</span>Minigames</button>
-<button data-panel="Missions"><span class="nav-icon">🏆</span>Missions</button>
-<button data-panel="Grammar"><span class="nav-icon">📚</span>Grammar</button>
-<button data-panel="Vocab"><span class="nav-icon">📚</span>Vocab</button>
-<button data-panel="Progress"><span class="nav-icon">📊</span>Progress</button>
-</div>
-</div>
+ <div class="menu-art"></div>
+ <div class="menu-vignette"></div>
+ <div class="menu-wrap">
+  <div class="menu-brand">
+   <h1>Tianyi's Dutch Quest 🇧🇪</h1>
+   <p>A Journey to Belgium</p>
+  </div>
+  <div class="menu-left">
+   <section class="menu-card">
+    <h3>🎯 Game Overview</h3>
+    <p>Learn Dutch with Tianyi through real-life adventures in Qingdao! Complete daily quests, practise vocabulary and grammar, and get one step closer to your life together in Belgium. ♡</p>
+   </section>
+   <section class="menu-card">
+    <h3>📖 Current Chapter</h3>
+    <p>Chapter 1</p>
+    <p><strong>Daily Life in Qingdao</strong></p>
+    <p>Let's have a good day! 🤩</p>
+    <p>📊 Progress <strong id="menu-percent">0%</strong></p>
+    <div class="menu-progress"><span id="menu-progress-bar"></span></div>
+    <p>🏆 XP <strong id="menu-xp">0 / 330 XP</strong></p>
+    <p>⭐ Level <strong id="menu-level">Lv.1</strong></p>
+   </section>
+   <section class="menu-card">
+    <h3>🔒 Next Chapter</h3>
+    <p>Chapter 2</p>
+    <p><strong>Under Construction</strong></p>
+   </section>
+  </div>
+  <div class="menu-right">
+   <section class="menu-card profile-card">
+    <div class="profile-avatar tianyi-photo" role="img" aria-label="Tianyi"></div>
+    <div>
+     <h2>Tianyi</h2>
+     <p>⚓ Maritime sector (Vessel Operations)</p>
+     <p>🎓 Master Public Administration</p>
+     <p>🎮 Games (LoL, Brawl Stars)</p>
+     <p><strong>🎯 Goal:</strong> Learn Dutch and relocate to Belgium.</p>
+    </div>
+   </section>
+   <section class="menu-card profile-card">
+    <div class="profile-avatar jessica-photo" role="img" aria-label="Jessica"></div>
+    <div>
+     <h2>Jessica</h2>
+     <p>♡ Your partner and travel buddy</p>
+     <p>💻 Public servant</p>
+     <p>📸 101 quirky hobbies which she can't decide on</p>
+     <p><strong>♡ Goal:</strong> Build a shared life together in Belgium.</p>
+    </div>
+   </section>
+  </div>
+  <div class="menu-center">
+   <button class="start-quest" id="menu-start">▶ Start Quest</button>
+  </div>
+  <nav class="menu-nav" aria-label="Game navigation">
+   <button data-panel="Story"><span class="ico">📖</span>Story</button>
+   <button data-panel="Minigames"><span class="ico">🎮</span>Minigames</button>
+   <button data-panel="Missions"><span class="ico">🏆</span>Missions</button>
+   <button data-panel="Grammar"><span class="ico">📘</span>Grammar</button>
+   <button data-panel="Vocab"><span class="ico">📚</span>Vocab</button>
+   <button data-panel="Progress"><span class="ico">📊</span>Progress</button>
+  </nav>
+ </div>
 </div>
 
-<div class="menu-panel" id="menu-panel">
-<div class="menu-panel-box">
-<h2 id="menu-panel-title">Story</h2>
-<div id="menu-panel-content"></div>
-<button id="menu-panel-close">Back to Main Menu</button>
-</div>
+<div id="menu-panel">
+ <div class="menu-panel-box">
+  <h2 id="menu-panel-title"></h2>
+  <div id="menu-panel-content"></div>
+  <button id="menu-panel-close">Close</button>
+ </div>
 </div>
 
+<div id="app-shell">
 <div class="shell">
 <header>
-<div class="brand">Tianyi's <span>Dutch Quest</span></div>
-<div class="hud">
-<div class="chip">⭐ XP: <span id="xp">0</span></div>
-<div class="chip">🔥 Completed: <span id="completed">0</span>/<span id="total">0</span></div>
-</div>
+ <div class="brand">⚔️ TIAN YI'S <span>DUTCH QUEST</span></div>
+ <div class="hud">
+  <div class="chip">📍 QINGDAO</div>
+  <div class="chip">📖 CHAPTER 1</div>
+  <div class="chip">⭐ <span id="xp">0</span> XP</div>
+  <div class="chip">👑 LEVEL <span id="level">1</span></div>
+ </div>
 </header>
 <div class="stage"><div id="game"></div></div>
 <div class="quest-banner">
-<div><div class="quest-name" id="quest-name">Home</div><small id="quest-copy">Welcome to Chapter 1</small></div>
-<div class="quest-status" id="quest-status">READY</div>
+ <div><div class="quest-name" id="quest-name">🏠 Daily life in Qingdao</div><small id="quest-copy">Let's have a good day!</small></div>
+ <div class="quest-status" id="quest-status">READY TO START</div>
 </div>
 <div class="controls">
-<div class="joystick" id="joystick"><div class="joy-knob" id="joy-knob"></div></div>
-<div class="control-hint">Use WASD / arrows or joystick to move.<br>Press E or TALK near a location.</div>
-<button class="action-btn" id="interact">TALK</button>
+ <div class="joystick" id="joystick"><div class="joy-knob" id="joy-knob"></div></div>
+ <div class="control-hint">Move with the joystick.<br>Computer: WASD / arrow keys</div>
+ <button class="action-btn" id="interact">TALK 👋</button>
+</div>
 </div>
 </div>
 
 <div class="dialog-backdrop" id="dialog-backdrop">
-<div class="dialog">
-<div class="dialog-tag" id="dialog-tag">CHAPTER 1</div>
-<h2 id="dialog-title">Location</h2>
-<p id="dialog-text"></p>
-<div id="speaker"></div>
-<div class="answers" id="answers"></div>
-<div class="result" id="result"></div>
-<div class="explain" id="explain"><strong>Explanation</strong><div id="explain-en"></div><small id="explain-zh"></small></div>
-<button class="close-btn" id="close-dialog">Next</button>
+ <div class="dialog">
+  <div class="dialog-tag" id="dialog-tag">CHAPTER 1</div>
+  <h2 id="dialog-title">Location</h2>
+  <p id="dialog-text"></p>
+  <div id="speaker"></div>
+  <div class="answers" id="answers"></div>
+  <div class="result" id="result"></div>
+  <div class="explain" id="explain">
+   <strong>Explanation</strong>
+   <div id="explain-en"></div>
+   <small id="explain-zh"></small>
+  </div>
+  <button class="close-btn" id="close-dialog">Next</button>
+ </div>
 </div>
-</div>
+
 <div class="intro-backdrop" id="intro">
-<div class="intro">
-<h1>Welcome, koning Tianyi!</h1>
-<p class="sub">Your Dutch adventure starts in Qingdao. Learn through everyday conversations, one quest at a time.</p>
-<div class="intro-grid">
-<div class="intro-card"><strong>Chapter 1</strong>Daily Life in Qingdao</div>
-<div class="intro-card"><strong>Goal</strong>Build your life together in Belgium</div>
+ <div class="intro">
+  <h1>Welcome, koning Tianyi!</h1>
+  <p class="sub">Your Dutch adventure starts in Qingdao. Learn through everyday conversations, one quest at a time.</p>
+  <div class="intro-grid">
+   <div class="intro-card"><strong>Chapter 1</strong>Daily Life in Qingdao</div>
+   <div class="intro-card"><strong>Goal</strong>Build your life together in Belgium</div>
+  </div>
+  <p class="muted">Complete quests, earn XP and improve your Dutch step by step.</p>
+  <button class="primary" id="start-game">Start Chapter 1</button>
+ </div>
 </div>
-<p class="muted">Complete quests, earn XP and improve your Dutch step by step.</p>
-<button class="primary" id="start-game">Start Chapter 1</button>
-</div>
-</div>
+
 <div class="complete-backdrop" id="complete">
-<div class="complete">
-<div class="crown">👑</div>
-<h1>Goed gedaan, koning Tianyi!</h1>
-<p>You completed Chapter 1.</p>
-<p class="muted">Jessica is proud of you. ❤️</p>
-<p>XP earned: <strong id="earned">0</strong></p>
-</div>
+ <div class="complete">
+  <div class="crown">👑</div>
+  <h1>Goed gedaan, koning Tianyi!</h1>
+  <p>You completed Chapter 1.</p>
+  <p class="muted">Jessica is proud of you. ❤️</p>
+  <p>XP earned: <strong id="earned">0</strong></p>
+ </div>
 </div>
 
 <script>
 (()=>{
 const $=id=>document.getElementById(id);
-let xp=Number(localStorage.getItem('tianyiQuestXP')||0),completed=Number(localStorage.getItem('tianyiQuestCompleted')||0),earned=0,phase=0,qIndex=0,answered=false,dialogOpen=false,started=false;
+let xp=Number(localStorage.getItem('tianyiQuestXP')||0);
+let completed=Number(localStorage.getItem('tianyiQuestCompleted')||0);
+let earned=0,phase=0,qIndex=0,answered=false,dialogOpen=false,started=false;
 const phases=[
 {kind:'home',place:'Home',qs:[
 {speaker:'Jessica',text:'Baby, kun je mij een koffie maken?',translation:'Can you make me a coffee?',answers:['Ja, natuurlijk.','Nee, ik ben koffie.','Ik ga gisteren.'],correct:0,en:'“Ja, natuurlijk” means “Yes, of course.” Natuurlijk is a natural, friendly way to agree.',zh:'“Ja, natuurlijk” means “好的，当然”. Natuurlijk is a friendly way to agree.'},
@@ -250,45 +347,199 @@ const phases=[
 {speaker:'Jessica',text:'Slaap lekker, mijn koning.',translation:'Sleep well, my king.',answers:['Dank je wel, mijn koningin. Slaap lekker!','Ik ben een bed.','Tot gisteren!'],correct:0,en:'“Slaap lekker” means sleep well. “Mijn koningin” is our special Dutch title.',zh:'“Slaap lekker” 是睡个好觉。“Mijn koningin” 是我们的特别称呼。'}
 ]}
 ];
-const total=phases.reduce((n,p)=>n+p.qs.length,0);$('total').textContent=total;
+const total=phases.reduce((n,p)=>n+p.qs.length,0);
+$('total').textContent=total;
 let scene,player,jessica,cursors,keys,game,objects=[],targetPrompt,moveVector={x:0,y:0};
-function makeChar(s,key,jacket,hair,skin,glasses){let g=s.make.graphics({x:0,y:0,add:false});g.fillStyle(0x1c261b,.3);g.fillEllipse(32,68,40,13);g.fillStyle(jacket);g.fillRoundedRect(14,36,36,28,9);g.fillStyle(skin);g.fillEllipse(32,25,28,27);g.fillStyle(hair);g.fillEllipse(32,15,29,18);g.fillRoundedRect(18,11,28,10,5);g.fillStyle(skin);g.fillCircle(18,25,4);g.fillCircle(46,25,4);if(glasses){g.lineStyle(2,0x20242b);g.strokeRoundedRect(20,21,10,7,2);g.strokeRoundedRect(34,21,10,7,2);g.lineBetween(30,24,34,24)}else{g.fillStyle(0x30231d);g.fillCircle(27,25,1.5);g.fillCircle(37,25,1.5)}g.fillStyle(0x202632);g.fillEllipse(23,64,13,7);g.fillEllipse(41,64,13,7);g.generateTexture(key,64,76);g.destroy()}
-function building(s,x,y,w,h,color,label){s.add.rectangle(x,y,w,h,color).setStrokeStyle(4,0x624b38).setDepth(2);s.add.rectangle(x,y-h*.24,w*.78,13,0x914c43).setDepth(3);for(let xx=x-w*.3;xx<=x+w*.3;xx+=w*.3)s.add.rectangle(xx,y-h*.05,34,34,0x9ed4dc).setStrokeStyle(3,0x4c5960).setDepth(3);s.add.rectangle(x+w*.28,y+h*.18,27,52,0x435a65).setDepth(3);s.add.text(x,y-h/2-19,label,{fontSize:'15px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#243348',padding:{x:7,y:4}}).setOrigin(.5).setDepth(8)}
-function create(){scene=this;let s=this;s.physics.world.setBounds(0,0,2200,1500);makeChar(s,'tianyi',0x667b42,0x24201e,0xe7b994,true);makeChar(s,'jessica',0x242b38,0xd8ad65,0xf0c7aa,true);makeChar(s,'npc',0x80583e,0x382b24,0xd9a77f,false);
-s.add.rectangle(1100,750,2200,1500,0x83a86e).setDepth(0);let grass=s.add.graphics().setDepth(1);for(let y=20;y<1500;y+=55)for(let x=20;x<2200;x+=60){grass.lineStyle(1,0x668b5c,.2);grass.lineBetween(x,y,x+6,y-3)}
-// coast and sea at north
-s.add.rectangle(1100,95,2200,190,0x3297b2).setDepth(1);let waves=s.add.graphics().setDepth(2);for(let x=0;x<2200;x+=55){waves.lineStyle(2,0xa7e4e8,.35);waves.arc(x,80,13,Math.PI,Math.PI*2,false)}
-s.add.rectangle(1100,205,2200,30,0xd7c28a).setDepth(2);s.add.rectangle(1100,242,2200,35,0xb5a27b).setDepth(2);
-// streets
-s.add.rectangle(1100,980,2200,115,0x59636b).setDepth(2);s.add.rectangle(1100,980,2200,4,0xf0d58b).setDepth(3);s.add.rectangle(1100,510,2200,80,0xd8c18f).setDepth(2);
-building(s,350,400,190,130,0xe2c9a3,'OUR APARTMENT');building(s,750,390,175,120,0xb9c8cf,'LUCKIN COFFEE');building(s,1190,390,190,130,0xd8d0a9,"SAM'S CLUB");building(s,1750,355,300,155,0xb6c1c9,'CMA CGM · OFFICE');
-s.add.rectangle(1660,205,520,30,0x5d6872).setDepth(3);s.add.text(1750,285,'⚓ CONTAINER TERMINAL',{fontSize:'17px',fontStyle:'bold',color:'#fff4d0'}).setOrigin(.5).setDepth(8);
+function makeChar(s,key,jacket,hair,skin,glasses){
+let g=s.make.graphics({x:0,y:0,add:false});
+g.fillStyle(0x1c261b,.3);g.fillEllipse(32,68,40,13);
+g.fillStyle(jacket);g.fillRoundedRect(14,36,36,28,9);
+g.fillStyle(skin);g.fillEllipse(32,25,28,27);
+g.fillStyle(hair);g.fillEllipse(32,15,29,18);g.fillRoundedRect(18,11,28,10,5);
+g.fillStyle(skin);g.fillCircle(18,25,4);g.fillCircle(46,25,4);
+if(glasses){g.lineStyle(2,0x20242b);g.strokeRoundedRect(20,21,10,7,2);g.strokeRoundedRect(34,21,10,7,2);g.lineBetween(30,24,34,24)}
+else{g.fillStyle(0x30231d);g.fillCircle(27,25,1.5);g.fillCircle(37,25,1.5)}
+g.fillStyle(0x202632);g.fillEllipse(23,64,13,7);g.fillEllipse(41,64,13,7);
+g.generateTexture(key,64,76);g.destroy()
+}
+function building(s,x,y,w,h,color,label){
+s.add.rectangle(x,y,w,h,color).setStrokeStyle(4,0x624b38).setDepth(2);
+s.add.rectangle(x,y-h*.24,w*.78,13,0x914c43).setDepth(3);
+for(let xx=x-w*.3;xx<=x+w*.3;xx+=w*.3)s.add.rectangle(xx,y-h*.05,34,34,0x9ed4dc).setStrokeStyle(3,0x4c5960).setDepth(3);
+s.add.rectangle(x+w*.28,y+h*.18,27,52,0x435a65).setDepth(3);
+s.add.text(x,y-h/2-19,label,{fontSize:'15px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#243348',padding:{x:7,y:4}}).setOrigin(.5).setDepth(8)
+}
+function create(){
+scene=this;let s=this;
+s.physics.world.setBounds(0,0,2200,1500);
+makeChar(s,'tianyi',0x667b42,0x24201e,0xe7b994,true);
+makeChar(s,'jessica',0x242b38,0xd8ad65,0xf0c7aa,true);
+makeChar(s,'npc',0x80583e,0x382b24,0xd9a77f,false);
+s.add.rectangle(1100,750,2200,1500,0x83a86e).setDepth(0);
+let grass=s.add.graphics().setDepth(1);
+for(let y=20;y<1500;y+=55)for(let x=20;x<2200;x+=60){grass.lineStyle(1,0x668b5c,.2);grass.lineBetween(x,y,x+6,y-3)}
+s.add.rectangle(1100,95,2200,190,0x3297b2).setDepth(1);
+let waves=s.add.graphics().setDepth(2);
+for(let x=0;x<2200;x+=55){waves.lineStyle(2,0xa7e4e8,.35);waves.arc(x,80,13,Math.PI,Math.PI*2,false)}
+s.add.rectangle(1100,205,2200,30,0xd7c28a).setDepth(2);
+s.add.rectangle(1100,242,2200,35,0xb5a27b).setDepth(2);
+s.add.rectangle(1100,980,2200,115,0x59636b).setDepth(2);
+s.add.rectangle(1100,980,2200,4,0xf0d58b).setDepth(3);
+s.add.rectangle(1100,510,2200,80,0xd8c18f).setDepth(2);
+building(s,350,400,190,130,0xe2c9a3,'OUR APARTMENT');
+building(s,750,390,175,120,0xb9c8cf,'LUCKIN COFFEE');
+building(s,1190,390,190,130,0xd8d0a9,"SAM'S CLUB");
+building(s,1750,355,300,155,0xb6c1c9,'CMA CGM · OFFICE');
+s.add.rectangle(1660,205,520,30,0x5d6872).setDepth(3);
+s.add.text(1750,285,'⚓ CONTAINER TERMINAL',{fontSize:'17px',fontStyle:'bold',color:'#fff4d0'}).setOrigin(.5).setDepth(8);
 s.add.text(120,880,'🚇 METRO',{fontSize:'18px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#26364a',padding:8}).setDepth(8);
 s.add.text(1360,1080,'🚗 WITTE TOYOTA',{fontSize:'16px',fontStyle:'bold',color:'#243348',backgroundColor:'#f6f7f5',padding:8}).setDepth(8);
 for(let i=0;i<28;i++){let x=100+(i*173)%2050,y=300+((i*97)%1050);s.add.circle(x,y,18,0x3d8054).setDepth(3);s.add.circle(x-6,y-7,10,0x5e9c68).setDepth(3)}
-player=s.physics.add.sprite(350,520,'tianyi').setDepth(10);player.setCollideWorldBounds(true);jessica=s.physics.add.sprite(300,520,'jessica').setDepth(9);jessica.body.setAllowGravity(false);
-cursors=s.input.keyboard.createCursorKeys();keys=s.input.keyboard.addKeys('W,A,S,D,E');s.cameras.main.setBounds(0,0,2200,1500);s.cameras.main.startFollow(player,true,.08,.08);s.cameras.main.setZoom(.95);
-objects=[{x:350,y:520,label:'Home',kind:'home'},{x:120,y:880,label:'Metro',kind:'metro'},{x:1750,y:355,label:'CMA CGM office',kind:'work'},{x:750,y:390,label:'Luckin Coffee',kind:'coffee'},{x:1190,y:390,label:"Sam's Club",kind:'sams'}];
-targetPrompt=s.add.text(480,480,'',{fontSize:'15px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#243348',padding:{x:8,y:5}}).setOrigin(.5).setDepth(20).setScrollFactor(0);
+player=s.physics.add.sprite(350,520,'tianyi').setDepth(10);
+player.setCollideWorldBounds(true);
+jessica=s.physics.add.sprite(300,520,'jessica').setDepth(9);
+jessica.body.setAllowGravity(false);
+cursors=s.input.keyboard.createCursorKeys();
+keys=s.input.keyboard.addKeys('W,A,S,D,E');
+s.cameras.main.setBounds(0,0,2200,1500);
+s.cameras.main.startFollow(player,true,.08,.08);
+s.cameras.main.setZoom(.95);
+objects=[
+{x:350,y:520,label:'Home',kind:'home'},
+{x:120,y:880,label:'Metro',kind:'metro'},
+{x:1750,y:355,label:'CMA CGM office',kind:'work'},
+{x:750,y:390,label:'Luckin Coffee',kind:'coffee'},
+{x:1190,y:390,label:"Sam's Club",kind:'sams'}
+];
+targetPrompt=s.add.text(480,480,'',{fontSize:'15px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#243348',padding:{x:8,y:5}}).setOrigin(.5).setDepth(20).setScrollFactor(0)
 }
-function update(time,delta){if(!started)return;let dx=0,dy=0;if(cursors.left.isDown||keys.A.isDown)dx=-1;if(cursors.right.isDown||keys.D.isDown)dx=1;if(cursors.up.isDown||keys.W.isDown)dy=-1;if(cursors.down.isDown||keys.S.isDown)dy=1;dx+=moveVector.x;dy+=moveVector.y;let len=Math.hypot(dx,dy)||1;player.setVelocity(dx/len*190,dy/len*190);if(Phaser.Input.Keyboard.JustDown(keys.E))interact();
-// Jessica accompanies Tianyi from home to the metro, waits at home during work, then rejoins at Luckin and follows him to the end.
-if(phase===0||phase===1||phase>=3){if(phase===3&&jessica.x<600){jessica.setPosition(690,450)}let dist=Phaser.Math.Distance.Between(player.x,player.y,jessica.x,jessica.y);if(dist>65){let a=Phaser.Math.Angle.Between(jessica.x,jessica.y,player.x,player.y);jessica.setVelocity(Math.cos(a)*Math.min(150,dist*2),Math.sin(a)*Math.min(150,dist*2))}else jessica.setVelocity(0,0)}else{jessica.setVelocity(0,0);jessica.setPosition(350,520)}
-let target=objects.find(o=>o.kind===phases[phase].kind);let d=Phaser.Math.Distance.Between(player.x,player.y,target.x,target.y);if(d<105){targetPrompt.setText('E / TALK: '+target.label);targetPrompt.setVisible(true)}else targetPrompt.setVisible(false)}
-function interact(){if(dialogOpen)return;let target=objects.find(o=>o.kind===phases[phase].kind);if(!target)return;let d=Phaser.Math.Distance.Between(player.x,player.y,target.x,target.y);if(d<125){openQuestion()}else{$('quest-status').textContent='GO TO '+target.label.toUpperCase()}}
-function openQuestion(){if(qIndex>=phases[phase].qs.length){advancePhase();return}const q=phases[phase].qs[qIndex];dialogOpen=true;answered=false;$('dialog-tag').textContent=`CHAPTER 1 · ${phases[phase].place.toUpperCase()} · ${qIndex+1}/${phases[phase].qs.length}`;$('dialog-title').textContent=phases[phase].place;$('dialog-text').innerHTML=`<strong>${q.speaker}:</strong> “${q.text}”<br><span style="color:#b9c9dd">${q.translation}</span>`;$('speaker').textContent='Tianyi:';$('result').textContent='';$('explain').classList.remove('show');$('close-dialog').disabled=true;$('close-dialog').textContent='Next →';$('answers').innerHTML='';q.answers.forEach((a,i)=>{let b=document.createElement('button');b.className='answer';b.textContent=a;b.onclick=()=>answer(i,b,q);$('answers').appendChild(b)});$('dialog-backdrop').classList.add('show')}
-function answer(i,btn,q){if(answered)return;answered=true;document.querySelectorAll('.answer').forEach((b,j)=>{b.disabled=true;if(j===q.correct)b.classList.add('good')});if(i===q.correct){xp+=10;earned+=10;$('result').textContent='✓ Well done, koning! ❤️';}else{btn.classList.add('bad');$('result').textContent='Almost, koning! ❤️ The correct answer is: '+q.answers[q.correct]}completed++;localStorage.setItem('tianyiQuestXP',xp);localStorage.setItem('tianyiQuestCompleted',completed);updateHud();$('explain-en').textContent=q.en;$('explain-zh').textContent=q.zh;$('explain').classList.add('show');$('close-dialog').disabled=false;$('close-dialog').textContent=qIndex===phases[phase].qs.length-1?'Finish location →':'Next question →';}
-function advancePhase(){phase++;qIndex=0;if(phase>=phases.length){$('earned').textContent=earned;$('complete').classList.add('show');return}let p=phases[phase];$('quest-name').textContent=p.place;$('quest-copy').textContent=`Quest complete! Walk to ${p.place} and press TALK to begin.`;$('quest-status').textContent='NEW LOCATION';}
-$('close-dialog').onclick=()=>{if(!answered)return;if(qIndex<phases[phase].qs.length-1){qIndex++;openQuestion();return}$('dialog-backdrop').classList.remove('show');dialogOpen=false;$('quest-status').textContent='LOCATION COMPLETE';advancePhase()};
+function update(time,delta){
+if(!started)return;
+let dx=0,dy=0;
+if(cursors.left.isDown||keys.A.isDown)dx=-1;
+if(cursors.right.isDown||keys.D.isDown)dx=1;
+if(cursors.up.isDown||keys.W.isDown)dy=-1;
+if(cursors.down.isDown||keys.S.isDown)dy=1;
+dx+=moveVector.x;dy+=moveVector.y;
+let len=Math.hypot(dx,dy)||1;
+player.setVelocity(dx/len*190,dy/len*190);
+if(Phaser.Input.Keyboard.JustDown(keys.E))interact();
+if(phase===0||phase===1||phase>=3){
+if(phase===3&&jessica.x<600){jessica.setPosition(690,450)}
+let dist=Phaser.Math.Distance.Between(player.x,player.y,jessica.x,jessica.y);
+if(dist>65){let a=Phaser.Math.Angle.Between(jessica.x,jessica.y,player.x,player.y);jessica.setVelocity(Math.cos(a)*Math.min(150,dist*2),Math.sin(a)*Math.min(150,dist*2))}
+else jessica.setVelocity(0,0)
+}else{jessica.setVelocity(0,0);jessica.setPosition(350,520)}
+let target=objects.find(o=>o.kind===phases[phase].kind);
+let d=Phaser.Math.Distance.Between(player.x,player.y,target.x,target.y);
+if(d<105){targetPrompt.setText('E / TALK: '+target.label);targetPrompt.setVisible(true)}
+else targetPrompt.setVisible(false)
+}
+function interact(){
+if(dialogOpen)return;
+let target=objects.find(o=>o.kind===phases[phase].kind);
+if(!target)return;
+let d=Phaser.Math.Distance.Between(player.x,player.y,target.x,target.y);
+if(d<125){openQuestion()}
+else{$('quest-status').textContent='GO TO '+target.label.toUpperCase()}
+}
+function openQuestion(){
+if(qIndex>=phases[phase].qs.length){advancePhase();return}
+const q=phases[phase].qs[qIndex];
+dialogOpen=true;answered=false;
+$('dialog-tag').textContent=`CHAPTER 1 · ${phases[phase].place.toUpperCase()} · ${qIndex+1}/${phases[phase].qs.length}`;
+$('dialog-title').textContent=phases[phase].place;
+$('dialog-text').innerHTML=`<strong>${q.speaker}:</strong> “${q.text}”<br><span style="color:#b9c9dd">${q.translation}</span>`;
+$('speaker').textContent='Tianyi:';
+$('result').textContent='';
+$('explain').classList.remove('show');
+$('close-dialog').disabled=true;
+$('close-dialog').textContent='Next →';
+$('answers').innerHTML='';
+q.answers.forEach((a,i)=>{
+let b=document.createElement('button');
+b.className='answer';b.textContent=a;
+b.onclick=()=>answer(i,b,q);
+$('answers').appendChild(b)
+});
+$('dialog-backdrop').classList.add('show')
+}
+function answer(i,btn,q){
+if(answered)return;
+answered=true;
+document.querySelectorAll('.answer').forEach((b,j)=>{b.disabled=true;if(j===q.correct)b.classList.add('good')});
+if(i===q.correct){xp+=10;earned+=10;$('result').textContent='✓ Well done, koning! ❤️'}
+else{btn.classList.add('bad');$('result').textContent='Almost, koning! ❤️ The correct answer is: '+q.answers[q.correct]}
+completed++;
+localStorage.setItem('tianyiQuestXP',xp);
+localStorage.setItem('tianyiQuestCompleted',completed);
+updateHud();
+$('explain-en').textContent=q.en;
+$('explain-zh').textContent=q.zh;
+$('explain').classList.add('show');
+$('close-dialog').disabled=false;
+$('close-dialog').textContent=qIndex===phases[phase].qs.length-1?'Finish location →':'Next question →'
+}
+function advancePhase(){
+phase++;qIndex=0;
+if(phase>=phases.length){$('earned').textContent=earned;$('complete').classList.add('show');return}
+let p=phases[phase];
+$('quest-name').textContent=p.place;
+$('quest-copy').textContent=`Quest complete! Walk to ${p.place} and press TALK to begin.`;
+$('quest-status').textContent='NEW LOCATION'
+}
+$('close-dialog').onclick=()=>{
+if(!answered)return;
+if(qIndex<phases[phase].qs.length-1){qIndex++;openQuestion();return}
+$('dialog-backdrop').classList.remove('show');
+dialogOpen=false;
+$('quest-status').textContent='LOCATION COMPLETE';
+advancePhase()
+};
 $('start-game').onclick=()=>{document.body.classList.add('playing');$('intro').classList.remove('show');started=true;game.scene.start('default')};
 $('menu-start').onclick=()=>{document.body.classList.add('playing');started=true;game.scale.refresh();game.scene.start('default')};
-function updateHud(){$('xp').textContent=xp;$('completed').textContent=completed;refreshMenu()}
-function refreshMenu(){let pct=Math.round(completed/total*100);$('menu-percent').textContent=pct+'%';$('menu-progress-bar').style.width=pct+'%';$('menu-xp').textContent=xp+' / '+(total*10)+' XP';$('menu-level').textContent='Lv.'+(Math.floor(xp/100)+1);}
+function updateHud(){
+$('xp').textContent=xp;
+$('completed').textContent=completed;
+refreshMenu()
+}
+function refreshMenu(){
+let pct=Math.min(100,Math.round(completed/total*100));
+$('menu-percent').textContent=pct+'%';
+$('menu-progress-bar').style.width=pct+'%';
+$('menu-xp').textContent=xp+' / '+(total*10)+' XP';
+$('menu-level').textContent='Lv.'+(Math.floor(xp/100)+1)
+}
 refreshMenu();
-document.querySelectorAll('.menu-nav button').forEach(b=>b.addEventListener('click',()=>{let name=b.dataset.panel;$('menu-panel-title').textContent=name;let content={Story:'Chapter 1: Daily Life in Qingdao. Follow Tianyi through home, the metro, his office, Luckin Coffee, Sam’s Club and home again.',Minigames:'Mini-games are coming soon. Complete the story quests to earn XP while this section is being prepared.',Missions:'Daily mission: complete the next location quest. Chapter mission: finish all six locations.',Grammar:'Grammar focus: present-tense verb conjugation, word order, questions, modal verbs and the perfect tense. Explanations appear after each answer in English and Chinese.',Vocab:'Vocabulary focus: daily routines, transport, vessel operations, coffee orders, groceries and food. Chinese support is included in the lessons.',Progress:`You have earned ${xp} XP and completed ${completed} of ${total} questions (${Math.round(completed/total*100)}%). Your current level is ${Math.floor(xp/100)+1}.`}[name];$('menu-panel-content').innerHTML='<p>'+content+'</p>';$('menu-panel').classList.add('show')}));
+document.querySelectorAll('.menu-nav button').forEach(b=>b.addEventListener('click',()=>{
+let name=b.dataset.panel;
+$('menu-panel-title').textContent=name;
+let content={
+Story:'Chapter 1: Daily Life in Qingdao. Follow Tianyi through home, the metro, his office, Luckin Coffee, Sam’s Club and home again.',
+Minigames:'Mini-games are coming soon. Complete the story quests to earn XP while this section is being prepared.',
+Missions:'Daily mission: complete the next location quest. Chapter mission: finish all six locations.',
+Grammar:'Grammar focus: present-tense verb conjugation, word order, questions, modal verbs and the perfect tense. Explanations appear after each answer in English and Chinese.',
+Vocab:'Vocabulary focus: daily routines, transport, vessel operations, coffee orders, groceries and food. Chinese support is included in the lessons.',
+Progress:`You have earned ${xp} XP and completed ${completed} of ${total} questions (${Math.round(completed/total*100)}%). Your current level is ${Math.floor(xp/100)+1}.`
+}[name];
+$('menu-panel-content').innerHTML='<p>'+content+'</p>';
+$('menu-panel').classList.add('show')
+}));
 $('menu-panel-close').onclick=()=>$('menu-panel').classList.remove('show');
 $('interact').onclick=interact;
-const joy=$('joystick'),knob=$('joy-knob');let active=false;function joyMove(e){let r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,max=35,len=Math.hypot(dx,dy)||1;if(len>max){dx=dx/len*max;dy=dy/len*max}knob.style.transform=`translate(${dx}px,${dy}px)`;moveVector={x:dx/max,y:dy/max}}joy.addEventListener('pointerdown',e=>{active=true;joy.setPointerCapture(e.pointerId);joyMove(e)});joy.addEventListener('pointermove',e=>{if(active)joyMove(e)});['pointerup','pointercancel','lostpointercapture'].forEach(ev=>joy.addEventListener(ev,()=>{active=false;moveVector={x:0,y:0};knob.style.transform='translate(0,0)'}));
+const joy=$('joystick'),knob=$('joy-knob');
+let active=false;
+function joyMove(e){
+let r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,max=35,len=Math.hypot(dx,dy)||1;
+if(len>max){dx=dx/len*max;dy=dy/len*max}
+knob.style.transform=`translate(${dx}px,${dy}px)`;
+moveVector={x:dx/max,y:dy/max}
+}
+joy.addEventListener('pointerdown',e=>{active=true;joy.setPointerCapture(e.pointerId);joyMove(e)});
+joy.addEventListener('pointermove',e=>{if(active)joyMove(e)});
+['pointerup','pointercancel','lostpointercapture'].forEach(ev=>joy.addEventListener(ev,()=>{
+active=false;moveVector={x:0,y:0};knob.style.transform='translate(0,0)'
+}));
 const config={type:Phaser.AUTO,parent:'game',width:960,height:540,backgroundColor:'#83a86e',physics:{default:'arcade',arcade:{debug:false}},scene:{create,update}};
 game=new Phaser.Game(config);
 })();
