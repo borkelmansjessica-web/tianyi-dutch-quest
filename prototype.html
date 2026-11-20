@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Tianyi's Dutch Quest | Qingdao Prototype</title>
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.min.js"></script>
+<style>
+  :root { color-scheme: dark; --gold:#f3c86a; --ink:#101827; --panel:#182337; --line:#42516a; --lime:#b5ed52; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; background:radial-gradient(ellipse at top,#293b59 0,#111827 65%); color:#f8fafc; font-family:Arial,sans-serif; }
+  .shell { width:min(1100px,100%); margin:0 auto; padding:14px; }
+  header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+  .brand { font-weight:900; letter-spacing:.2px; font-size:clamp(15px,2.4vw,21px); }
+  .brand span { color:var(--gold); }
+  .hud { display:flex; gap:7px; flex-wrap:wrap; justify-content:flex-end; }
+  .chip { background:#202e44; border:1px solid #53617a; border-radius:999px; padding:8px 12px; font-size:12px; font-weight:700; white-space:nowrap; }
+  .stage { position:relative; border:2px solid #8d7042; border-radius:17px; overflow:hidden; box-shadow:0 18px 45px #0008; background:#789b6c; }
+  #game { width:100%; aspect-ratio:16/9; min-height:300px; touch-action:none; }
+  #game canvas { display:block; width:100% !important; height:100% !important; object-fit:contain; }
+  .quest-banner { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:11px 14px; background:linear-gradient(90deg,#202d43,#172235); border:1px solid #46536b; border-radius:12px; margin-top:10px; }
+  .quest-banner small { display:block; color:#c3ccda; margin-top:3px; }
+  .quest-name { font-weight:800; }
+  .quest-status { color:var(--gold); font-size:12px; font-weight:800; white-space:nowrap; }
+  .controls { display:flex; justify-content:space-between; align-items:end; gap:12px; margin-top:10px; }
+  .joystick { width:124px; height:124px; border-radius:50%; background:#182337aa; border:2px solid #ffffff42; position:relative; touch-action:none; user-select:none; }
+  .joy-knob { width:48px; height:48px; border-radius:50%; background:linear-gradient(145deg,#dce6f4,#8999b2); border:2px solid #fff9; position:absolute; left:36px; top:36px; box-shadow:0 3px 12px #0008; }
+  .control-hint { color:#aebbd0; font-size:12px; line-height:1.5; text-align:center; flex:1; }
+  .action-btn { border:1px solid #ffe08a; border-radius:15px; padding:16px 19px; color:#211a0b; font-weight:900; font-size:14px; background:linear-gradient(#ffe28a,#e9a92d); box-shadow:0 5px 0 #8b5e19; min-width:108px; touch-action:manipulation; }
+  .action-btn:active { transform:translateY(3px); box-shadow:0 2px 0 #8b5e19; }
+  .dialog-backdrop { position:fixed; inset:0; z-index:20; display:none; align-items:center; justify-content:center; padding:16px; background:#050914c9; }
+  .dialog-backdrop.show { display:flex; }
+  .dialog { width:min(510px,100%); background:linear-gradient(145deg,#26354e,#151f30); border:1px solid #a98950; border-radius:18px; padding:20px; box-shadow:0 20px 60px #000b; }
+  .dialog-tag { color:var(--gold); font-size:11px; font-weight:900; letter-spacing:1.3px; }
+  .dialog h2 { margin:8px 0; font-size:22px; }
+  .dialog p { color:#d9e0eb; line-height:1.5; }
+  .answers { display:grid; gap:9px; margin-top:14px; }
+  .answer { text-align:left; color:#f8fafc; background:#2b3b55; border:1px solid #65748b; padding:13px; border-radius:11px; font-size:15px; }
+  .answer:disabled { opacity:.8; }
+  .answer.good { border-color:#a3e635; background:#25432e; }
+  .answer.bad { border-color:#fb7185; background:#492b37; }
+  .result { min-height:42px; margin-top:12px; line-height:1.5; color:#f8e6b0; }
+  .close-btn { margin-top:8px; border:0; border-radius:10px; background:var(--lime); color:#17200b; padding:12px 16px; font-weight:900; width:100%; }
+  .footer-note { color:#8f9db2; font-size:11px; text-align:center; margin:10px 0 2px; }
+  @media (min-width:760px) { .controls { display:none; } }
+  @media (max-width:520px) { .shell{padding:9px} .chip{padding:7px 9px;font-size:11px} #game{min-height:280px} .joystick{width:108px;height:108px} .joy-knob{left:29px;top:29px} }
+</style>
+</head>
+<body>
+<div class="shell">
+  <header>
+    <div class="brand">⚔️ TIAN YI'S <span>DUTCH QUEST</span></div>
+    <div class="hud">
+      <div class="chip">📍 QINGDAO</div>
+      <div class="chip">⭐ <span id="xp">0</span> XP</div>
+      <div class="chip">👑 LEVEL 1</div>
+    </div>
+  </header>
+
+  <div class="stage"><div id="game"></div></div>
+
+  <div class="quest-banner">
+    <div><div class="quest-name">☕ Quest 01: Vind het café</div><small id="quest-copy">Loop naar het café en praat met de barista.</small></div>
+    <div class="quest-status" id="quest-status">NIET VOLTOOID</div>
+  </div>
+
+  <div class="controls">
+    <div class="joystick" id="joystick" aria-label="Beweegpersonage"><div class="joy-knob" id="joy-knob"></div></div>
+    <div class="control-hint">Gebruik de joystick om te lopen.<br>Op computer: WASD of pijltjestoetsen.</div>
+    <button class="action-btn" id="interact">PRAAT 👋</button>
+  </div>
+  <div class="footer-note">Prototype 0.1 · Besturing: WASD / pijltjes · Bij het café: E of PRAAT</div>
+</div>
+
+<div class="dialog-backdrop" id="dialog-backdrop">
+  <div class="dialog">
+    <div class="dialog-tag">QINGDAO · EERSTE TAALMISSIE</div>
+    <h2 id="dialog-title">Een koffie bestellen ☕</h2>
+    <p id="dialog-text">Barista: Goedemorgen! Wat wil je drinken?</p>
+    <p><strong>Tianyi:</strong> Wat antwoord je?</p>
+    <div class="answers" id="answers">
+      <button class="answer" data-answer="0">Ik wil graag een koffie.</button>
+      <button class="answer" data-answer="1">Ik graag koffie wil.</button>
+      <button class="answer" data-answer="2">Ik ben koffie.</button>
+    </div>
+    <div class="result" id="result"></div>
+    <button class="close-btn" id="close-dialog">Verder spelen</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const xpEl = document.getElementById('xp');
+  const questCopy = document.getElementById('quest-copy');
+  const questStatus = document.getElementById('quest-status');
+  const backdrop = document.getElementById('dialog-backdrop');
+  const resultEl = document.getElementById('result');
+  const answersEl = document.getElementById('answers');
+  const closeDialog = document.getElementById('close-dialog');
+  const interactButton = document.getElementById('interact');
+  let xp = 0;
+  let missionDone = false;
+  let dialogOpen = false;
+  let nearCafe = false;
+  let touchVector = { x: 0, y: 0 };
+
+  const config = {
+    type: Phaser.AUTO,
+    parent: 'game',
+    backgroundColor: '#88a96f',
+    scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH, width: 960, height: 540 },
+    physics: { default: 'arcade', arcade: { debug: false } },
+    scene: { create, update }
+  };
+
+  let game, player, jessica, cursors, keys, promptText, cafeZone, worldDecor;
+  let companionTick = 0;
+
+  function makeCharacterTexture(scene, key, jacket, hair, skin, glasses) {
+    const g = scene.make.graphics({ x: 0, y: 0, add: false });
+    // soft ground shadow
+    g.fillStyle(0x203020, 0.25); g.fillEllipse(32, 67, 39, 13);
+    // body and jacket, viewed from a slightly elevated angle
+    g.fillStyle(jacket, 1); g.fillRoundedRect(15, 34, 34, 30, 10);
+    g.fillStyle(0xffffff, 0.18); g.fillRoundedRect(29, 37, 4, 23, 2);
+    // neck and face
+    g.fillStyle(skin, 1); g.fillRoundedRect(25, 24, 14, 14, 5);
+    g.fillStyle(skin, 1); g.fillEllipse(32, 23, 28, 28);
+    // hair cap
+    g.fillStyle(hair, 1); g.fillEllipse(32, 14, 29, 18);
+    g.fillRoundedRect(18, 12, 28, 10, 5);
+    // ears
+    g.fillStyle(skin, 1); g.fillCircle(18, 24, 4); g.fillCircle(46, 24, 4);
+    if (glasses) {
+      g.lineStyle(2, 0x272b31, 1); g.strokeRoundedRect(20, 20, 10, 8, 2); g.strokeRoundedRect(34, 20, 10, 8, 2); g.lineBetween(30, 23, 34, 23);
+    } else {
+      g.fillStyle(0x332b27, 1); g.fillCircle(27, 24, 1.5); g.fillCircle(37, 24, 1.5);
+    }
+    // shoes
+    g.fillStyle(0x252a34, 1); g.fillEllipse(23, 64, 13, 7); g.fillEllipse(41, 64, 13, 7);
+    g.generateTexture(key, 64, 76);
+    g.destroy();
+  }
+
+  function create() {
+    const s = this;
+    s.physics.world.setBounds(0, 0, 1900, 1300);
+    makeCharacterTexture(s, 'tianyi', 0x667b42, 0x24201e, 0xe7b994, true);
+    makeCharacterTexture(s, 'jessica', 0x242b38, 0xd8ad65, 0xf0c7aa, true);
+    makeCharacterTexture(s, 'barista', 0x6c4b35, 0x382b24, 0xd9a77f, false);
+
+    // Grass base and subtle texture
+    s.add.rectangle(950, 650, 1900, 1300, 0x86a96e).setDepth(0);
+    const grass = s.add.graphics().setDepth(1);
+    for (let y = 25; y < 1300; y += 54) {
+      for (let x = 20; x < 1900; x += 63) {
+        grass.lineStyle(1, 0x668b5c, 0.20); grass.lineBetween(x, y, x + 5, y - 3);
+        grass.lineBetween(x + 12, y + 7, x + 17, y + 4);
+      }
+    }
+
+    // Coastline and promenade at the north edge
+    s.add.rectangle(950, 65, 1900, 130, 0x3d91b0).setDepth(2);
+    const waves = s.add.graphics().setDepth(3);
+    for (let i = 0; i < 34; i++) {
+      const x = (i * 71) % 1880;
+      waves.lineStyle(2, 0xb8e4e8, 0.28); waves.beginPath(); waves.arc(x, 45 + (i % 4) * 24, 16, 0.2, 2.7, false); waves.strokePath();
+    }
+    s.add.rectangle(950, 157, 1900, 34, 0xd8c69b).setDepth(4);
+    s.add.rectangle(950, 180, 1900, 8, 0xf0e2c2).setDepth(4);
+
+    // Roads and plaza paths
+    s.add.rectangle(950, 790, 1900, 170, 0x606b70).setDepth(2);
+    s.add.rectangle(950, 790, 1900, 4, 0xd6c58d).setDepth(3);
+    s.add.rectangle(950, 708, 1900, 5, 0xd5d8d2).setDepth(3);
+    s.add.rectangle(950, 872, 1900, 5, 0xd5d8d2).setDepth(3);
+    s.add.rectangle(610, 485, 520, 90, 0xd4c59c).setDepth(2);
+    s.add.rectangle(1120, 485, 520, 90, 0xd4c59c).setDepth(2);
+
+    // Cafe building
+    const cafe = s.add.container(1100, 380).setDepth(5);
+    const facade = s.add.rectangle(0, 0, 260, 175, 0xe7d6b5).setStrokeStyle(5, 0x785b43);
+    const roof = s.add.triangle(0, -99, -145, 0, 145, 0, 0, -80, 0x9a5544).setStrokeStyle(4, 0x673d35);
+    const awning = s.add.rectangle(0, -34, 210, 24, 0x8b3f3f).setStrokeStyle(2, 0x6b3030);
+    const door = s.add.rectangle(0, 48, 48, 80, 0x536b75).setStrokeStyle(3, 0x594c3c);
+    const win1 = s.add.rectangle(-82, 40, 58, 55, 0x9bcbd1).setStrokeStyle(4, 0x745b45);
+    const win2 = s.add.rectangle(82, 40, 58, 55, 0x9bcbd1).setStrokeStyle(4, 0x745b45);
+    const sign = s.add.text(0, -117, 'QINGDAO CAFÉ', { fontFamily:'Arial', fontSize:'17px', fontStyle:'bold', color:'#fff1c8', backgroundColor:'#53372e', padding:{x:9,y:5} }).setOrigin(0.5);
+    cafe.add([facade, roof, awning, door, win1, win2, sign]);
+    s.add.text(1100, 505, '☕', { fontSize:'30px' }).setOrigin(0.5).setDepth(6);
+
+    // Buildings around the square
+    drawBuilding(s, 370, 420, 205, 145, 0xd7b99b, 'NOODLE HOUSE');
+    drawBuilding(s, 1640, 420, 210, 150, 0xd7c8ad, 'FLOWER SHOP');
+    drawBuilding(s, 390, 1010, 235, 150, 0xd8c3a4, 'BOOK SHOP');
+    drawBuilding(s, 1570, 1015, 235, 150, 0xd5b6a4, 'MARKET');
+
+    // Trees and planters
+    const treePositions = [[170,350],[235,560],[520,260],[770,350],[1420,270],[1730,600],[220,950],[700,1080],[1300,1060],[1770,930],[900,590],[1370,590]];
+    treePositions.forEach(([x,y]) => drawTree(s,x,y));
+
+    // Player and companion
+    player = s.physics.add.image(570, 890, 'tianyi').setDepth(20);
+    player.setCollideWorldBounds(true); player.body.setSize(34, 45).setOffset(15, 20);
+    jessica = s.add.image(500, 930, 'jessica').setDepth(19);
+    s.physics.world.enable(jessica); jessica.body.setAllowGravity(false); jessica.body.setImmovable(true);
+
+    // Barista and interaction zone
+    const barista = s.physics.add.staticImage(1100, 535, 'barista').setDepth(18);
+    barista.setScale(0.85); barista.refreshBody();
+    cafeZone = new Phaser.Geom.Circle(1100, 600, 118);
+    s.add.circle(1100, 600, 118, 0xf4c45e, 0.07).setStrokeStyle(2, 0xf4c45e, 0.55).setDepth(8);
+
+    // Decorative signposts and spawn marker
+    s.add.text(565, 820, 'START', {fontSize:'13px',fontStyle:'bold',color:'#24321d',backgroundColor:'#e8d99f',padding:{x:7,y:4}}).setOrigin(0.5).setDepth(10);
+    s.add.text(1100, 670, 'Praat met de barista', {fontSize:'15px',fontStyle:'bold',color:'#fff4d1',backgroundColor:'#563c2e',padding:{x:9,y:6}}).setOrigin(0.5).setDepth(11);
+
+    cursors = s.input.keyboard.createCursorKeys();
+    keys = s.input.keyboard.addKeys('W,A,S,D,E,SPACE');
+    promptText = s.add.text(480, 0, '', {fontSize:'15px',fontStyle:'bold',color:'#fff5d6',backgroundColor:'#172235',padding:{x:10,y:7}}).setOrigin(0.5).setDepth(50).setScrollFactor(0);
+
+    s.cameras.main.setBounds(0, 0, 1900, 1300);
+    s.cameras.main.startFollow(player, true, 0.08, 0.08);
+    s.cameras.main.setZoom(1.05);
+    s.add.text(18, 18, 'QINGDAO · COASTAL DISTRICT', {fontSize:'13px',fontStyle:'bold',color:'#fff1c8',backgroundColor:'#182337bb',padding:{x:9,y:6}}).setScrollFactor(0).setDepth(60);
+    s.add.text(18, 51, 'Beweeg met WASD / pijltjes en verken de stad', {fontSize:'11px',color:'#ffffff',backgroundColor:'#182337aa',padding:{x:8,y:5}}).setScrollFactor(0).setDepth(60);
+  }
+
+  function drawBuilding(s,x,y,w,h,color,label) {
+    const c = s.add.container(x,y).setDepth(4);
+    c.add(s.add.rectangle(0,0,w,h,color).setStrokeStyle(4,0x725b45));
+    c.add(s.add.triangle(0,-h/2-22,-w/2-8,0,w/2+8,0,0,-38,0x8b5545).setStrokeStyle(3,0x633e36));
+    c.add(s.add.rectangle(0,5,w*.72,20,0x8b4d40));
+    c.add(s.add.rectangle(-w*.27,35,38,42,0x9bcbd1).setStrokeStyle(3,0x745b45));
+    c.add(s.add.rectangle(w*.27,35,38,42,0x9bcbd1).setStrokeStyle(3,0x745b45));
+    c.add(s.add.text(0,-h/2-9,label,{fontSize:'12px',fontStyle:'bold',color:'#fff1d1',backgroundColor:'#513a32',padding:{x:6,y:4}}).setOrigin(.5));
+  }
+
+  function drawTree(s,x,y) {
+    s.add.ellipse(x+4,y+18,52,18,0x263a27,0.23).setDepth(4);
+    s.add.rectangle(x,y+5,13,34,0x76523a).setDepth(5);
+    s.add.circle(x,y-8,28,0x3d754b).setDepth(6);
+    s.add.circle(x-14,y-16,17,0x4d8954).setDepth(7);
+    s.add.circle(x+13,y-19,17,0x5a965a).setDepth(7);
+    s.add.circle(x-7,y-26,10,0x77a969,0.7).setDepth(8);
+  }
+
+  function update(time, delta) {
+    if (!player || dialogOpen) { if (player) player.setVelocity(0,0); return; }
+    const speed = 205;
+    let vx = 0, vy = 0;
+    if (cursors.left.isDown || keys.A.isDown) vx -= 1;
+    if (cursors.right.isDown || keys.D.isDown) vx += 1;
+    if (cursors.up.isDown || keys.W.isDown) vy -= 1;
+    if (cursors.down.isDown || keys.S.isDown) vy += 1;
+    vx += touchVector.x; vy += touchVector.y;
+    const len = Math.hypot(vx,vy);
+    if (len > 1) { vx /= len; vy /= len; }
+    player.setVelocity(vx*speed, vy*speed);
+    if (len > 0.08) player.rotation = Phaser.Math.Angle.Between(0,0,vx,vy) * 0.12;
+
+    companionTick += delta;
+    const targetX = player.x - 55;
+    const targetY = player.y + 22;
+    jessica.x = Phaser.Math.Linear(jessica.x, targetX, 0.055);
+    jessica.y = Phaser.Math.Linear(jessica.y, targetY, 0.055);
+    const bob = Math.sin(companionTick / 190) * 1.4;
+    jessica.y += bob * 0.04;
+
+    const distance = Phaser.Math.Distance.Between(player.x, player.y, 1100, 600);
+    nearCafe = distance < 135;
+    promptText.setText(nearCafe ? 'Druk op E of PRAAT om te praten' : '');
+    if (nearCafe && Phaser.Input.Keyboard.JustDown(keys.E)) openDialog();
+  }
+
+  function openDialog() {
+    if (missionDone) {
+      document.getElementById('dialog-title').textContent = 'Missie voltooid! 🏆';
+      document.getElementById('dialog-text').textContent = 'De barista herkent je alweer. Goed gedaan, koning!';
+      answersEl.innerHTML = '<div class="answer good">Je hebt je eerste koffie besteld.</div>';
+      resultEl.textContent = 'Je hebt deze missie al afgerond. Je kunt verder de stad verkennen.';
+    } else {
+      document.getElementById('dialog-title').textContent = 'Een koffie bestellen ☕';
+      document.getElementById('dialog-text').textContent = 'Barista: Goedemorgen! Wat wil je drinken?';
+      answersEl.innerHTML = '<button class="answer" data-answer="0">Ik wil graag een koffie.</button><button class="answer" data-answer="1">Ik graag koffie wil.</button><button class="answer" data-answer="2">Ik ben koffie.</button>';
+      resultEl.textContent = '';
+      answersEl.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => chooseAnswer(Number(btn.dataset.answer))));
+    }
+    dialogOpen = true;
+    backdrop.classList.add('show');
+  }
+
+  function chooseAnswer(index) {
+    const buttons = [...answersEl.querySelectorAll('button')];
+    buttons.forEach(b => b.disabled = true);
+    if (index === 0) {
+      buttons[0].classList.add('good');
+      resultEl.textContent = '✓ Uitstekend, koning! “Ik wil graag een koffie.” is correct. +10 XP. Je hebt de eerste missie voltooid!';
+      xp += 10; xpEl.textContent = xp; missionDone = true;
+      questStatus.textContent = 'VOLTOOID ✓'; questStatus.style.color = '#b5ed52';
+      questCopy.textContent = 'Goed gedaan! Je eerste Nederlandse bestelling is gelukt.';
+      document.getElementById('dialog-title').textContent = 'Bestelling geslaagd!';
+    } else {
+      buttons[index].classList.add('bad'); buttons[0].classList.add('good');
+      resultEl.textContent = 'Nog niet helemaal. De juiste zin is: “Ik wil graag een koffie.” In een gewone hoofdzin staat het werkwoord op de tweede plaats.';
+    }
+  }
+
+  closeDialog.addEventListener('click', () => { backdrop.classList.remove('show'); dialogOpen = false; });
+  interactButton.addEventListener('click', () => { if (nearCafe) openDialog(); else { questCopy.textContent = 'Loop naar het café met het koffietekentje om de missie te starten.'; } });
+
+  // Touch joystick
+  const joystick = document.getElementById('joystick');
+  const knob = document.getElementById('joy-knob');
+  let joyPointer = null;
+  function moveJoy(e) {
+    const r = joystick.getBoundingClientRect();
+    const cx = r.left + r.width/2, cy = r.top + r.height/2;
+    let dx = e.clientX-cx, dy = e.clientY-cy;
+    const max = r.width*0.32; const d = Math.hypot(dx,dy);
+    if (d > max) { dx = dx/d*max; dy = dy/d*max; }
+    touchVector = {x:dx/max,y:dy/max};
+    knob.style.transform = `translate(${dx}px,${dy}px)`;
+  }
+  joystick.addEventListener('pointerdown', e => { joyPointer=e.pointerId; joystick.setPointerCapture(joyPointer); moveJoy(e); });
+  joystick.addEventListener('pointermove', e => { if (e.pointerId===joyPointer) moveJoy(e); });
+  function resetJoy() { joyPointer=null; touchVector={x:0,y:0}; knob.style.transform='translate(0,0)'; }
+  joystick.addEventListener('pointerup',resetJoy); joystick.addEventListener('pointercancel',resetJoy); joystick.addEventListener('lostpointercapture',resetJoy);
+
+  game = new Phaser.Game(config);
+})();
+</script>
+</body>
+</html>
