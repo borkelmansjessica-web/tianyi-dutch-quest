@@ -688,6 +688,7 @@ function enterInterior(kind,label){
  }else if(kind==='coffee'){
    add(scene.add.rectangle(1100,660,370,65,0x79503a).setDepth(34));
    add(scene.add.rectangle(1100,625,370,12,0xd4a16a).setDepth(35));
+   add(scene.add.image(1100,575,'barista').setScale(.92).setDepth(38));
    add(scene.add.text(1100,610,'咖啡 · ORDER HERE',{fontSize:'17px',fontStyle:'bold',color:'#fff1d5'}).setOrigin(.5).setDepth(36));
    [930,1100,1270].forEach(x=>{
      add(scene.add.circle(x,820,32,0x9b6d4a).setDepth(34));
@@ -701,6 +702,7 @@ function enterInterior(kind,label){
      add(scene.add.rectangle(x,770,90,130,i%2?0xc28e55:0x9eaf86).setStrokeStyle(3,0x69533d).setDepth(34));
      add(scene.add.rectangle(x,720,94,12,0xead6ad).setDepth(35));
    });
+   add(scene.add.image(1100,835,kind==='sams'?'resident-blue':'shopstaff').setScale(.9).setDepth(38));
    add(scene.add.text(1100,900,kind==='sams'?'生鲜 · 食品 · 日用品  /  Groceries & daily goods':'扫码支付  ·  微信支付 / 支付宝',{fontSize:'13px',color:'#7b332e'}).setOrigin(.5).setDepth(36));
  }else if(kind==='office'){
    add(scene.add.rectangle(1100,660,390,55,0x536b83).setDepth(34));
@@ -709,7 +711,8 @@ function enterInterior(kind,label){
      add(scene.add.rectangle(x,800,120,65,0x8b9aa5).setDepth(34));
      add(scene.add.rectangle(x,760,90,28,0x293b4b).setDepth(35));
    });
-   add(scene.add.text(1100,900,'同事 · COLLEAGUES',{fontSize:'14px',color:'#7b332e'}).setOrigin(.5).setDepth(36));
+   add(scene.add.image(1100,735,'colleague').setScale(1.05).setDepth(38));
+   add(scene.add.text(1100,790,'同事  ·  COLLEAGUE',{fontSize:'13px',fontStyle:'bold',color:'#536477'}).setOrigin(.5).setDepth(38));
  }else if(kind==='metro'){
    add(scene.add.rectangle(1100,680,580,115,0x4c5964).setDepth(33));
    add(scene.add.rectangle(1100,750,580,18,0x252d35).setDepth(34));
@@ -775,26 +778,26 @@ function addChineseNeighborhood(s){
  s.add.text(1600,330,'李村生活街  ·  LOCAL SHOPS',{fontSize:'14px',fontStyle:'bold',color:'#fff2d2',backgroundColor:'#9a342e',padding:6}).setOrigin(.5).setDepth(9);
  // Residents walk along the shared paths.
  ambientNPCs=[];
+ // Five residents walk on the open courtyard paths, away from building footprints and parking.
  const residents=[
-  {x:900,y:900,end:990,key:'resident-blue'},
-  {x:1310,y:900,end:1400,key:'resident-red'},
-  {x:480,y:1080,end:560,key:'resident-cream'},
-  {x:1600,y:1080,end:1690,key:'resident-green'},
-  {x:760,y:1260,end:830,key:'resident-purple'}
+  {x:1040,y:1060,end:1160,key:'resident-blue',duration:6200},
+  {x:1160,y:1280,end:1040,key:'resident-red',duration:7100},
+  {x:900,y:1320,end:1000,key:'resident-cream',duration:6800},
+  {x:1200,y:1320,end:1300,key:'resident-green',duration:5900},
+  {x:1100,y:1120,end:1100,key:'resident-purple',duration:7600}
  ];
  residents.forEach((r,i)=>{
-   const n=s.physics.add.sprite(r.x,r.y,r.key).setDepth(11);
-   n.body.setAllowGravity(false);n.body.setImmovable(true);ambientNPCs.push(n);
-   s.tweens.add({targets:n,x:r.end,duration:5400+i*700,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
+   const n=s.add.image(r.x,r.y,r.key).setDepth(18).setScale(.78);
+   ambientNPCs.push(n);
+   s.tweens.add({targets:n,x:r.end,duration:r.duration,yoyo:true,repeat:-1,ease:'Sine.easeInOut',delay:i*350});
  });
- const colleague=s.physics.add.sprite(1690,445,'colleague').setDepth(12);
- colleague.body.setAllowGravity(false);colleague.body.setImmovable(true);
- const barista=s.physics.add.sprite(1690,715,'barista').setDepth(12);
- barista.body.setAllowGravity(false);barista.body.setImmovable(true);
- const convenienceStaff=s.physics.add.sprite(1450,455,'shopstaff').setDepth(12);
- convenienceStaff.body.setAllowGravity(false);convenienceStaff.body.setImmovable(true);
- const samsStaff=s.physics.add.sprite(1190,455,'resident-blue').setDepth(12);
- samsStaff.body.setAllowGravity(false);samsStaff.body.setImmovable(true);
+ // Exterior colleague stands visibly on the pavement beside the CMA CGM entrance.
+ const colleague=s.add.image(1690,455,'colleague').setDepth(18).setScale(.82);
+ // Shop employees are positioned inside their respective buildings and are also recreated inside interiors.
+ const barista=s.add.image(1690,720,'barista').setDepth(18).setScale(.82);
+ const convenienceStaff=s.add.image(1450,455,'shopstaff').setDepth(18).setScale(.82);
+ const samsStaff=s.add.image(1190,455,'resident-blue').setDepth(18).setScale(.82);
+ ambientNPCs.push(colleague,barista,convenienceStaff,samsStaff);
 }
 function create(){
 scene=this;let s=this;
