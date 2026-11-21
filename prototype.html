@@ -505,32 +505,25 @@ s.add.text(x,y-h/2-19,label,{fontSize:'15px',fontStyle:'bold',color:'#fff4d0',ba
 }
 
 function addCourtyardDetails(s){
+ // Home courtyard and a full-size asphalt parking lot beside it.
  s.add.rectangle(350,535,390,210,0xc8b995).setDepth(1);
  s.add.rectangle(350,535,360,180,0xd8c9a7).setDepth(1);
- s.add.rectangle(500,535,190,112,0x59636b).setDepth(2);
- for(let i=0;i<3;i++)s.add.rectangle(445+i*55,535,2,76,0xf4e6bb).setDepth(3);
- s.add.rectangle(500,480,190,3,0xf4e6bb).setDepth(3);
- s.add.rectangle(500,590,190,3,0xf4e6bb).setDepth(3);
- [[205,500,70,28],[205,590,70,28],[390,625,100,25],[610,625,100,25]].forEach(([x,y,w,h])=>{
-  s.add.rectangle(x,y,w,h,0x52784a).setStrokeStyle(3,0x36583c).setDepth(3);
-  for(let i=0;i<5;i++)s.add.circle(x-w/2+12+i*(w-24)/4,y,5,0x7ca65c).setDepth(4);
- });
- [[270,650],[575,650]].forEach(([x,y])=>{
-  s.add.rectangle(x,y,58,10,0x805637).setDepth(4);
-  s.add.rectangle(x,y-8,58,5,0xc49a63).setDepth(4);
-  s.add.rectangle(x-20,y+8,5,10,0x51402e).setDepth(3);
-  s.add.rectangle(x+20,y+8,5,10,0x51402e).setDepth(3);
- });
- [[180,455],[650,455],[180,670],[650,670]].forEach(([x,y])=>{
+ s.add.rectangle(350,535,390,210,0x59636b).setDepth(2);
+ for(let i=0;i<5;i++)s.add.rectangle(205+i*72,535,2,150,0xf4e6bb).setDepth(3);
+ s.add.rectangle(350,430,360,3,0xf4e6bb).setDepth(3);
+ s.add.rectangle(350,640,360,3,0xf4e6bb).setDepth(3);
+ [[180,455],[520,455],[180,615],[520,615]].forEach(([x,y])=>{
   s.add.rectangle(x,y+13,5,26,0x3d4650).setDepth(4);
   s.add.circle(x,y,8,0xffe5a0).setStrokeStyle(2,0x59616b).setDepth(5);
  });
- s.add.rectangle(555,390,116,82,0xd9d6c8).setStrokeStyle(3,0x665c4e).setDepth(2);
- s.add.rectangle(555,359,116,18,0x2d795e).setDepth(4);
- s.add.text(555,359,"便利店 · SHOP",{fontSize:"11px",fontStyle:"bold",color:"#ffffff"}).setOrigin(.5).setDepth(5);
- s.add.rectangle(555,402,34,40,0x8eb9c4).setStrokeStyle(3,0x4c5960).setDepth(4);
- s.add.rectangle(588,407,18,50,0x435a65).setDepth(4);
- s.add.text(555,445,"CONVENIENCE STORE",{fontSize:"9px",fontStyle:"bold",color:"#fff4d0",backgroundColor:"#243348",padding:{x:4,y:2}}).setOrigin(.5).setDepth(8);
+ // Convenience store is now part of the shopping district.
+ const x=1450,y=390;
+ s.add.rectangle(x,y,116,82,0xd9d6c8).setStrokeStyle(3,0x665c4e).setDepth(4);
+ s.add.rectangle(x,y-31,116,18,0x2d795e).setDepth(5);
+ s.add.text(x,y-31,"便利店 · SHOP",{fontSize:"11px",fontStyle:"bold",color:"#ffffff"}).setOrigin(.5).setDepth(6);
+ s.add.rectangle(x,y+12,34,40,0x8eb9c4).setStrokeStyle(3,0x4c5960).setDepth(5);
+ s.add.rectangle(x+33,y+17,18,50,0x435a65).setDepth(5);
+ s.add.text(x,y+55,"CONVENIENCE STORE",{fontSize:"9px",fontStyle:"bold",color:"#fff4d0",backgroundColor:"#243348",padding:{x:4,y:2}}).setOrigin(.5).setDepth(8);
 }
 
 
@@ -559,10 +552,10 @@ function addResidentialDistrict(s){
  s.add.circle(1090,1382,14,0x76a66b).setDepth(5);
  // Residential blocks, with repeated windows, balconies and visible entrances.
  const blocks = [
-   {x:270,y:900,w:190,h:150,label:'RESIDENCE A',wall:0xd9c5a7},
-   {x:690,y:900,w:190,h:150,label:'RESIDENCE B',wall:0xc9d2d0},
-   {x:1120,y:900,w:190,h:150,label:'RESIDENCE C',wall:0xe0c9ad},
-   {x:1810,y:900,w:210,h:150,label:'RESIDENCE D',wall:0xc5cbd3},
+   {x:270,y:805,w:190,h:150,label:'RESIDENCE A',wall:0xd9c5a7},
+   {x:690,y:805,w:190,h:150,label:'RESIDENCE B',wall:0xc9d2d0},
+   {x:1120,y:805,w:190,h:150,label:'RESIDENCE C',wall:0xe0c9ad},
+   {x:1810,y:805,w:210,h:150,label:'RESIDENCE D',wall:0xc5cbd3},
    {x:270,y:1370,w:190,h:145,label:'APARTMENTS',wall:0xd4c4b1},
    {x:690,y:1370,w:190,h:145,label:'APARTMENTS',wall:0xc6d1ce},
    {x:1810,y:1370,w:210,h:145,label:'APARTMENTS',wall:0xd8c9b5}
@@ -610,7 +603,6 @@ function addResidentialDistrict(s){
    s.add.rectangle(x,y+15,5,28,0x3d4650).setDepth(5);
    s.add.circle(x,y,8,0xffe5a0).setStrokeStyle(2,0x59616b).setDepth(6);
  });
- s.add.text(1100,970,'RESIDENTIAL QUARTER · WOONWIJK',{fontSize:'15px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#344a42',padding:{x:8,y:4}}).setOrigin(.5).setDepth(12);
 }
 
 function create(){
@@ -629,20 +621,20 @@ s.add.rectangle(1100,205,2200,30,0xd7c28a).setDepth(2);
 s.add.rectangle(1100,242,2200,35,0xb5a27b).setDepth(2);
 s.add.rectangle(1100,980,2200,115,0x59636b).setDepth(2);
 s.add.rectangle(1100,980,2200,4,0xf0d58b).setDepth(3);
-s.add.rectangle(1100,510,2200,80,0xd8c18f).setDepth(2);
+s.add.rectangle(1100,510,2200,80,0x59636b).setDepth(2);\ns.add.rectangle(1100,510,2200,3,0xe7d9ad).setDepth(3);
 building(s,350,400,190,130,0xe2c9a3,'OUR APARTMENT');
-building(s,750,390,175,120,0xb9c8cf,'LUCKIN COFFEE');
+building(s,1650,390,175,120,0xb9c8cf,'LUCKIN COFFEE');
 building(s,1190,390,190,130,0xd8d0a9,"SAM'S CLUB");
 building(s,1750,355,300,155,0xb6c1c9,'CMA CGM · OFFICE');
  addCourtyardDetails(s);
 s.add.rectangle(1660,205,520,30,0x5d6872).setDepth(3);
 s.add.text(1750,285,'⚓',{fontSize:'17px',fontStyle:'bold',color:'#fff4d0'}).setOrigin(.5).setDepth(8);
-s.add.text(120,880,'🚇 METRO',{fontSize:'18px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#26364a',padding:8}).setDepth(8);
+s.add.text(650,535,'🚇 METRO',{fontSize:'18px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#26364a',padding:8}).setDepth(8);
 makeToyota(s,'white-toyota-empty',0);
 makeToyota(s,'white-toyota-driver',1);
 makeToyota(s,'white-toyota-two',2);
 
-car=s.physics.add.sprite(500,535,'white-toyota-empty').setDepth(11);
+car=s.physics.add.sprite(350,535,'white-toyota-empty').setDepth(11);
 car.setCollideWorldBounds(true);
 car.body.setSize(82,48).setOffset(17,12);
 car.setRotation(0);
@@ -660,8 +652,8 @@ for(let i=0;i<28;i++){let x=100+(i*173)%2050,y=300+((i*97)%1050);s.add.circle(x,
   solidObjects.push(wall);
  }
  addSolid(350,400,190,130);
- addSolid(555,390,116,82);
- addSolid(750,390,175,120);
+ addSolid(1450,390,116,82);
+ addSolid(1650,390,175,120);
  addSolid(1190,390,190,130);
  addSolid(1750,355,300,155);
 
@@ -679,9 +671,9 @@ s.cameras.main.startFollow(player,true,.08,.08);
 s.cameras.main.setZoom(.95);
 objects=[
 {x:350,y:520,label:'Home',kind:'home'},
-{x:120,y:880,label:'Metro',kind:'metro'},
+{x:650,y:535,label:'Metro',kind:'metro'},
 {x:1750,y:355,label:'CMA CGM office',kind:'work'},
-{x:750,y:390,label:'Luckin Coffee',kind:'coffee'},
+{x:1650,y:390,label:'Luckin Coffee',kind:'coffee'},
 {x:1190,y:390,label:"Sam's Club",kind:'sams'}
 ];
 targetPrompt=s.add.text(480,480,'',{fontSize:'15px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#243348',padding:{x:8,y:5}}).setOrigin(.5).setDepth(20).setScrollFactor(0)
