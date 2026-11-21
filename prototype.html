@@ -421,7 +421,7 @@ const phases=[
 ];
 const total=phases.reduce((n,p)=>n+p.qs.length,0);
 let scene,player,jessica,car,cursors,keys,game,objects=[],targetPrompt,moveVector={x:0,y:0};
-let indoor=false,indoorKind='',indoorLabel='',indoorReturn={x:350,y:520},indoorLayer=[],indoorTrain=null,ambientNPCs=[];let dayOverlay=null;
+let indoor=false,indoorKind='',indoorLabel='',indoorReturn={x:520,y:1090},indoorLayer=[],indoorTrain=null,ambientNPCs=[];let dayOverlay=null;
 let driving=false,carHasJessica=false,carSpeed=0;
 function makeChar(s,key,jacket,hair,skin,glasses){
 let g=s.make.graphics({x:0,y:0,add:false});
@@ -587,12 +587,12 @@ function addResidentialDistrict(s){
  addRect(1100,1274,430,34,0x8a7762,6);
  s.add.text(1100,1274,'社区停车场  ·  PARKING',{fontSize:'13px',fontStyle:'bold',color:'#fff2d4'}).setOrigin(.5).setDepth(8);
  // Landscaped shared courtyard and curved-feeling planted islands.
- s.add.ellipse(1100,1010,390,105,0x70985e).setDepth(4);
- s.add.ellipse(1100,1010,325,72,0x9cba7d).setDepth(5);
- s.add.ellipse(1100,1010,100,55,0x668d58).setDepth(6);
- s.add.circle(1100,1000,24,0x4b7e4e).setDepth(7);
- s.add.circle(1080,990,15,0x79a968).setDepth(8);
- s.add.circle(1120,990,15,0x79a968).setDepth(8);
+ s.add.ellipse(1100,1360,390,82,0x70985e).setDepth(4);
+ s.add.ellipse(1100,1360,325,58,0x9cba7d).setDepth(5);
+ s.add.ellipse(1100,1360,100,42,0x668d58).setDepth(6);
+ s.add.circle(1100,1352,24,0x4b7e4e).setDepth(7);
+ s.add.circle(1080,1344,15,0x79a968).setDepth(8);
+ s.add.circle(1120,1344,15,0x79a968).setDepth(8);
  // Footpaths connect every residential entrance to the courtyard and parking.
  addRect(650,1110,520,38,0xd6c8a8,5);
  addRect(1550,1110,520,38,0xd6c8a8,5);
@@ -647,7 +647,7 @@ function addResidentialDistrict(s){
  addRect(1350,930,125,45,0xb9c6c3,8).setStrokeStyle(3,0x66716d);
  s.add.text(1350,930,'电动车停放',{fontSize:'11px',fontStyle:'bold',color:'#344b4c'}).setOrigin(.5).setDepth(10);
  // Benches and warm lantern-style courtyard lights.
- [[1020,1000],[1180,1000],[760,1190],[1440,1190]].forEach(([x,y])=>{
+ [[1020,1360],[1180,1360],[760,1190],[1440,1190]].forEach(([x,y])=>{
    addRect(x,y,42,9,0x8d6347,8);addRect(x,y+9,5,12,0x584a3c,8);
  });
  [[430,1080],[430,1280],[1870,1080],[1870,1280],[1100,1370]].forEach(([x,y])=>{
@@ -815,7 +815,7 @@ makeToyota(s,'white-toyota-empty',0);
 makeToyota(s,'white-toyota-driver',1);
 makeToyota(s,'white-toyota-two',2);
 
-car=s.physics.add.sprite(1200,1160,'white-toyota-empty').setDepth(11);
+car=s.physics.add.sprite(1260,1160,'white-toyota-empty').setDepth(11);
 car.setCollideWorldBounds(true);
 car.body.setSize(82,48).setOffset(17,12);
 car.setRotation(0);
@@ -838,9 +838,9 @@ for(let i=0;i<28;i++){let x=100+(i*173)%2050,y=300+((i*97)%1050);s.add.circle(x,
  addSolid(1190,390,190,130);
  addSolid(1750,355,300,155);
 
- player=s.physics.add.sprite(350,520,'tianyi').setDepth(10);
+ player=s.physics.add.sprite(520,1090,'tianyi').setDepth(10);
 player.setCollideWorldBounds(true);
- addChineseNeighborhood(s);
+ // Legacy duplicate gate/road layer intentionally disabled.
  dayOverlay=s.add.rectangle(1100,750,2200,1500,0x101b3b,0.08).setDepth(9.5);
  // Soft ambient cloud bands and warm street lamps.
  [250,820,1360,1900].forEach((x,i)=>{
@@ -851,7 +851,7 @@ player.setCollideWorldBounds(true);
  addResidentialDistrict(s);
  s.physics.add.collider(player,solidObjects);
  s.physics.add.collider(car,solidObjects);
-jessica=s.physics.add.sprite(300,520,'jessica').setDepth(9);
+jessica=s.physics.add.sprite(585,1090,'jessica').setDepth(9);
 jessica.body.setAllowGravity(false);
 cursors=s.input.keyboard.createCursorKeys();
 keys=s.input.keyboard.addKeys('W,A,S,D,E');
@@ -859,7 +859,7 @@ s.cameras.main.setBounds(0,0,2200,1500);
 s.cameras.main.startFollow(player,true,.08,.08);
 s.cameras.main.setZoom(.95);
 objects=[
-{x:350,y:520,label:'Home',kind:'home'},
+{x:520,y:1061,label:'Our Home',kind:'home'},
 {x:650,y:610,label:'Metro',kind:'metro'},
 {x:1750,y:355,label:'CMA CGM office',kind:'work'},
 {x:1740,y:650,label:'Luckin Coffee',kind:'coffee'},
@@ -912,7 +912,7 @@ function update(time,delta){
    let dist=Phaser.Math.Distance.Between(player.x,player.y,jessica.x,jessica.y);
    if(dist>65){let a=Phaser.Math.Angle.Between(jessica.x,jessica.y,player.x,player.y);jessica.setVelocity(Math.cos(a)*Math.min(150,dist*2),Math.sin(a)*Math.min(150,dist*2))}
    else jessica.setVelocity(0,0);
-  }else{jessica.setVelocity(0,0);jessica.setPosition(350,520)}
+  }else{jessica.setVelocity(0,0);jessica.setPosition(585,1090)}
   scene.cameras.main.startFollow(player,true,.08,.08);
  }
  if(Phaser.Input.Keyboard.JustDown(keys.E))interact();
@@ -943,7 +943,7 @@ function update(time,delta){
    {label:'LICUN METRO',x:650,y:610}
   ].find(e=>Phaser.Math.Distance.Between(player.x,player.y,e.x,e.y)<95);
   if(nearbyEntrance){targetPrompt.setText('E: ENTER '+nearbyEntrance.label);targetPrompt.setVisible(true)}
-  else if(d<105){targetPrompt.setText('E / TALK: '+target.label);targetPrompt.setVisible(true)}
+  else if(d<105 && !(phases[phase].kind==='home' && phase===0)){targetPrompt.setText('E / TALK: '+target.label);targetPrompt.setVisible(true)}
   else targetPrompt.setVisible(false);
  }
  // A non-passenger Jessica keeps following the vehicle on foot.
