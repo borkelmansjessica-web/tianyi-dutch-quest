@@ -635,7 +635,6 @@ building(s,750,390,175,120,0xb9c8cf,'LUCKIN COFFEE');
 building(s,1190,390,190,130,0xd8d0a9,"SAM'S CLUB");
 building(s,1750,355,300,155,0xb6c1c9,'CMA CGM · OFFICE');
  addCourtyardDetails(s);
- addResidentialDistrict(s);
 s.add.rectangle(1660,205,520,30,0x5d6872).setDepth(3);
 s.add.text(1750,285,'⚓',{fontSize:'17px',fontStyle:'bold',color:'#fff4d0'}).setOrigin(.5).setDepth(8);
 s.add.text(120,880,'🚇 METRO',{fontSize:'18px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#26364a',padding:8}).setDepth(8);
@@ -668,6 +667,7 @@ for(let i=0;i<28;i++){let x=100+(i*173)%2050,y=300+((i*97)%1050);s.add.circle(x,
 
  player=s.physics.add.sprite(350,520,'tianyi').setDepth(10);
 player.setCollideWorldBounds(true);
+ addResidentialDistrict(s);
  s.physics.add.collider(player,solidObjects);
  s.physics.add.collider(car,solidObjects);
 jessica=s.physics.add.sprite(300,520,'jessica').setDepth(9);
