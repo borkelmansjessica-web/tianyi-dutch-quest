@@ -421,6 +421,7 @@ const phases=[
 ];
 const total=phases.reduce((n,p)=>n+p.qs.length,0);
 let scene,player,jessica,car,cursors,keys,game,objects=[],targetPrompt,moveVector={x:0,y:0};
+let indoor=false,indoorKind='',indoorLabel='',indoorReturn={x:350,y:520},indoorLayer=[],indoorTrain=null,ambientNPCs=[];let dayOverlay=null;
 let driving=false,carHasJessica=false,carSpeed=0;
 function makeChar(s,key,jacket,hair,skin,glasses){
 let g=s.make.graphics({x:0,y:0,add:false});
@@ -539,23 +540,7 @@ function addResidentialDistrict(s){
  // Side street connecting the old neighborhood to the new residential street
  s.add.rectangle(1500,817.5,88,615,0x59636b).setDepth(2);
  s.add.rectangle(1500,817.5,3,615,0xe7d9ad).setDepth(3);
- // Zebra crossings only at real intersections.
- // At the upper junction, the east-west road is crossed vertically on both approaches.
- [1432,1568].forEach(x=>{
-   for(let i=0;i<9;i++) s.add.rectangle(x-32+i*8,510,5,76,0xf2eee0).setDepth(4);
- });
- // The north-south connector is crossed horizontally immediately after the upper junction.
- [565].forEach(y=>{
-   for(let i=0;i<9;i++) s.add.rectangle(1500,y-32+i*8,76,5,0xf2eee0).setDepth(4);
- });
- // At the central residential-road junction: crosswalks on the connector's two approaches
- // and on the east-west road's two approaches.
- [910,1050].forEach(y=>{
-   for(let i=0;i<9;i++) s.add.rectangle(1500,y-32+i*8,76,5,0xf2eee0).setDepth(4);
- });
- [1432,1568].forEach(x=>{
-   for(let i=0;i<9;i++) s.add.rectangle(x-32+i*8,980,5,108,0xf2eee0).setDepth(4);
- });
+ // Zebra crossings removed by design. Roads remain clear and readable.
  // A little planted square between the apartment buildings
  s.add.rectangle(1090,1370,300,150,0x638d58).setStrokeStyle(4,0x496e45).setDepth(2);
  s.add.rectangle(1090,1370,110,110,0xb6c99a).setStrokeStyle(3,0x7a966b).setDepth(3);
@@ -618,6 +603,120 @@ function addResidentialDistrict(s){
  });
 }
 
+
+function enterInterior(kind,label){
+ if(indoor||driving||!player)return;
+ indoor=true;indoorKind=kind;indoorLabel=label;
+ indoorReturn={x:player.x,y:player.y};
+ player.setVelocity(0,0);player.setPosition(1100,750);
+ player.setDepth(45);
+ jessica.setVisible(false);car.setVisible(false);
+ scene.cameras.main.startFollow(player,true,.08,.08);
+ indoorLayer=[];
+ const add=(o)=>{indoorLayer.push(o);return o};
+ // Cover the outdoor map, then build a walkable room with a visible doorway.
+ add(scene.add.rectangle(1100,750,2200,1500,0x17212b).setDepth(30));
+ add(scene.add.rectangle(1100,750,650,450,0xd7c7a7).setStrokeStyle(12,0x57483b).setDepth(31));
+ add(scene.add.rectangle(1100,535,650,20,0x8c5544).setDepth(32));
+ add(scene.add.rectangle(1100,965,650,20,0x8c5544).setDepth(32));
+ add(scene.add.rectangle(1100,750,610,410,0xe8dcc5).setDepth(32));
+ // Warm ceiling lights and Chinese decorative touches.
+ [930,1100,1270].forEach(x=>add(scene.add.circle(x,590,12,0xffe3a1).setStrokeStyle(3,0x8a7048).setDepth(34)));
+ add(scene.add.text(1100,555,label,{fontSize:'22px',fontStyle:'bold',color:'#fff3d2',backgroundColor:'#8e302c',padding:{x:12,y:6}}).setOrigin(.5).setDepth(36));
+ add(scene.add.text(1100,985,'按 E 离开  ·  Press E to leave',{fontSize:'14px',fontStyle:'bold',color:'#fff',backgroundColor:'#26364a',padding:8}).setOrigin(.5).setDepth(40));
+ if(kind==='home'){
+   add(scene.add.rectangle(940,675,150,80,0x8b5e43).setDepth(34));
+   add(scene.add.rectangle(940,650,160,18,0xc28d5d).setDepth(35));
+   add(scene.add.rectangle(1250,680,100,70,0x9d7956).setDepth(34));
+   add(scene.add.rectangle(1250,642,110,10,0xeee2ca).setDepth(35));
+   add(scene.add.rectangle(1100,850,180,65,0xb57c4f).setDepth(34));
+   add(scene.add.rectangle(1100,815,190,12,0xead9bd).setDepth(35));
+   add(scene.add.text(1100,720,'家  HOME',{fontSize:'18px',fontStyle:'bold',color:'#7b332e'}).setOrigin(.5).setDepth(36));
+   add(scene.add.text(940,750,'鞋柜  ·  鞋子',{fontSize:'12px',color:'#fff'}).setOrigin(.5).setDepth(36));
+ }else if(kind==='coffee'){
+   add(scene.add.rectangle(1100,660,370,65,0x79503a).setDepth(34));
+   add(scene.add.rectangle(1100,625,370,12,0xd4a16a).setDepth(35));
+   add(scene.add.text(1100,610,'咖啡 · ORDER HERE',{fontSize:'17px',fontStyle:'bold',color:'#fff1d5'}).setOrigin(.5).setDepth(36));
+   [930,1100,1270].forEach(x=>{
+     add(scene.add.circle(x,820,32,0x9b6d4a).setDepth(34));
+     add(scene.add.rectangle(x,860,8,45,0x66503f).setDepth(33));
+   });
+   add(scene.add.text(1100,900,'扫码点单  ·  Scan to order',{fontSize:'13px',color:'#7b332e'}).setOrigin(.5).setDepth(36));
+ }else if(kind==='shop'||kind==='sams'){
+   add(scene.add.rectangle(1100,650,430,70,kind==='sams'?0x426b58:0x47745c).setDepth(34));
+   add(scene.add.text(1100,650,kind==='sams'?'山姆会员店  ·  SAM’S CLUB':'便利店  ·  CONVENIENCE STORE',{fontSize:'18px',fontStyle:'bold',color:'#fff'}).setOrigin(.5).setDepth(36));
+   [900,1020,1180,1300].forEach((x,i)=>{
+     add(scene.add.rectangle(x,770,90,130,i%2?0xc28e55:0x9eaf86).setStrokeStyle(3,0x69533d).setDepth(34));
+     add(scene.add.rectangle(x,720,94,12,0xead6ad).setDepth(35));
+   });
+   add(scene.add.text(1100,900,kind==='sams'?'生鲜 · 食品 · 日用品  /  Groceries & daily goods':'扫码支付  ·  微信支付 / 支付宝',{fontSize:'13px',color:'#7b332e'}).setOrigin(.5).setDepth(36));
+ }else if(kind==='office'){
+   add(scene.add.rectangle(1100,660,390,55,0x536b83).setDepth(34));
+   add(scene.add.text(1100,660,'CMA CGM · 办公室',{fontSize:'18px',fontStyle:'bold',color:'#fff'}).setOrigin(.5).setDepth(36));
+   [930,1100,1270].forEach(x=>{
+     add(scene.add.rectangle(x,800,120,65,0x8b9aa5).setDepth(34));
+     add(scene.add.rectangle(x,760,90,28,0x293b4b).setDepth(35));
+   });
+   add(scene.add.text(1100,900,'同事 · COLLEAGUES',{fontSize:'14px',color:'#7b332e'}).setOrigin(.5).setDepth(36));
+ }else if(kind==='metro'){
+   add(scene.add.rectangle(1100,680,580,115,0x4c5964).setDepth(33));
+   add(scene.add.rectangle(1100,750,580,18,0x252d35).setDepth(34));
+   add(scene.add.rectangle(1100,835,580,14,0xd6b65e).setDepth(35));
+   add(scene.add.text(1100,615,'李村站  LICUN STATION',{fontSize:'21px',fontStyle:'bold',color:'#fff',backgroundColor:'#a72e35',padding:8}).setOrigin(.5).setDepth(36));
+   add(scene.add.text(1100,700,'2号线  LINE 2     ⇄     3号线  LINE 3',{fontSize:'16px',fontStyle:'bold',color:'#fff'}).setOrigin(.5).setDepth(36));
+   add(scene.add.rectangle(1100,800,500,100,0xdce5e8).setStrokeStyle(4,0x596a73).setDepth(36));
+   add(scene.add.rectangle(1100,760,500,22,0x9e3038).setDepth(37));
+   add(scene.add.text(1100,835,'下一班列车即将进站  ·  NEXT TRAIN',{fontSize:'13px',color:'#273744'}).setOrigin(.5).setDepth(38));
+   indoorTrain=scene.add.rectangle(1100,790,390,58,0xe9ecec).setStrokeStyle(4,0x53636d).setDepth(39);
+   indoorLayer.push(indoorTrain);
+   scene.tweens.add({targets:indoorTrain,x:1380,duration:4200,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
+ }
+ $('quest-status').textContent=label.toUpperCase();
+ $('quest-copy').textContent='Explore the interior. Press E to leave or TALK to continue.';
+}
+function leaveInterior(){
+ if(!indoor)return;
+ indoorLayer.forEach(o=>{if(o&&o.destroy)o.destroy()});
+ indoorLayer=[];indoorTrain=null;indoor=false;indoorKind='';
+ player.setPosition(indoorReturn.x,indoorReturn.y);player.setDepth(10);
+ jessica.setVisible(true);car.setVisible(true);
+ scene.cameras.main.startFollow(player,true,.08,.08);
+ $('quest-status').textContent='BACK OUTSIDE';
+ $('quest-copy').textContent='Explore the neighborhood.';
+}
+function addChineseNeighborhood(s){
+ // Gated residential compound entrance and Chinese street furniture.
+ s.add.rectangle(1090,760,430,18,0x6f5541).setDepth(4);
+ s.add.rectangle(875,760,18,92,0x8e3832).setDepth(5);
+ s.add.rectangle(1305,760,18,92,0x8e3832).setDepth(5);
+ s.add.rectangle(1090,715,430,12,0xb98a4f).setDepth(5);
+ s.add.text(1090,700,'李村社区  LICUN COMMUNITY',{fontSize:'15px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#8e302c',padding:{x:9,y:4}}).setOrigin(.5).setDepth(8);
+ // Parcel lockers and e-bike parking.
+ for(let i=0;i<6;i++){
+   s.add.rectangle(1380+i*22,820,18,54,0x5d8792).setStrokeStyle(2,0x334c57).setDepth(5);
+   s.add.rectangle(1380+i*22,820,10,4,0xe7d7a8).setDepth(6);
+ }
+ for(let i=0;i<4;i++){
+   const x=900+i*42;
+   s.add.circle(x,875,13,0x29353b).setStrokeStyle(3,0x9da9aa).setDepth(5);
+   s.add.rectangle(x,875,32,5,0x8b9a9d).setRotation(0.3).setDepth(6);
+ }
+ // Lanterns and Chinese shop signs along the commercial edge.
+ [1400,1510,1620,1730].forEach((x,i)=>{
+   s.add.rectangle(x,275,36,12,0x9d3035).setDepth(7);
+   s.add.circle(x,292,9,0xc83b32).setDepth(8);
+   s.add.rectangle(x,303,3,12,0xd9b46a).setDepth(7);
+ });
+ s.add.text(1500,325,'李村生活街  ·  LOCAL SHOPS',{fontSize:'13px',fontStyle:'bold',color:'#fff2d2',backgroundColor:'#9a342e',padding:6}).setOrigin(.5).setDepth(9);
+ // Moving pedestrians make the street feel inhabited.
+ ambientNPCs=[];
+ [[820,700,960],[1030,875,1160],[1870,700,1990],[1420,880,1550]].forEach(([x,y,end],i)=>{
+   const n=s.physics.add.sprite(x,y,'npc').setDepth(11);
+   n.body.setAllowGravity(false);n.body.setImmovable(true);ambientNPCs.push(n);
+   s.tweens.add({targets:n,x:end,duration:5000+i*900,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
+ });
+}
+
 function create(){
 scene=this;let s=this;
 s.physics.world.setBounds(0,0,2200,1500);
@@ -643,7 +742,12 @@ building(s,1750,355,300,155,0xb6c1c9,'CMA CGM · OFFICE');
  addCourtyardDetails(s);
 s.add.rectangle(1660,205,520,30,0x5d6872).setDepth(3);
 s.add.text(1750,285,'⚓',{fontSize:'17px',fontStyle:'bold',color:'#fff4d0'}).setOrigin(.5).setDepth(8);
-s.add.text(650,535,'🚇 METRO',{fontSize:'18px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#26364a',padding:8}).setDepth(8);
+s.add.rectangle(650,535,150,82,0x53636c).setStrokeStyle(4,0x2e414b).setDepth(4);
+s.add.rectangle(650,505,150,22,0xa72e35).setDepth(5);
+s.add.text(650,505,'李村站  LICUN',{fontSize:'15px',fontStyle:'bold',color:'#fff'}).setOrigin(.5).setDepth(6);
+s.add.rectangle(650,560,92,26,0x263944).setDepth(5);
+s.add.text(650,560,'地铁  METRO',{fontSize:'11px',fontStyle:'bold',color:'#fff'}).setOrigin(.5).setDepth(6);
+s.add.rectangle(650,590,68,8,0xc7b78e).setDepth(4);
 makeToyota(s,'white-toyota-empty',0);
 makeToyota(s,'white-toyota-driver',1);
 makeToyota(s,'white-toyota-two',2);
@@ -673,6 +777,14 @@ for(let i=0;i<28;i++){let x=100+(i*173)%2050,y=300+((i*97)%1050);s.add.circle(x,
 
  player=s.physics.add.sprite(350,520,'tianyi').setDepth(10);
 player.setCollideWorldBounds(true);
+ addChineseNeighborhood(s);
+ dayOverlay=s.add.rectangle(1100,750,2200,1500,0x101b3b,0.08).setDepth(9.5);
+ // Soft ambient cloud bands and warm street lamps.
+ [250,820,1360,1900].forEach((x,i)=>{
+   const cloud=s.add.ellipse(x,180,110,26,0xffffff,.12).setDepth(2);
+   s.tweens.add({targets:cloud,x:x+70,duration:14000+i*1300,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
+ });
+
  addResidentialDistrict(s);
  s.physics.add.collider(player,solidObjects);
  s.physics.add.collider(car,solidObjects);
@@ -685,7 +797,7 @@ s.cameras.main.startFollow(player,true,.08,.08);
 s.cameras.main.setZoom(.95);
 objects=[
 {x:350,y:520,label:'Home',kind:'home'},
-{x:650,y:535,label:'Metro',kind:'metro'},
+{x:650,y:610,label:'Metro',kind:'metro'},
 {x:1750,y:355,label:'CMA CGM office',kind:'work'},
 {x:1740,y:650,label:'Luckin Coffee',kind:'coffee'},
 {x:1190,y:390,label:"Sam's Club",kind:'sams'}
@@ -694,6 +806,20 @@ targetPrompt=s.add.text(480,480,'',{fontSize:'15px',fontStyle:'bold',color:'#fff
 }
 function update(time,delta){
  if(!started)return;
+ if(indoor){
+   let ix=0,iy=0;
+   if(cursors.left.isDown||keys.A.isDown)ix=-1;
+   if(cursors.right.isDown||keys.D.isDown)ix=1;
+   if(cursors.up.isDown||keys.W.isDown)iy=-1;
+   if(cursors.down.isDown||keys.S.isDown)iy=1;
+   ix+=moveVector.x;iy+=moveVector.y;
+   const il=Math.hypot(ix,iy)||1;
+   player.setVelocity(ix/il*165,iy/il*165);
+   player.x=Phaser.Math.Clamp(player.x,810,1390);
+   player.y=Phaser.Math.Clamp(player.y,565,935);
+   if(Phaser.Input.Keyboard.JustDown(keys.E))interact();
+   return;
+ }
  let dx=0,dy=0;
  if(cursors.left.isDown||keys.A.isDown)dx=-1;
  if(cursors.right.isDown||keys.D.isDown)dx=1;
@@ -727,6 +853,10 @@ function update(time,delta){
   scene.cameras.main.startFollow(player,true,.08,.08);
  }
  if(Phaser.Input.Keyboard.JustDown(keys.E))interact();
+ if(dayOverlay){
+   const cycle=((time%180000)/180000)*Math.PI*2;
+   dayOverlay.setAlpha(0.035+0.14*((1-Math.cos(cycle))/2));
+ }
  let activeX=driving?car.x:player.x,activeY=driving?car.y:player.y;
  if(!driving && (phase===0||phase===1||phase>=3)){
   // If Jessica is not in the car, she follows the car while it is being driven.
@@ -740,6 +870,18 @@ function update(time,delta){
   else{targetPrompt.setText('Driving · E to exit');targetPrompt.setVisible(true)}
  }else if(Phaser.Math.Distance.Between(player.x,player.y,car.x,car.y)<115){
   targetPrompt.setText('E: ENTER WHITE TOYOTA');targetPrompt.setVisible(true)
+ }else if([
+  {label:'HOME',x:350,y:455},{label:'CONVENIENCE STORE',x:1450,y:445},
+  {label:'SAM’S CLUB',x:1190,y:455},{label:'LUCKIN COFFEE',x:1740,y:715},
+  {label:'CMA CGM OFFICE',x:1750,y:445},{label:'LICUN METRO',x:650,y:610},
+  {label:'RESIDENCE A',x:270,y:895},{label:'RESIDENCE B',x:690,y:895},
+  {label:'RESIDENCE C',x:1120,y:895},{label:'RESIDENCE D',x:1810,y:895},
+  {label:'APARTMENTS',x:270,y:1450},{label:'APARTMENTS',x:690,y:1450},{label:'APARTMENTS',x:1810,y:1450}
+ ].some(e=>Phaser.Math.Distance.Between(player.x,player.y,e.x,e.y)<95)){
+  const e=[{label:'HOME',x:350,y:455},{label:'CONVENIENCE STORE',x:1450,y:445},
+  {label:'LUCKIN COFFEE',x:1740,y:715},{label:'CMA CGM OFFICE',x:1750,y:445},
+  {label:'LICUN METRO',x:650,y:610}].find(e=>Phaser.Math.Distance.Between(player.x,player.y,e.x,e.y)<95);
+  targetPrompt.setText('E: ENTER '+e.label);targetPrompt.setVisible(true)
  }else if(d<105){targetPrompt.setText('E / TALK: '+target.label);targetPrompt.setVisible(true)}
  else targetPrompt.setVisible(false);
  // A non-passenger Jessica keeps following the vehicle on foot.
@@ -751,7 +893,30 @@ function update(time,delta){
 }
 function interact(){
  if(dialogOpen)return;
+ if(indoor){
+   if(indoorKind===phases[phase].kind){openQuestion();return}
+   leaveInterior();return;
+ }
 
+ // ENTER BUILDINGS / METRO
+ const entrances=[
+  {kind:'home',label:'Our Apartment',x:350,y:455},
+  {kind:'shop',label:'Convenience Store',x:1450,y:445},
+  {kind:'sams',label:'Sam’s Club',x:1190,y:455},
+  {kind:'coffee',label:'Luckin Coffee',x:1740,y:715},
+  {kind:'office',label:'CMA CGM Office',x:1750,y:445},
+  {kind:'metro',label:'Licun Metro Station',x:650,y:610},
+  {kind:'home',label:'Residence A',x:270,y:895},
+  {kind:'home',label:'Residence B',x:690,y:895},
+  {kind:'home',label:'Residence C',x:1120,y:895},
+  {kind:'home',label:'Residence D',x:1810,y:895},
+  {kind:'home',label:'Apartment Block',x:270,y:1450},
+  {kind:'home',label:'Apartment Block',x:690,y:1450},
+  {kind:'home',label:'Apartment Block',x:1810,y:1450}
+ ];
+ const nearCarForEntry=Phaser.Math.Distance.Between(player.x,player.y,car.x,car.y);
+ const door=entrances.find(e=>Phaser.Math.Distance.Between(player.x,player.y,e.x,e.y)<95 && !(e.kind==='home' && nearCarForEntry<125));
+ if(door){enterInterior(door.kind,door.label);return;}
  // EXIT CAR
  if(driving){
   driving=false;
