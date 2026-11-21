@@ -498,11 +498,18 @@ function makeToyota(s,key,occupants=0){
  g.destroy();
 }
 function building(s,x,y,w,h,color,label){
-s.add.rectangle(x,y,w,h,color).setStrokeStyle(4,0x624b38).setDepth(2);
-s.add.rectangle(x,y-h*.24,w*.78,13,0x914c43).setDepth(3);
-for(let xx=x-w*.3;xx<=x+w*.3;xx+=w*.3)s.add.rectangle(xx,y-h*.05,34,34,0x9ed4dc).setStrokeStyle(3,0x4c5960).setDepth(3);
-s.add.rectangle(x+w*.28,y+h*.18,27,52,0x435a65).setDepth(3);
-s.add.text(x,y-h/2-19,label,{fontSize:'15px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#243348',padding:{x:7,y:4}}).setOrigin(.5).setDepth(8)
+ // Layered facade with a shallow roof overhang, ground-floor shopfront and framed windows.
+ s.add.rectangle(x+7,y+9,w+12,h+12,0x33443a,.22).setDepth(2);
+ s.add.rectangle(x,y,w,h,color).setStrokeStyle(3,0x66594b).setDepth(3);
+ s.add.rectangle(x,y-h/2+7,w+12,16,0x914c43).setDepth(4);
+ s.add.rectangle(x,y-h/2+17,w+6,5,0xc38a59).setDepth(5);
+ for(let xx=x-w*.29;xx<=x+w*.29;xx+=w*.29){
+   s.add.rectangle(xx,y-h*.13,38,40,0x9ed4dc).setStrokeStyle(4,0x4c5960).setDepth(5);
+   s.add.rectangle(xx,y-h*.13+19,42,4,0xe1d6bd).setDepth(6);
+ }
+ s.add.rectangle(x+w*.28,y+h*.19,28,54,0x435a65).setStrokeStyle(2,0x2d3b43).setDepth(5);
+ s.add.rectangle(x,y+h*.12,w*.78,10,0xc38a59).setDepth(5);
+ s.add.text(x,y-h/2-22,label,{fontSize:'14px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#8e302c',padding:{x:8,y:4}}).setOrigin(.5).setDepth(8)
 }
 
 function addCourtyardDetails(s){
@@ -542,21 +549,21 @@ function addResidentialDistrict(s){
  s.add.rectangle(1500,817.5,3,615,0xe7d9ad).setDepth(3);
  // Zebra crossings removed by design. Roads remain clear and readable.
  // A little planted square between the apartment buildings
- s.add.rectangle(1090,1370,300,150,0x638d58).setStrokeStyle(4,0x496e45).setDepth(2);
- s.add.rectangle(1090,1370,110,110,0xb6c99a).setStrokeStyle(3,0x7a966b).setDepth(3);
- s.add.circle(1090,1370,28,0x56804f).setDepth(4);
- s.add.circle(1078,1358,14,0x76a66b).setDepth(5);
- s.add.circle(1102,1358,14,0x76a66b).setDepth(5);
- s.add.circle(1090,1382,14,0x76a66b).setDepth(5);
+ s.add.rectangle(1090,1090,300,120,0x638d58).setStrokeStyle(4,0x496e45).setDepth(2);
+ s.add.rectangle(1090,1090,110,90,0xb6c99a).setStrokeStyle(3,0x7a966b).setDepth(3);
+ s.add.circle(1090,1090,25,0x56804f).setDepth(4);
+ s.add.circle(1078,1080,13,0x76a66b).setDepth(5);
+ s.add.circle(1102,1080,13,0x76a66b).setDepth(5);
+ s.add.circle(1090,1100,13,0x76a66b).setDepth(5);
  // Residential blocks, with repeated windows, balconies and visible entrances.
  const blocks = [
-   {x:270,y:805,w:190,h:150,label:'RESIDENCE A',wall:0xd9c5a7},
-   {x:690,y:805,w:190,h:150,label:'RESIDENCE B',wall:0xc9d2d0},
-   {x:1120,y:805,w:190,h:150,label:'RESIDENCE C',wall:0xe0c9ad},
-   {x:1810,y:805,w:210,h:150,label:'RESIDENCE D',wall:0xc5cbd3},
-   {x:270,y:1370,w:190,h:145,label:'APARTMENTS',wall:0xd4c4b1},
-   {x:690,y:1370,w:190,h:145,label:'APARTMENTS',wall:0xc6d1ce},
-   {x:1810,y:1370,w:210,h:145,label:'APARTMENTS',wall:0xd8c9b5}
+   {x:520,y:900,w:190,h:150,label:'RESIDENCE A',wall:0xd9c5a7},
+   {x:850,y:900,w:190,h:150,label:'RESIDENCE B',wall:0xc9d2d0},
+   {x:1180,y:900,w:190,h:150,label:'RESIDENCE C',wall:0xe0c9ad},
+   {x:1510,y:900,w:210,h:150,label:'RESIDENCE D',wall:0xc5cbd3},
+   {x:520,y:1270,w:190,h:145,label:'APARTMENTS',wall:0xd4c4b1},
+   {x:850,y:1270,w:190,h:145,label:'APARTMENTS',wall:0xc6d1ce},
+   {x:1510,y:1270,w:210,h:145,label:'APARTMENTS',wall:0xd8c9b5}
  ];
  blocks.forEach((b,idx)=>{
    const {x,y,w,h}=b;
@@ -608,7 +615,7 @@ function enterInterior(kind,label){
  if(indoor||driving||!player)return;
  indoor=true;indoorKind=kind;indoorLabel=label;
  indoorReturn={x:player.x,y:player.y};
- player.setVelocity(0,0);player.setPosition(1100,750);
+ player.setVelocity(0,0);player.setPosition(1100,900);
  player.setDepth(45);
  jessica.setVisible(false);car.setVisible(false);
  scene.cameras.main.startFollow(player,true,.08,.08);
@@ -623,7 +630,8 @@ function enterInterior(kind,label){
  // Warm ceiling lights and Chinese decorative touches.
  [930,1100,1270].forEach(x=>add(scene.add.circle(x,590,12,0xffe3a1).setStrokeStyle(3,0x8a7048).setDepth(34)));
  add(scene.add.text(1100,555,label,{fontSize:'22px',fontStyle:'bold',color:'#fff3d2',backgroundColor:'#8e302c',padding:{x:12,y:6}}).setOrigin(.5).setDepth(36));
- add(scene.add.text(1100,985,'按 E 离开  ·  Press E to leave',{fontSize:'14px',fontStyle:'bold',color:'#fff',backgroundColor:'#26364a',padding:8}).setOrigin(.5).setDepth(40));
+ add(scene.add.rectangle(1100,925,150,34,0x8e302c).setStrokeStyle(2,0xead4a8).setDepth(39));
+ add(scene.add.text(1100,925,'出口  EXIT  ·  E',{fontSize:'14px',fontStyle:'bold',color:'#fff'}).setOrigin(.5).setDepth(40));
  if(kind==='home'){
    add(scene.add.rectangle(940,675,150,80,0x8b5e43).setDepth(34));
    add(scene.add.rectangle(940,650,160,18,0xc28d5d).setDepth(35));
@@ -672,7 +680,7 @@ function enterInterior(kind,label){
    scene.tweens.add({targets:indoorTrain,x:1380,duration:4200,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
  }
  $('quest-status').textContent=label.toUpperCase();
- $('quest-copy').textContent='Explore the interior. Press E to leave or TALK to continue.';
+ $('quest-copy').textContent='Explore the interior. Walk to the red EXIT mat and press E. Use TALK for the current quest.';
 }
 function leaveInterior(){
  if(!indoor)return;
@@ -685,38 +693,50 @@ function leaveInterior(){
  $('quest-copy').textContent='Explore the neighborhood.';
 }
 function addChineseNeighborhood(s){
- // Gated residential compound entrance and Chinese street furniture.
- s.add.rectangle(1090,760,430,18,0x6f5541).setDepth(4);
- s.add.rectangle(875,760,18,92,0x8e3832).setDepth(5);
- s.add.rectangle(1305,760,18,92,0x8e3832).setDepth(5);
- s.add.rectangle(1090,715,430,12,0xb98a4f).setDepth(5);
- s.add.text(1090,700,'李村社区  LICUN COMMUNITY',{fontSize:'15px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#8e302c',padding:{x:9,y:4}}).setOrigin(.5).setDepth(8);
- // Parcel lockers and e-bike parking.
+ // One coherent Licun-style residential compound, organized around a single entrance.
+ // Low perimeter walls frame the compound; the central opening is the pedestrian gate.
+ s.add.rectangle(1090,755,1450,12,0x9a9b8b).setDepth(3);
+ s.add.rectangle(365,1070,12,640,0x9a9b8b).setDepth(3);
+ s.add.rectangle(1815,1070,12,640,0x9a9b8b).setDepth(3);
+ s.add.rectangle(1090,1390,1450,12,0x9a9b8b).setDepth(3);
+ // Main gate is centered on a paved pedestrian approach, not scattered around the map.
+ s.add.rectangle(1010,755,18,82,0x8e3832).setDepth(5);
+ s.add.rectangle(1170,755,18,82,0x8e3832).setDepth(5);
+ s.add.rectangle(1090,718,200,14,0xb98a4f).setDepth(5);
+ s.add.text(1090,694,'李村社区  ·  LICUN RESIDENCE',{fontSize:'16px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#8e302c',padding:{x:10,y:5}}).setOrigin(.5).setDepth(8);
+ // A paved arrival court links the gate to the apartment buildings.
+ s.add.rectangle(1090,830,430,120,0xc9b995).setDepth(2);
+ s.add.rectangle(1090,830,360,92,0xd9c9a8).setDepth(3);
+ // Parcel lockers are grouped beside the gate.
+ s.add.rectangle(1275,785,150,94,0x8c9b94).setStrokeStyle(3,0x56645e).setDepth(4);
  for(let i=0;i<6;i++){
-   s.add.rectangle(1380+i*22,820,18,54,0x5d8792).setStrokeStyle(2,0x334c57).setDepth(5);
-   s.add.rectangle(1380+i*22,820,10,4,0xe7d7a8).setDepth(6);
+   s.add.rectangle(1220+i*22,785,18,66,0x5d8792).setStrokeStyle(2,0x334c57).setDepth(5);
+   s.add.circle(1220+i*22+5,785,2,0xe7d7a8).setDepth(6);
  }
- for(let i=0;i<4;i++){
-   const x=900+i*42;
-   s.add.circle(x,875,13,0x29353b).setStrokeStyle(3,0x9da9aa).setDepth(5);
-   s.add.rectangle(x,875,32,5,0x8b9a9d).setRotation(0.3).setDepth(6);
+ s.add.text(1275,842,'快递柜',{fontSize:'11px',fontStyle:'bold',color:'#fff'}).setOrigin(.5).setDepth(7);
+ // E-bike parking is one dedicated bay along the inner wall.
+ s.add.rectangle(890,785,130,70,0x8a9b87).setDepth(3);
+ for(let i=0;i<3;i++){
+   const x=855+i*38;
+   s.add.circle(x,785,12,0x29353b).setStrokeStyle(3,0x9da9aa).setDepth(5);
+   s.add.rectangle(x,785,28,4,0x8b9a9d).setDepth(6);
  }
- // Lanterns and Chinese shop signs along the commercial edge.
- [1400,1510,1620,1730].forEach((x,i)=>{
-   s.add.rectangle(x,275,36,12,0x9d3035).setDepth(7);
-   s.add.circle(x,292,9,0xc83b32).setDepth(8);
-   s.add.rectangle(x,303,3,12,0xd9b46a).setDepth(7);
+ s.add.text(890,835,'电动车',{fontSize:'11px',fontStyle:'bold',color:'#fff'}).setOrigin(.5).setDepth(7);
+ // Chinese lanterns and signboards belong to the commercial street.
+ [1420,1550,1680,1810].forEach((x)=>{
+   s.add.rectangle(x,280,44,12,0x9d3035).setDepth(7);
+   s.add.circle(x,297,10,0xc83b32).setDepth(8);
+   s.add.rectangle(x,310,3,12,0xd9b46a).setDepth(7);
  });
- s.add.text(1500,325,'李村生活街  ·  LOCAL SHOPS',{fontSize:'13px',fontStyle:'bold',color:'#fff2d2',backgroundColor:'#9a342e',padding:6}).setOrigin(.5).setDepth(9);
- // Moving pedestrians make the street feel inhabited.
+ s.add.text(1600,330,'李村生活街  ·  LOCAL SHOPS',{fontSize:'14px',fontStyle:'bold',color:'#fff2d2',backgroundColor:'#9a342e',padding:6}).setOrigin(.5).setDepth(9);
+ // Residents walk along the shared paths.
  ambientNPCs=[];
- [[820,700,960],[1030,875,1160],[1870,700,1990],[1420,880,1550]].forEach(([x,y,end],i)=>{
+ [[900,900,990],[1310,900,1400],[480,1080,560],[1600,1080,1690]].forEach(([x,y,end],i)=>{
    const n=s.physics.add.sprite(x,y,'npc').setDepth(11);
    n.body.setAllowGravity(false);n.body.setImmovable(true);ambientNPCs.push(n);
-   s.tweens.add({targets:n,x:end,duration:5000+i*900,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
+   s.tweens.add({targets:n,x:end,duration:5400+i*700,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
  });
 }
-
 function create(){
 scene=this;let s=this;
 s.physics.world.setBounds(0,0,2200,1500);
@@ -752,7 +772,7 @@ makeToyota(s,'white-toyota-empty',0);
 makeToyota(s,'white-toyota-driver',1);
 makeToyota(s,'white-toyota-two',2);
 
-car=s.physics.add.sprite(350,535,'white-toyota-empty').setDepth(11);
+car=s.physics.add.sprite(455,575,'white-toyota-empty').setDepth(11);
 car.setCollideWorldBounds(true);
 car.body.setSize(82,48).setOffset(17,12);
 car.setRotation(0);
@@ -871,12 +891,12 @@ function update(time,delta){
  }else if(Phaser.Math.Distance.Between(player.x,player.y,car.x,car.y)<115){
   targetPrompt.setText('E: ENTER WHITE TOYOTA');targetPrompt.setVisible(true)
  }else if([
-  {label:'HOME',x:350,y:455},{label:'CONVENIENCE STORE',x:1450,y:445},
-  {label:'SAM’S CLUB',x:1190,y:455},{label:'LUCKIN COFFEE',x:1740,y:715},
-  {label:'CMA CGM OFFICE',x:1750,y:445},{label:'LICUN METRO',x:650,y:610},
-  {label:'RESIDENCE A',x:270,y:895},{label:'RESIDENCE B',x:690,y:895},
-  {label:'RESIDENCE C',x:1120,y:895},{label:'RESIDENCE D',x:1810,y:895},
-  {label:'APARTMENTS',x:270,y:1450},{label:'APARTMENTS',x:690,y:1450},{label:'APARTMENTS',x:1810,y:1450}
+  {label:'HOME',x:350,y:480},{label:'CONVENIENCE STORE',x:1450,y:455},
+  {label:'SAM’S CLUB',x:1190,y:475},{label:'LUCKIN COFFEE',x:1740,y:725},
+  {label:'CMA CGM OFFICE',x:1750,y:450},{label:'LICUN METRO',x:650,y:620},
+  {label:'RESIDENCE A',x:520,y:985},{label:'RESIDENCE B',x:850,y:985},
+  {label:'RESIDENCE C',x:1180,y:985},{label:'RESIDENCE D',x:1510,y:985},
+  {label:'APARTMENTS',x:520,y:1355},{label:'APARTMENTS',x:850,y:1355},{label:'APARTMENTS',x:1510,y:1355}
  ].some(e=>Phaser.Math.Distance.Between(player.x,player.y,e.x,e.y)<95)){
   const e=[{label:'HOME',x:350,y:455},{label:'CONVENIENCE STORE',x:1450,y:445},
   {label:'LUCKIN COFFEE',x:1740,y:715},{label:'CMA CGM OFFICE',x:1750,y:445},
@@ -894,28 +914,28 @@ function update(time,delta){
 function interact(){
  if(dialogOpen)return;
  if(indoor){
-   if(indoorKind===phases[phase].kind){openQuestion();return}
-   leaveInterior();return;
+   if(Phaser.Math.Distance.Between(player.x,player.y,1100,925)<85){leaveInterior();return;}
+   return;
  }
 
  // ENTER BUILDINGS / METRO
  const entrances=[
-  {kind:'home',label:'Our Apartment',x:350,y:455},
-  {kind:'shop',label:'Convenience Store',x:1450,y:445},
-  {kind:'sams',label:'Sam’s Club',x:1190,y:455},
-  {kind:'coffee',label:'Luckin Coffee',x:1740,y:715},
-  {kind:'office',label:'CMA CGM Office',x:1750,y:445},
-  {kind:'metro',label:'Licun Metro Station',x:650,y:610},
-  {kind:'home',label:'Residence A',x:270,y:895},
-  {kind:'home',label:'Residence B',x:690,y:895},
-  {kind:'home',label:'Residence C',x:1120,y:895},
-  {kind:'home',label:'Residence D',x:1810,y:895},
-  {kind:'home',label:'Apartment Block',x:270,y:1450},
-  {kind:'home',label:'Apartment Block',x:690,y:1450},
-  {kind:'home',label:'Apartment Block',x:1810,y:1450}
+  {kind:'home',label:'Our Apartment',x:350,y:480},
+  {kind:'shop',label:'Convenience Store',x:1450,y:455},
+  {kind:'sams',label:'Sam’s Club',x:1190,y:475},
+  {kind:'coffee',label:'Luckin Coffee',x:1740,y:725},
+  {kind:'office',label:'CMA CGM Office',x:1750,y:450},
+  {kind:'metro',label:'Licun Metro Station',x:650,y:620},
+  {kind:'home',label:'Residence A',x:520,y:985},
+  {kind:'home',label:'Residence B',x:850,y:985},
+  {kind:'home',label:'Residence C',x:1180,y:985},
+  {kind:'home',label:'Residence D',x:1510,y:985},
+  {kind:'home',label:'Apartment Block',x:520,y:1355},
+  {kind:'home',label:'Apartment Block',x:850,y:1355},
+  {kind:'home',label:'Apartment Block',x:1510,y:1355}
  ];
  const nearCarForEntry=Phaser.Math.Distance.Between(player.x,player.y,car.x,car.y);
- const door=entrances.find(e=>Phaser.Math.Distance.Between(player.x,player.y,e.x,e.y)<95 && !(e.kind==='home' && nearCarForEntry<125));
+ const door=entrances.find(e=>Phaser.Math.Distance.Between(player.x,player.y,e.x,e.y)<125 && !(e.kind==='home' && nearCarForEntry<125));
  if(door){enterInterior(door.kind,door.label);return;}
  // EXIT CAR
  if(driving){
@@ -1087,7 +1107,7 @@ $('menu-panel-content').innerHTML='<p>'+content+'</p>';
 $('menu-panel').classList.add('show')
 }));
 $('menu-panel-close').onclick=()=>$('menu-panel').classList.remove('show');
-$('interact').onclick=interact;
+$('interact').onclick=()=>{if(indoor){if(indoorKind===phases[phase].kind)openQuestion();else $('quest-status').textContent='EXPLORE THE INTERIOR';}else interact()};
 const joy=$('joystick'),knob=$('joy-knob');
 let active=false;
 function joyMove(e){
