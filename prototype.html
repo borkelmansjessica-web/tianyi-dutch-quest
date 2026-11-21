@@ -537,18 +537,25 @@ function addResidentialDistrict(s){
  s.add.rectangle(1100,1038,2200,22,0xc9b995).setDepth(2);
  s.add.rectangle(1100,1212,2200,22,0xc9b995).setDepth(2);
  // Side street connecting the old neighborhood to the new residential street
- s.add.rectangle(1500,850,88,550,0x59636b).setDepth(2);
- s.add.rectangle(1500,850,3,550,0xe7d9ad).setDepth(3);
- // Zebra crossings: full-width crossings, placed in open road sections away from building doors.
- // Horizontal streets: vertical white stripes span the full road width.
- [650,1500,2050].forEach(x=>{
-   for(let i=0;i<7;i++) s.add.rectangle(x-27+i*9,1125,5,112,0xf2eee0).setDepth(4);
+ s.add.rectangle(1500,817.5,88,615,0x59636b).setDepth(2);
+ s.add.rectangle(1500,817.5,3,615,0xe7d9ad).setDepth(3);
+ // Zebra crossings only at real intersections.
+ // At the upper junction, the east-west road is crossed vertically on both approaches.
+ [1432,1568].forEach(x=>{
+   for(let i=0;i<9;i++) s.add.rectangle(x-32+i*8,510,5,76,0xf2eee0).setDepth(4);
  });
- [850,1450,1950].forEach(x=>{
-   for(let i=0;i<7;i++) s.add.rectangle(x-27+i*9,510,5,72,0xf2eee0).setDepth(4);
+ // The north-south connector is crossed horizontally immediately after the upper junction.
+ [565].forEach(y=>{
+   for(let i=0;i<9;i++) s.add.rectangle(1500,y-32+i*8,76,5,0xf2eee0).setDepth(4);
  });
- // Vertical connector: horizontal stripes span the road from left to right.
- for(let i=0;i<7;i++) s.add.rectangle(1500,620+i*12,76,6,0xf2eee0).setDepth(4);
+ // At the central residential-road junction: crosswalks on the connector's two approaches
+ // and on the east-west road's two approaches.
+ [910,1050].forEach(y=>{
+   for(let i=0;i<9;i++) s.add.rectangle(1500,y-32+i*8,76,5,0xf2eee0).setDepth(4);
+ });
+ [1432,1568].forEach(x=>{
+   for(let i=0;i<9;i++) s.add.rectangle(x-32+i*8,980,5,108,0xf2eee0).setDepth(4);
+ });
  // A little planted square between the apartment buildings
  s.add.rectangle(1090,1370,300,150,0x638d58).setStrokeStyle(4,0x496e45).setDepth(2);
  s.add.rectangle(1090,1370,110,110,0xb6c99a).setStrokeStyle(3,0x7a966b).setDepth(3);
@@ -630,7 +637,7 @@ s.add.rectangle(1100,980,2200,4,0xf0d58b).setDepth(3);
 s.add.rectangle(1100,510,2200,80,0x59636b).setDepth(2);
 s.add.rectangle(1100,510,2200,3,0xe7d9ad).setDepth(3);
 building(s,350,400,190,130,0xe2c9a3,'OUR APARTMENT');
-building(s,1100,650,175,120,0xb9c8cf,'LUCKIN COFFEE');
+building(s,1740,650,175,120,0xb9c8cf,'LUCKIN COFFEE');
 building(s,1190,390,190,130,0xd8d0a9,"SAM'S CLUB");
 building(s,1750,355,300,155,0xb6c1c9,'CMA CGM · OFFICE');
  addCourtyardDetails(s);
@@ -660,7 +667,7 @@ for(let i=0;i<28;i++){let x=100+(i*173)%2050,y=300+((i*97)%1050);s.add.circle(x,
  }
  addSolid(350,400,190,130);
  addSolid(1450,390,116,82);
- addSolid(1100,650,175,120);
+ addSolid(1740,650,175,120);
  addSolid(1190,390,190,130);
  addSolid(1750,355,300,155);
 
@@ -680,7 +687,7 @@ objects=[
 {x:350,y:520,label:'Home',kind:'home'},
 {x:650,y:535,label:'Metro',kind:'metro'},
 {x:1750,y:355,label:'CMA CGM office',kind:'work'},
-{x:1100,y:650,label:'Luckin Coffee',kind:'coffee'},
+{x:1740,y:650,label:'Luckin Coffee',kind:'coffee'},
 {x:1190,y:390,label:"Sam's Club",kind:'sams'}
 ];
 targetPrompt=s.add.text(480,480,'',{fontSize:'15px',fontStyle:'bold',color:'#fff4d0',backgroundColor:'#243348',padding:{x:8,y:5}}).setOrigin(.5).setDepth(20).setScrollFactor(0)
